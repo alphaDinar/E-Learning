@@ -1,0 +1,209 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="{% static 'base.css' %}">
+  <link rel="stylesheet" href="{% static 'get_scheme.css' %}">
+  <title>Document</title>
+</head>
+<body>
+  <section class="page">
+    <section class="sideBar">
+      <button type="button" id="sideBar_tag" class="material-symbols-outlined">linear_scale</button>
+      <header>
+        <strong>{{scheme.topic}}</strong>
+      </header>
+      <nav class="resource_swiper swiper">
+        <button class="material-symbols-outlined resource_swiper_prev">West</button>
+        <button class="material-symbols-outlined resource_swiper_next">east</button>
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <span>Images</span>
+            <input type="text" placeholder="Image search" class="image_search">
+            <div class="res_box">
+              {% for image in scheme.get_images  %}
+              <div class="res" id="image_res" data-name="Cocoa">
+                <div style="background-image: url({{image.image.url}});"></div>
+                <span>{{image.name}}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <span>Passages</span>
+            <input type="text" placeholder="Passage search" class="passage_search">
+            <div class="res_box">
+              <div class="res">
+                <div style="background-image: url(images/corn.webp);"></div>
+                <span>Corn</span>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <span>Videos</span>
+            <input type="text" placeholder="video search" class="video_search">
+            <div class="res_box">
+              {% for video in scheme.get_videos %}
+              <div class="res" id="video_res">
+                <video src="{{video.video.url}}"></video>
+                <span>{{video.name}}</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </nav>
+      <footer>
+        <a href="{% url 'schemes_page' course.slug %}" class="material-symbols-outlined">arrow_back_ios_new</a>
+      </footer>
+    </section>
+    <i class="material-symbols-outlined" id="hide_nav">expand</i>
+    <section class="main">
+      <nav>
+        <i class="material-symbols-outlined" id="toggle_stats">donut_small</i>
+        <i class="material-symbols-outlined" id="toggle_stats">slideshow</i>
+      </nav>
+      <section class="stat_box">
+        last_touched 
+        ----
+        images 
+        passages 
+        videos
+        ----
+        add res
+        -----
+        status -> pending
+        ----
+        toggle stat button
+      </section>
+
+      <section class="screen">
+
+      </section>
+    </section>
+    <script>
+      const hide_nav = document.getElementById('hide_nav')
+      const main = document.querySelector('.main')
+
+      hide_nav.onclick =()=>{
+        console.log('meee')
+        main.classList.toggle('hide')
+      }
+
+      const toggle_stats = document.getElementById('toggle_stats')
+      const stat_box = document.querySelector('.stat_box')
+
+      toggle_stats.onclick=()=>{
+        stat_box.classList.toggle('change')
+      } 
+    </script>
+
+    <script>
+      const res_box = document.querySelector('.res_box')
+      const res = document.querySelectorAll('.res')[0]
+
+      // for (var i = 0; i < 4; i++) {
+      //   var res_clone = res.cloneNode(true)
+      //   res_box.appendChild(res_clone)
+      // }
+
+      const screen = document.querySelector('.screen')
+      const image_res = document.querySelectorAll('[id=image_res]')
+      const video_res = document.querySelectorAll('[id=video_res]')
+
+      image_res.forEach(el=>{
+        el.onclick =()=>{
+          screen.innerHTML = ''
+          screen.style.backgroundImage = el.children[0].style.backgroundImage 
+        }
+      })
+
+      video_res.forEach(el=>{
+        el.onclick =()=>{
+          screen.innerHTML = ''
+          var video_box = document.createElement('video')
+          video_box.src = el.children[0].src
+          video_box.controls = true
+          video_box.classList.add('mini_screen')
+          screen.appendChild(video_box)
+        }
+      })
+
+
+
+      // SEARCH
+
+      const image_search = document.querySelector('.image_search')
+      image_search.oninput =()=>{
+        image_res.forEach(el=>{
+          var el_name = el.dataset.name.toLowerCase()
+          if(!el_name.includes(image_search.value.toLowerCase())){
+            el.style.display = 'none'
+          }else{
+            el.style.display = 'flex'
+          }
+          runSearchAnime(el)
+        })
+      }
+
+      const runSearchAnime =(el)=>{
+        anime({
+          targets : el,
+          duration : 500,
+          easing: 'spring(1, 80, 10, 0)',
+          opacity : [0,1],
+        })
+      }
+
+    </script>
+    
+  </section>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"
+  integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <script>
+    var resource_swiper = new Swiper('.resource_swiper', {
+      loop : true,
+      navigation: {
+        nextEl: '.resource_swiper_next',
+        prevEl: '.resource_swiper_prev',
+      },
+     
+    })
+  </script>
+  <!-- <script>
+    image_res.forEach((el,i)=>{
+      anime({
+        targets : el,
+        duration : 500,
+        translateX : [50,0],
+        easing: 'spring(1, 80, 10, 0)',
+        opacity : [0,1],
+        delay : i * 100,
+      })
+    })
+  </script> -->
+
+</body>
+</html>
+
+<script>
+  const sideBar = document.querySelector('.sideBar')
+  const sideBar_tag = document.getElementById('sideBar_tag')
+
+  sideBar_tag.onclick =()=>{
+    main.classList.toggle('change')
+    sideBar.classList.toggle('change')
+  }
+
+
+
+</script>

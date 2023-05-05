@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link rel="stylesheet" href="{% static 'base.css' %}">
+  <link rel="stylesheet" href="{% static 'course.css' %}">
+  <title>Document</title>
+</head>
+<body>
+  <section class="page">
+    <nav>
+      <strong>Courses</strong>
+      <input type="text" class="course_in">
+      <div>
+        <span>Welcome Back,</span> 
+        <span><i class="material-symbols-outlined">self_improvement</i> {{user.username}} </span>
+      </div>
+    </nav>
+    <section class="course_box">
+      {% for course in courses %}
+        <a href="{% url 'schemes_page' course.slug %}" class="course" data-name="{{course.subject}}">
+          <i class="material-symbols-outlined">school</i>
+          <span>{{course}}</span>
+          <p></p>
+        </a>
+      {% endfor %}
+    </section>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"
+    integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      const course_in = document.querySelector('.course_in')
+      const courses = document.querySelectorAll('.course')
+
+      course_in.oninput =()=>{
+        courses.forEach(course=>{
+            if(!course.dataset.name.toLowerCase().includes(course_in.value.toLowerCase())){
+              course.style.display = 'none'
+            }else{
+              course.style.display = 'flex'
+            }
+            anime({
+              targets : course,
+              translateY : [50, 0],
+              opacity : [0,1],
+              duration : 500,
+              easing: 'spring(1, 80, 10, 0)'
+            })
+        })
+      }
+
+      courses.forEach((el,i)=>{
+        anime({
+          targets : el,
+          translateY : [50, 0],
+          opacity : [0,1],
+          delay : 100 * i,
+          duration : 500,
+          easing: 'spring(1, 80, 10, 0)'
+        })
+      })
+    </script>
+  </section>
+</body>
+</html>

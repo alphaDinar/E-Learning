@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+  <link rel="stylesheet" href="{% static 'base.css' %}">
+  <link rel="stylesheet" href="{% static 'dash.css' %}">
+  <title>Document</title>
+</head>
+
+<body>
+  <section class="page">
+    <section class="sideBar">
+      <button class="material-symbols-outlined">linear_scale</button>
+      <header>
+        <i class="material-symbols-outlined">school</i>
+        <strong>{{course}}</strong>
+      </header>
+      <nav>
+        <a href="dash.html"><i class="material-symbols-outlined">inventory_2</i> <span>Schemes</span></a>
+        <a href=""><i class="material-symbols-outlined">psychology_alt</i> <span>QuizHub</span></a>
+        <a href=""><i class="material-symbols-outlined">stacked_bar_chart</i> <span>Assesment</span></a>
+        <a href=""><i class="material-symbols-outlined">admin_panel_settings</i> <span>Manager</span></a>
+      </nav>
+      <footer>
+        <a href=""><i class="material-symbols-outlined">logout</i> <span>Logout</span></a>
+      </footer>
+    </section>
+    <section class="main">
+      <header>
+        <a href="" class="box">
+          <p>
+            <i class="material-symbols-outlined">history</i>
+            <span>Recent</span>
+          </p>
+          <span>Cold war</span>
+          <p>
+            <small class="material-symbols-outlined">trending_flat</small>
+          </p>
+        </a>
+        <div class="chart_box">
+          <legend>
+            <small class="material-symbols-outlined" style="color: #fe6265;">pending</small>
+            <small class="material-symbols-outlined" style="color: #00acea;">bolt</small>
+            <small class="material-symbols-outlined" style="color: #acedc2;">verified</small>
+          </legend>
+          <canvas id="myChart"></canvas>
+        </div>
+        <a href="" class="box">
+          <p>
+            <i class="material-symbols-outlined">favorite</i>
+            <span>Favorite</span>
+          </p>
+          <span>Diplomacy</span>
+          <p>
+            <small class="material-symbols-outlined">trending_flat</small>
+          </p>
+        </a>
+      </header>
+      <section class="con">
+        <form>
+          <div>
+            <i class="material-symbols-outlined">blur_on</i>
+            <span>Schemes | 5</span>
+          </div>
+          <input type="text" id="item_in">
+          <select id="item_select">
+            <option value="pending">Pending</option>
+            <option value="active">Active</option>
+            <option value="completed">Completed</option>
+          </select>
+          <button type="button" class="material-symbols-outlined">north</button>
+        </form>
+        <div class="scheme_box">
+          {% for scheme in schemes  %}
+          <div class="scheme_hold"  id="item"  data-name="{{scheme.topic}}" data-status="{{scheme.status}}">
+            <a href="{% url 'use_scheme_page' scheme.slug %}" class="scheme">
+              <i class="material-symbols-outlined">agriculture</i>
+              <span>{{scheme.topic}}</span>
+              
+              {% if scheme.status == 'pending' %}
+              <p style="background: #fe6265;"></p>
+              {% elif scheme.status == 'active' %}
+              <p style="background: #00acea;"></p>
+              {% else %}
+              <p style="background: #acedc2;"></p>
+              {% endif %}
+                
+              <small>43 mins ago</small>
+            </a>
+            <a href="{% url 'edit_scheme_page' scheme.slug %}" class="edit_scheme">
+              <i class="material-symbols-outlined">settings</i>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </section>
+
+  </section>
+</body>
+
+</html>
+<script>
+  const sideBar = document.querySelector('.sideBar')
+  const main = document.querySelector('.main')
+  const sideBar_tag = document.querySelector('.sideBar button')
+
+  sideBar_tag.onclick = () => {
+    sideBar.classList.toggle('change')
+    main.classList.toggle('change')
+  }
+
+  const toggle_main = document.querySelector('.main .con form button')
+  const main_header = document.querySelector('.main header')
+  const main_con = document.querySelector('.main .con')
+  toggle_main.onclick = () => {
+    main.classList.toggle('toggle')
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"
+  integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  const item_in = document.getElementById('item_in')
+  const item_select = document.getElementById('item_select')
+  const items = document.querySelectorAll('#item')
+  console.log(items, item_select, item_in)
+
+  // for (var i = 0; i < 8; i++) {
+  //   var item_clone = document.querySelectorAll('#item')[0].cloneNode(true)
+  //   document.querySelector('.scheme_box').appendChild(item_clone)
+  // }
+
+  item_in.oninput = () => {
+    items.forEach(el => {
+      var el_name = el.dataset.name.toLowerCase()
+      if (!el_name.includes(item_in.value)) {
+        el.style.display = 'none'
+      } else {
+        el.style.display = 'flex'
+      }
+      runSearchAnime(el)
+    })
+  }
+
+  item_select.onchange = () => {
+    items.forEach(el => {
+      var el_status = el.dataset.status.toLowerCase()
+      if (el_status != item_select.value.toLowerCase()) {
+        el.style.display = 'none'
+      } else {
+        el.style.display = 'flex'
+      }
+      runSearchAnime(el)
+    })
+  }
+
+  const runSearchAnime = (el) => {
+    anime({
+      targets: el,
+      translateY: [50, 0],
+      opacity: [0, 1],
+      duration: 500,
+      easing: 'spring(1, 80, 10, 0)'
+    })
+  }
+
+  items.forEach((el, i) => {
+    anime({
+      targets: el,
+      translateX: [-50, 0],
+      opacity: [0, 1],
+      duration: 300,
+      easing: 'spring(1, 80, 10, 0)',
+      delay: i * 100
+    })
+  })
+
+  document.querySelectorAll('.main header .box').forEach((el, i) => {
+    anime({
+      targets: el,
+      translateY: [-50, 0],
+      opacity: [0, 1],
+      scale: [0.8, 1],
+      duration: 500,
+      easing: 'spring(1, 80, 10, 0)',
+      delay: i * 100
+    })
+  })
+
+</script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+  var pendCount = 5
+  var actCount = 3
+  var compCount = 2
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        backgroundColor: ['#00acea', '#acedc2', '#fe6265'],
+        data: [actCount, compCount, pendCount],
+        borderWidth: 1,
+      }]
+    },
+  });
+</script>
+
+<!-- <script>
+  const scheme = document.querySelector('.scheme')
+  const scheme_box = document.querySelector('.scheme_box')
+
+  for (var i = 0; i < 6; i++) {
+    var scheme_clone = scheme.cloneNode(true)
+    scheme_box.appendChild(scheme_clone)
+  }
+</script> -->
