@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-1xs3%5o8tt9r-ltsfo&*iwco$s)6xkcz32vl$y)8knugur*liy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['e-learning-qjk3.onrender.com']
+ALLOWED_HOSTS = ['e-learning-qjk3.onrender.com','*']
 AUTH_USER_MODEL = 'Log.User'
 
 # Application definition
@@ -66,16 +66,16 @@ WSGI_APPLICATION = 'ELearning.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.parse('postgres://e_learning_3di0_user:kFClASjxiv8fQmZNCvVT49e886uBD4kF@dpg-chae9m3hp8u791i4dc80-a.oregon-postgres.render.com/e_learning_3di0')
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.parse('postgres://e_learning_3di0_user:kFClASjxiv8fQmZNCvVT49e886uBD4kF@dpg-chae9m3hp8u791i4dc80-a.oregon-postgres.render.com/e_learning_3di0')
+# }
 
 
 # Password validation

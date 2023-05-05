@@ -16,13 +16,13 @@
         {% csrf_token %}
         <div class="input_field">
           <span>Username</span>
-          <input type="text" name="username">
+          <input type="text" name="username" required>
         </div>
         <div class="input_field">
           <span>Password</span>
-          <input type="password" name="password">
+          <input type="password" name="password" required>
         </div>
-        <button>Login</button>
+        <button type="submit">Login</button>
       </form>
     </section>
   </section>
@@ -56,7 +56,10 @@
     flex-direction: column;
   }
   .head_box p{
-    font-size: 1.2rem;
+    /* background: white; */
+    padding: 5px;
+    font-weight: 600;
+    font-size: 1.1rem;
   }
   .head_box form{
     width: 300px;
@@ -97,3 +100,9 @@
     font-weight: 600;
   }
 </style>
+
+<script>
+  if(window.history.replaceState){
+    window.history.replaceState(null,null, window.location.href)
+  }
+</script>
