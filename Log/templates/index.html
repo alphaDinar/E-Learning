@@ -1,16 +1,99 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'base.css' %}">
   <title>Document</title>
 </head>
 <body>
-  <form method="post">
-    <input type="text" name="username" placeholder="username">
-    <input type="password" name="password" placeholder="password">
-    <button type="submit">SEND</button>
-  </form>
+  <section class="page">
+    <section class="head_box">
+      <p>Please Login to continue</p>
+      <form method="post">
+        {% csrf_token %}
+        <div class="input_field">
+          <span>Username</span>
+          <input type="text" name="username">
+        </div>
+        <div class="input_field">
+          <span>Password</span>
+          <input type="password" name="password">
+        </div>
+        <button>Login</button>
+      </form>
+    </section>
+  </section>
 </body>
 </html>
+
+
+<style>
+  .page{
+    display: flex;
+    /* flex-direction: column; */
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fd;
+    min-height: 100vh;
+    /* gap: 1rem; */
+  }
+  .head_box{
+    width: 80%;
+    padding: 0 5%;
+    height: 480px;
+    background-image: url(https://res.cloudinary.com/dvnemzw0z/image/upload/v1683309556/media/Elearning/yank_y9jhie.png);
+    background-position: center;
+    /* margin-top: 10vh; */
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    gap: 2rem;
+    flex-direction: column;
+  }
+  .head_box p{
+    font-size: 1.2rem;
+  }
+  .head_box form{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    /* height: 200px; */
+    padding: 20px 0;
+    gap: 2rem;
+    background: white;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 15px;
+  }
+  .head_box form .input_field{
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+    flex-direction: column;
+  }
+  .input_field span{
+    font-weight: 600;
+  }
+  .head_box form input{
+    padding: 10px;
+    background: #f8f9fd;
+    width: 200px;
+    border-radius: 10px;
+    border: 1px dotted darkgray;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    /* border: 1px solid black; */
+  }
+  .head_box form button{
+    padding: 10px 25px;
+    cursor: pointer;
+    background: #e9dd84;
+    color: ghostwhite;
+    font-weight: 600;
+  }
+</style>
