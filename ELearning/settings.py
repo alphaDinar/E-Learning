@@ -129,7 +129,11 @@ CLOUDINARY_STORAGE = {
     'API_SECRET' : '9X_kzT8VXq9a4_UY6qTr6jQ1X1o'
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+LOGIN_URL = 'homepage'
+LOGIN_REDIRECT_URL = 'homepage'
+
+# DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

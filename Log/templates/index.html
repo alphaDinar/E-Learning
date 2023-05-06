@@ -11,7 +11,15 @@
 <body>
   <section class="page">
     <section class="head_box">
-      <p>Please Login to continue</p>
+      
+      {% if messages %}
+        {% for message in messages %}
+        <p>{{message}}</p>
+        {% endfor %}
+        {% else %}
+        <p>Please Login to continue</p>
+      {% endif %}
+        
       <form method="post">
         {% csrf_token %}
         <div class="input_field">
@@ -89,6 +97,7 @@
     width: 200px;
     border-radius: 10px;
     border: 1px dotted darkgray;
+    font-size: 1.1rem;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     /* border: 1px solid black; */
   }

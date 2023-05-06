@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
   <link rel="stylesheet" href="{% static 'base.css' %}">
   <link rel="stylesheet" href="{% static 'get_scheme.css' %}">
+  <link rel="stylesheet" href="{% static 'get_scheme_slides.css' %}">
   <title>Document</title>
 </head>
 <body>
@@ -28,30 +29,32 @@
             <span>Images</span>
             <input type="text" placeholder="Image search" class="image_search">
             <div class="res_box">
-              {% for image in scheme.get_images  %}
-              <div class="res" id="image_res" data-name="Cocoa">
+              {% for image in scheme.get_images %}
+              <div class="res" id="image_res" data-name="{{image.name}}" draggable="true">
                 <div style="background-image: url({{image.image.url}});"></div>
                 <span>{{image.name}}</span>
               </div>
-              {% endfor %}
+              {% endfor %} 
             </div>
           </div>
           <div class="swiper-slide">
             <span>Passages</span>
             <input type="text" placeholder="Passage search" class="passage_search">
             <div class="res_box">
-              <div class="res">
-                <div style="background-image: url(images/corn.webp);"></div>
-                <span>Corn</span>
+              {% for passage in scheme.get_passages  %}
+              <div class="res" id="passage_res" draggable="true" data-name="{{passage.title}}" data-title="{{passage.title}}" data-body="{{passage.body}}">
+                <div style="background-image: url({{passage.thumb.url}});"></div>
+                <span>{{passage.title}}</span>
               </div>
+              {% endfor %}
             </div>
           </div>
           <div class="swiper-slide">
             <span>Videos</span>
             <input type="text" placeholder="video search" class="video_search">
             <div class="res_box">
-              {% for video in scheme.get_videos %}
-              <div class="res" id="video_res">
+              {% for video in  scheme.get_videos %}
+              <div class="res" id="video_res" data-name="{{video.name}}" draggable="true">
                 <video src="{{video.video.url}}"></video>
                 <span>{{video.name}}</span>
               </div>
@@ -68,7 +71,7 @@
     <section class="main">
       <nav>
         <i class="material-symbols-outlined" id="toggle_stats">donut_small</i>
-        <i class="material-symbols-outlined" id="toggle_stats">slideshow</i>
+        <i class="material-symbols-outlined" id="toggle_slide">slideshow</i>
       </nav>
       <section class="stat_box">
         last_touched 
@@ -85,84 +88,36 @@
       </section>
 
       <section class="screen">
-
+        <section class="slide_box">
+          <div class="slide_box_nav">
+            <input type="text" placeholder="Title">
+            <!-- <select name="se">
+              <option selected value="10">10 seconds</option>
+              <option value="30">30 seconds</option>
+              <option value="60">1 minute</option>
+              <option value="300">5 minutes</option>
+            </select> -->
+            <button class="play">play</button>
+          </div>
+          <div class="slide_tray" id="slide_tray">
+            <!-- <small id="slide_tip">Drop Items here</small>  -->
+          </div>
+        </section>
       </section>
+      <section class="slide_screen swiper">
+        <div class="slide_screen_nav">
+          <i class="material-symbols-outlined">close</i>
+          <i class="material-symbols-outlined">edit</i>
+          <i class="slide_screen_nav_tag material-symbols-outlined">expand_less</i>
+        </div>
+        <div class="swiper-wrapper"></div>
+        <button type="button" class="material-symbols-outlined slide_screen_next">chevron_right</button>
+        <button type="button" class="material-symbols-outlined slide_screen_prev">chevron_left</button>
+      </section>
+      
     </section>
-    <script>
-      const hide_nav = document.getElementById('hide_nav')
-      const main = document.querySelector('.main')
-
-      hide_nav.onclick =()=>{
-        console.log('meee')
-        main.classList.toggle('hide')
-      }
-
-      const toggle_stats = document.getElementById('toggle_stats')
-      const stat_box = document.querySelector('.stat_box')
-
-      toggle_stats.onclick=()=>{
-        stat_box.classList.toggle('change')
-      } 
-    </script>
-
-    <script>
-      const res_box = document.querySelector('.res_box')
-      const res = document.querySelectorAll('.res')[0]
-
-      // for (var i = 0; i < 4; i++) {
-      //   var res_clone = res.cloneNode(true)
-      //   res_box.appendChild(res_clone)
-      // }
-
-      const screen = document.querySelector('.screen')
-      const image_res = document.querySelectorAll('[id=image_res]')
-      const video_res = document.querySelectorAll('[id=video_res]')
-
-      image_res.forEach(el=>{
-        el.onclick =()=>{
-          screen.innerHTML = ''
-          screen.style.backgroundImage = el.children[0].style.backgroundImage 
-        }
-      })
-
-      video_res.forEach(el=>{
-        el.onclick =()=>{
-          screen.innerHTML = ''
-          var video_box = document.createElement('video')
-          video_box.src = el.children[0].src
-          video_box.controls = true
-          video_box.classList.add('mini_screen')
-          screen.appendChild(video_box)
-        }
-      })
 
 
-
-      // SEARCH
-
-      const image_search = document.querySelector('.image_search')
-      image_search.oninput =()=>{
-        image_res.forEach(el=>{
-          var el_name = el.dataset.name.toLowerCase()
-          if(!el_name.includes(image_search.value.toLowerCase())){
-            el.style.display = 'none'
-          }else{
-            el.style.display = 'flex'
-          }
-          runSearchAnime(el)
-        })
-      }
-
-      const runSearchAnime =(el)=>{
-        anime({
-          targets : el,
-          duration : 500,
-          easing: 'spring(1, 80, 10, 0)',
-          opacity : [0,1],
-        })
-      }
-
-    </script>
     
   </section>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"
@@ -170,40 +125,268 @@
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script>
+    const sideBar = document.querySelector('.sideBar')
+    const sideBar_tag = document.getElementById('sideBar_tag')
+  
+    sideBar_tag.onclick =()=>{
+      main.classList.toggle('change')
+      sideBar.classList.toggle('change')
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <script>
+    const screen = document.querySelector('.screen')
+    const toggle_slide = document.getElementById('toggle_slide')
+    const slide_box_nav_title = document.querySelector('.slide_box_nav input')
+    const slide_box = document.querySelector('.slide_box')
+
+    toggle_slide.onclick = ()=>{
+      slide_box.classList.toggle('change')
+    }
+
+    const slide_screen_nav = document.querySelector('.slide_screen_nav')
+    const slide_screen_wrapper = document.querySelector('.slide_screen .swiper-wrapper')
+    const close_slide_screen_nav = document.querySelector('.slide_screen_nav').children[0]
+    const edit_slide_screen_nav = document.querySelector('.slide_screen_nav').children[0]
+    const slide_screen_nav_tag = document.querySelector('.slide_screen_nav_tag')
+
+    slide_screen_nav_tag.onclick =()=>{
+      slide_screen_nav.classList.toggle('change')
+    }
+    close_slide_screen_nav.onclick =()=>{
+      slide_screen_wrapper.innerHTML = ''
+      slide_screen.classList.remove('show')
+    }
+
+  </script>
+  <script>
+    const res_lis = document.querySelectorAll('.res')
+    console.log(res_lis)
+    const slide_play = document.querySelector('.slide_box_nav .play')
+    const slide_tray = document.getElementById('slide_tray')
+    const slide_screen = document.querySelector('.slide_screen')
+  
+    res_lis.forEach(el=>{
+      el.ondragstart = (event)=>{
+        dragged_res = el.cloneNode(true)
+        dragged_res_con = el.children[0]
+      }
+    })
+  
+    slide_tray.ondragover =(event)=>{
+      event.preventDefault()
+    }
+  
+    slide_tray.ondrop =(event)=>{
+      var dragged_res_hold =document.createElement('div')
+      dragged_res_hold.classList.add('dragged_res_hold')
+      var dragged_res_del = document.createElement('button')
+      dragged_res_del.innerHTML = '<i class="material-symbols-outlined">delete</i>'
+      dragged_res_del.classList.add('dragged_res_del')
+      dragged_res_hold.appendChild(dragged_res_del)
+      dragged_res.classList.add('slide_res')
+      dragged_res_hold.appendChild(dragged_res)
+      slide_tray.appendChild(dragged_res_hold)
+      deletSlideItem()
+      startSlideShow()
+    }
+
+    const deletSlideItem =()=>{
+      let dragged_res_del = document.querySelectorAll('.dragged_res_del')
+      dragged_res_del.forEach(el=>{
+        el.onclick =()=>{
+          el.parentElement.remove()
+        }
+      })
+    }
+
+    const startSlideShow =()=>{
+      slide_play.onclick =()=>{
+        if(slide_box_nav_title.value){
+          var slide_sheet = document.createElement('div')
+          var slide_sheet_title = document.createElement('strong')
+          slide_sheet_title.innerHTML = slide_box_nav_title.value
+          slide_sheet.appendChild(slide_sheet_title)
+          slide_sheet.classList.add('swiper-slide')
+          slide_screen_wrapper.appendChild(slide_sheet) 
+        }
+
+        let slide_res = document.querySelectorAll('.slide_res')
+        slide_res.forEach(el=>{
+          if(el.id === 'image_res'){
+            var slide_sheet = document.createElement('div')
+            slide_sheet.style.backgroundImage = el.children[0].style.backgroundImage
+            slide_sheet.classList.add('swiper-slide')
+            var slide_sheet_tag = document.createElement('span')
+            slide_sheet_tag.classList.add('slide_sheet_tag')
+            slide_sheet_tag.innerHTML = el.children[1].innerHTML
+            slide_sheet.appendChild(slide_sheet_tag)
+            slide_screen_wrapper.appendChild(slide_sheet) 
+          }else if (el.id === 'video_res') {
+            var slide_sheet = document.createElement('video')
+            slide_sheet.src = el.children[0].src
+            slide_sheet.controls = true
+            slide_sheet.classList.add('swiper-slide')              
+            slide_screen_wrapper.appendChild(slide_sheet)
+          }else{
+            var slide_sheet = document.createElement('div')
+            slide_sheet.classList.add('swiper-slide') 
+            var title = document.createElement('span')
+            title.innerHTML = el.dataset.title
+            title.classList.add('passage_title')
+            slide_sheet.appendChild(title)
+            var body = document.createElement('p')
+            body.innerHTML = el.dataset.body 
+            body.classList.add('passage_body')
+            slide_sheet.appendChild(body)
+            slide_screen_wrapper.appendChild(slide_sheet)
+          }
+        })
+        
+        createSlideSwiper()
+        slide_screen.classList.add('show')
+      }
+    }
+
+    const createSlideSwiper =()=>{
+      var slide_screen_swiper = new Swiper('.slide_screen', {
+        loop : false,
+        speed : 1000,
+        navigation :{
+          nextEl : '.slide_screen_next',
+          prevEl : '.slide_screen_prev',
+        }
+      })
+    }
+    createSlideSwiper()
+  </script>
+
+
+  <script>
+    const hide_nav = document.getElementById('hide_nav')
+    const main = document.querySelector('.main')
+
+    hide_nav.onclick =()=>{
+      console.log('meee')
+      main.classList.toggle('hide')
+    }
+
+    const toggle_stats = document.getElementById('toggle_stats')
+    const stat_box = document.querySelector('.stat_box')
+
+    toggle_stats.onclick=()=>{
+      stat_box.classList.toggle('change')
+    } 
+  </script>
+
+  <script>
+    const res_box = document.querySelector('.res_box')
+    const res = document.querySelectorAll('.res')[0]
+    
+    const image_res = document.querySelectorAll('[id=image_res]')
+    const video_res = document.querySelectorAll('[id=video_res]')
+    const passage_res = document.querySelectorAll('[id=passage_res]')
+    console.log(passage_res)
+
+    image_res.forEach(el=>{
+      el.onclick =()=>{
+        screen.innerHTML = ''
+        screen.style.backgroundImage = el.children[0].style.backgroundImage 
+      }
+    })
+
+    video_res.forEach(el=>{
+      el.onclick =()=>{
+        screen.innerHTML = ''
+        var video_box = document.createElement('video')
+        video_box.src = el.children[0].src
+        video_box.controls = true
+        video_box.classList.add('mini_screen')
+        screen.appendChild(video_box)
+      }
+    })
+
+    passage_res.forEach(el=>{
+      el.onclick =()=>{
+        screen.innerHTML = ''
+        var title = document.createElement('span')
+        title.innerHTML = el.dataset.title
+        title.classList.add('passage_title')
+        screen.appendChild(title)
+        var body = document.createElement('p')
+        body.innerHTML = el.dataset.body 
+        body.classList.add('passage_body')
+        screen.appendChild(body)
+      }
+      console.log(el.dataset.title)
+    })
+
+
+    // SEARCH
+
+    const image_search = document.querySelector('.image_search')
+    image_search.oninput =()=>{
+      image_res.forEach(el=>{
+        var el_name = el.dataset.name.toLowerCase()
+        if(!el_name.includes(image_search.value.toLowerCase())){
+          el.style.display = 'none'
+        }else{
+          el.style.display = 'flex'
+        }
+        runSearchAnime(el)
+      })
+    }
+
+    const video_search = document.querySelector('.video_search')
+    video_search.oninput =()=>{
+      video_res.forEach(el=>{
+        var el_name = el.dataset.name.toLowerCase()
+        if(!el_name.includes(video_search.value.toLowerCase())){
+          el.style.display = 'none'
+        }else{
+          el.style.display = 'flex'
+        }
+        runSearchAnime(el)
+      })
+    }
+
+    const passage_search = document.querySelector('.passage_search')
+    passage_search.oninput =()=>{
+      passage_res.forEach(el=>{
+        var el_name = el.dataset.name.toLowerCase()
+        if(!el_name.includes(passage_search.value.toLowerCase())){
+          el.style.display = 'none'
+        }else{
+          el.style.display = 'flex'
+        }
+        runSearchAnime(el)
+      })
+    }
+
+    const runSearchAnime =(el)=>{
+      anime({
+        targets : el,
+        duration : 500,
+        easing: 'spring(1, 80, 10, 0)',
+        opacity : [0,1],
+      })
+    }
+
+  </script>
+  <script>
     var resource_swiper = new Swiper('.resource_swiper', {
       loop : true,
       navigation: {
         nextEl: '.resource_swiper_next',
         prevEl: '.resource_swiper_prev',
       },
-     
+      allowTouchMove: false,
     })
   </script>
-  <!-- <script>
-    image_res.forEach((el,i)=>{
-      anime({
-        targets : el,
-        duration : 500,
-        translateX : [50,0],
-        easing: 'spring(1, 80, 10, 0)',
-        opacity : [0,1],
-        delay : i * 100,
-      })
-    })
-  </script> -->
+
 
 </body>
 </html>
 
-<script>
-  const sideBar = document.querySelector('.sideBar')
-  const sideBar_tag = document.getElementById('sideBar_tag')
-
-  sideBar_tag.onclick =()=>{
-    main.classList.toggle('change')
-    sideBar.classList.toggle('change')
-  }
 
 
-
-</script>

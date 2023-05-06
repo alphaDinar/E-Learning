@@ -31,7 +31,7 @@ class Scheme(models.Model):
         return f"{self.course}  - {self.topic}"
     def get_images(self):
         return self.image_set.all()
-    def get_passage(self):
+    def get_passages(self):
         return self.passage_set.all()
     def get_videos(self):
         return self.video_set.all()
@@ -41,18 +41,20 @@ class Scheme(models.Model):
 
 class Image(models.Model):
     name = models.CharField(max_length=300)
-    image = models.ImageField(default='default.jpg',upload_to='Scheme_images')
+    # image = models.ImageField(default='default.jpg',upload_to='Scheme_images')
     image = CloudinaryField("Image" ,folder='TM/Scheme_image', resource_type='auto')
     holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 
 class Passage(models.Model):
-    name = models.CharField(max_length=300)
-    content = models.TextField(max_length=10000)
+    title = models.CharField(max_length=300)
+    body = models.TextField(max_length=10000)
+    # thumb = models.ImageField(default='https://res.cloudinary.com/dvnemzw0z/image/upload/v1683386036/5064889_wpiq8e.png',upload_to='Scheme_images',blank=True,null=True)
+    thumb = CloudinaryField("Image" ,folder='TM/Scheme_image', resource_type='auto', default='https://res.cloudinary.com/dvnemzw0z/image/upload/v1683386036/5064889_wpiq8e.png')
     holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     def __str__(self):
-        return self.name
+        return self.title
 
 class Video(models.Model):
     name = models.CharField(max_length=300)
