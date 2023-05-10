@@ -76,11 +76,15 @@ body {
 .sideBar.change footer a span {
   display: none;
 }
-
-.sideBar footer a {
-  color: salmon;
+.sideBar footer{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
 }
-
+.sideBar footer a{
+  padding: 3px;
+}
 .main {
   display: flex;
   flex-direction: column;

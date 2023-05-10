@@ -1,0 +1,63 @@
+
+.answer_box label {
+  width: 38%;
+}
+
+.answer_box label input {
+  display: none;
+}
+
+.answer_box .answer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 98%;
+  color: black;
+  color: white;
+  cursor: pointer;
+  background: radial-gradient(circle at left, transparent 5px, var(--var-bg) 0);
+  border-radius: 5px;
+  height: 50px;
+  padding: 2.5px 1%;
+  border: 1px solid white;
+}
+
+.ans_rad {
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.answer_box label input:checked+.answer {
+  background: white;
+  color: var(--var-bg);
+  border: 1px solid var(--var-bg);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.answer_box label input:checked+.answer .ans_rad {
+  background: white;
+  rotate: 360deg;
+  color: var(--var-bg);
+}
+
+.answer span {
+  width: 80%;
+  border-left: 1px dotted white;
+  border-right: 1px dotted white;
+}
+
+.answer small,
+.answer span,
+.answer label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.answer small {
+  width: 10%;
+}
+

@@ -1,0 +1,320 @@
+.sideBar nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: auto !important;
+  gap: 1.3rem;
+}
+
+.sideBar nav hr {
+  width: 90%;
+  border-top: 2px dotted darkgray;
+}
+
+.sideBar nav div {
+  gap: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sideBar nav div input::-webkit-inner-spin-button {
+  display: none;
+}
+
+.sideBar nav div p {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border: 1px solid transparent;
+  transition: 0.3s ease;
+  background: rgb(57, 199, 255);
+  cursor: pointer;
+  color: white;
+}
+
+.sideBar nav div p:hover {
+  background: white;
+  color: rgb(57, 199, 255);
+  border: 1px dotted rgb(57, 199, 255);
+}
+
+.screen {
+  background: white;
+  border-left: 1px dotted rgb(57, 199, 255);
+}
+.sideBar nav,
+.sideBar nav form,
+.sideBar nav form div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sideBar nav {
+  justify-content: center;
+}
+
+.sideBar nav form {
+  width: 100%;
+  gap: 2rem;
+}
+
+.sideBar nav form button {
+  padding: 10px;
+  border-radius: 40px;
+  color: white;
+  border: 1px solid darkgray;
+  background: transparent;
+  color: rgb(52, 52, 52);
+  cursor: pointer;
+}
+
+.sideBar nav form div {
+  width: 100%;
+  gap: 0.3rem;
+}
+
+.sideBar nav hr {
+  width: 90%;
+  border-top: 2px dotted darkgrey;
+}
+
+.palette_box {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  gap: 0.5rem;
+  flex-direction: column;
+  display: flex;
+}
+
+.palette_box p {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.quiz_box button[type='button'] {
+  z-index: 200;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  background: transparent;
+  font-weight: 600;
+  font-size: 3rem;
+  cursor: pointer;
+  color: darkgray;
+}
+
+.quiz_box_prev {
+  left: 10px;
+}
+
+.quiz_box_next {
+  right: 10px;
+}
+
+
+
+.screen {
+  background: white;
+  border-left: 1px dotted darkgray;
+}
+
+.quiz_box {
+  height: 81%;
+  position: relative;
+  width: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:root {
+  --var-bg: rgb(57, 199, 255);
+}
+
+.quiz_box .swiper-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.question_tag {
+  color: darkgray;
+  display: flex;
+  justify-content: center;
+  font-size: 1.1rem;
+  align-items: center;
+}
+
+.question_box {
+  resize: none;
+  border-bottom: 2px dotted var(--var-bg);
+  width: 96%;
+  text-align: center;
+  padding: 10px 0;
+  height: auto;
+  font-size: 1.1rem;
+}
+
+.answer_box {
+  height: 330px;
+  height: 55%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  color: black;
+}
+.quiz_box .swiper-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.quiz_box button[type='button'] {
+  z-index: 200;
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  background: transparent;
+  font-weight: 600;
+  font-size: 3rem;
+  cursor: pointer;
+  color: darkgray;
+}
+
+.quiz_box_prev {
+  left: 10px;
+}
+
+.quiz_box_next {
+  right: 10px;
+}
+
+.question_tag {
+  color: darkgray;
+  display: flex;
+  justify-content: center;
+  font-size: 1.1rem;
+  align-items: center;
+}
+.page_box{
+  position: absolute;
+  right: -100px;
+  height: 80%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 5px;
+  display: flex;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  flex-direction: column;
+  align-items: center;
+  transition: 0.4s ease;
+}
+.page_box.show{
+  right: 10px;
+}
+.page_box::-webkit-scrollbar{
+  width: 10px;
+  background: lightgray;
+  border-radius: 40px;
+}
+.page_box::-webkit-scrollbar-thumb{
+  background: darkgray;
+  border-radius: 40px;
+}
+.page_box p{
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 3px;
+  justify-content: center;
+  border-radius: 10px;
+  background: white;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  color: darkgrey;
+}
+
+.quiz_box {
+  height: 81%;
+  position: relative;
+  width: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.answer_box {
+  height: 330px;
+  height: 55%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.prompt_box {
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+}
+
+.prompt_box p {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.prompt_box p button {
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.q_prompt_box{
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.3rem;
+  position: absolute;
+}
+.q_prompt_box.show{
+  display: flex;
+}
+.q_prompt_box span{
+  font-size: 1.4rem;
+}
+.q_prompt_box hr{
+  width: 100%;
+  border-top: 2px dotted darkgray;
+}
+
+@media all and (max-width:1200px) {
+  .sideBar {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+}
