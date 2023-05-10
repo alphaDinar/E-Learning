@@ -325,7 +325,6 @@ body {
   .main .screen, .main.hide .screen{
     width: 100%;
     min-height: auto;
-    height: 500px;
     background-position: center;
     object-fit: cover;
     background-size: cover;

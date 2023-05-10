@@ -32,23 +32,25 @@
 
 
 <style>
-  .main{
+  .main {
     min-height: 100vh;
     width: 100%;
     flex-direction: column;
     display: flex;
     align-items: center;
-    justify-content:  center;
+    justify-content: center;
     /* background: salmon; */
   }
-  .main .screen{
+
+  .main .screen {
     width: 80%;
     height: 80vh;
     border: none;
     position: none;
     /* background: skyblue; */
   }
-  .main .screen .swiper{
+
+  .main .screen .swiper {
     border-radius: 10px;
     /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
     /* border: 1px solid black; */
@@ -101,6 +103,59 @@
     background: transparent;
     font-size: 1.5rem;
     cursor: pointer;
+  }
+
+  @media all and (max-width:1300px) {
+    .page {
+      justify-content: flex-start;
+      min-height: auto;
+      padding: 20px 0;
+      height: auto;
+    }
+    /* .main{
+      min-height: auto;
+      height: auto;
+    } */
+    .screen {
+      gap: 1rem;
+      height: auto !important;
+      width: 100% !important;
+      min-height: 50vh;
+      background: white;
+      flex-direction: column;
+    }
+
+    .answer_box {
+      gap: 1rem;
+    }
+
+    .score_box {
+      position: revert;
+    }
+
+    .quiz_box {
+      min-height: 50vh;
+      width: 100%;
+    }
+
+    .quiz_box .swiper-slide {
+      gap: 2rem;
+    }
+  }
+
+  @media all and (max-width:800px) {
+    .answer_box {
+      display: flex;
+      width: 100% !important;
+    }
+
+    .answer_box label {
+      width: 70% !important;
+    }
+
+    .answer_box .answer {
+      width: 100%;
+    }
   }
 </style>
 
@@ -223,7 +278,7 @@
 
   const setTime = () => {
     if (!sessionStorage.getItem('seconds')) {
-      sessionStorage.setItem('seconds', s -1)
+      sessionStorage.setItem('seconds', s - 1)
     }
   }
   setTime()
@@ -275,10 +330,10 @@
 
 
   var force_submit =
-  setInterval(()=>{
-    sendResults()
-    clearInterval(force_submit)
-  },time_stone)
+    setInterval(() => {
+      sendResults()
+      clearInterval(force_submit)
+    }, time_stone)
 
 
   const quiz_submit = document.querySelector('.quiz_submit')
