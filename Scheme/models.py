@@ -35,6 +35,8 @@ class Scheme(models.Model):
         return self.passage_set.all()
     def get_videos(self):
         return self.video_set.all()
+    def get_slides(self):
+        return self.slide_set.all()
     def get_quizes(self):
         return self.quiz_set.all()  
     
@@ -64,3 +66,9 @@ class Video(models.Model):
     def __str__(self):
         return self.name
     
+class Slide(models.Model):
+    title = models.CharField(max_length=300)
+    con = models.JSONField()
+    holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.title

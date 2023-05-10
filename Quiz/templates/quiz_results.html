@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'quiz.css' %}">
+<link rel="stylesheet" href="{% static 'use_quiz.css' %}">
+<title>Document</title>
+{% endblock styles %}
+
+
+
+{% block page %}
+<section class="page">
+  <section class="screen">
+    <p class="score_box" data-score="{{score.mark}}">
+      <span>{{score.mark}}%</span>
+    </p>
+
+    <section data-json="{{score.quiz_con}}" data-user_choice="{{score.choice_box}}"
+      data-com_choice="{{score.quiz_ans_box}}" class="quiz_box swiper" onsubmit="run(event)">
+      <button type="button" class="quiz_box_next material-symbols-outlined">chevron_right</button>
+      <button type="button" class="quiz_box_prev material-symbols-outlined">chevron_left</button>
+      <div class="swiper-wrapper"></div>
+    </section>
+
+  </section>
+</section>
+
+
+<style>
+  :root {
+    --var-score_box: wheat;
+  }
+
+  .page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .screen {
+    width: 1200px;
+    height: 650px;
+    display: flex;
+    align-items: center;
+    border: none;
+    justify-content: center;
+    position: relative;
+  }
+
+  .score_box {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    right: -60px;
+    top: -60px;
+    display: flex;
+    font-size: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 50%;
+    background: radial-gradient(circle at bottom, transparent 8px, var(--var-score_box) 0);
+  }
+
+  .main {
+    min-height: 100vh;
+    width: 100%;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main .screen {
+    width: 80%;
+    height: 80vh;
+    border: none;
+    position: none;
+  }
+
+  .quiz_box {
+    width: 100%;
+    height: 100%;
+
+  }
+
+  .revision_box {
+    top: 0;
+    left: 0;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+  }
+
+  .revision_box p {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .ans_rad {
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  .answer_box .answer.change {
+    background: white;
+    color: var(--var-bg);
+    border: 1px solid var(--var-bg);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  .answer_box .answer.change .ans_rad {
+    background: white;
+    rotate: 360deg;
+    color: var(--var-bg);
+  }
+
+  .cor_ans {
+    padding: 10px;
+    width: 90%;
+    text-align: center;
+    font-size: 1.3rem;
+    /* border: 1px solid black; */
+    border-top: 2px dotted var(--var-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+</style>
+
+
+{% endblock page %}
+
+
+
+
+{% block js %}
+<script>
+  const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
+  const quiz_box = document.querySelector('.quiz_box')
+  let user_choice = JSON.parse(quiz_box.dataset.user_choice)
+  let com_choice = JSON.parse(quiz_box.dataset.com_choice)
+  // console.log(user_choice, com_choice)
+
+
+  if (quiz_box.dataset.json != 'None') {
+    JSON.parse(quiz_box.dataset.json).forEach((el, i) => {
+      console.log(user_choice[i])
+      console.log(com_choice[i].cor_ans)
+
+      const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
+      var slide_sheet = document.createElement('div')
+      slide_sheet.classList.add('swiper-slide')
+
+      var question_tag = document.createElement('p')
+      question_tag.classList.add('question_tag')
+      question_tag.innerHTML = `Question ${el.num}`
+      slide_sheet.appendChild(question_tag)
+      var question_box = document.createElement('div')
+      question_box.innerHTML = el.question
+      question_box.classList.add('question_box')
+      slide_sheet.appendChild(question_box)
+      var answer_box = document.createElement('div')
+      answer_box.classList.add('answer_box')
+      let tag_box = ['A', 'B', 'C', 'D']
+      el.ans_set.forEach((ans, ii) => {
+        var answer_label = document.createElement('label')
+        var answer = document.createElement('div')
+        answer.classList.add('answer')
+        var answer_small = document.createElement('small')
+        answer_small.innerHTML = tag_box[ii]
+        answer.appendChild(answer_small)
+        var answer_text = document.createElement('span')
+        if (user_choice[i] === ans) {
+          answer.classList.add('change')
+        }
+        answer_text.innerHTML = ans
+        answer.appendChild(answer_text)
+        var ans_rad = document.createElement('div')
+        ans_rad.classList.add('ans_rad')
+        ans_rad.classList.add('material-symbols-outlined')
+        ans_rad.innerHTML = 'verified'
+        answer.appendChild(ans_rad)
+        answer_label.appendChild(answer)
+        answer_box.appendChild(answer_label)
+      })
+      slide_sheet.appendChild(answer_box)
+      var cor_ans = document.createElement('span')
+      cor_ans.classList.add('cor_ans')
+      if (user_choice[i] === com_choice[i].cor_ans) {
+        cor_ans.style.color = '#1de182'
+        cor_ans.innerHTML = `<i class='material-symbols-outlined'>verified</i>${com_choice[i].cor_ans}`
+      } else {
+        cor_ans.style.color = 'salmon'
+        cor_ans.innerHTML = `<i class='material-symbols-outlined'>dangerous</i>${com_choice[i].cor_ans}`
+      }
+      slide_sheet.appendChild(cor_ans)
+      quiz_box_wrapper.appendChild(slide_sheet)
+    })
+  }
+</script>
+<script>
+  var quiz_swiper = new Swiper('.quiz_box', {
+    loop: false,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+    speed: 500,
+    navigation: {
+      nextEl: '.quiz_box_next',
+      prevEl: '.quiz_box_prev',
+    },
+  });
+</script>
+
+
+
+<script>
+  var rootElement = document.documentElement;
+
+  const score_box = document.querySelector('.score_box')
+  var score = score_box.dataset.score
+  if (score > 40 && score < 70) {
+    rootElement.style.setProperty('--var-score_box', `#f2b75e`);
+  } else if (score > 70) {
+    rootElement.style.setProperty('--var-score_box', `#1be685`);
+  } else {
+    rootElement.style.setProperty('--var-score_box', `#ee4747`);
+  }
+</script>
+{% endblock js %}

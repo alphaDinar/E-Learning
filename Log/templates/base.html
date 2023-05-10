@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,300,0,0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'base.css' %}">
+  {% block styles %}
+
+  {% endblock styles %}
+</head>
+
+<body>
+  {% block page %}
+
+  {% endblock page %}
+
+
+  {% block response %}
+
+  {% endblock response %}
+
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"
+    integrity="sha512-z4OUqw38qNLpn1libAN9BsoDx6nbNFio5lA6CuTp9NlK83b89hgyCVq+N5FdBJptINztxn1Z3SaKSKUS5UP60Q=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+    integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href)
+    }
+  </script>
+
+  <script>
+    const runAxios = (url, data) => {
+      axios.post(`${window.location.origin}/${url}`, {
+        data: data
+      }
+        , {
+          headers: {
+            'X-CSRFToken': '{{token}}'
+          }
+        }
+      )
+        .then(function (response) {
+          if (response.data.info === 'reload') {
+            window.location.reload()
+          } else if (response.data.info === 'redirect') {
+            window.location.href = response.data.link
+          } else {
+            handleData(response)
+            console.log(response);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  </script>
+
+
+  {% block js %}
+
+  {% endblock js %}
+</body>
+
+
+
+</html>

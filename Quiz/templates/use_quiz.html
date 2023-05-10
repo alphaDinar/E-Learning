@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'get_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'quiz.css' %}">
+<link rel="stylesheet" href="{% static 'use_quiz.css' %}">
+<title>Document</title>
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  <section class="sideBar">
+    <button type="button" id="sideBar_tag" class="material-symbols-outlined">linear_scale</button>
+    <header>
+      <strong>{{quiz.title}}</strong>
+    </header>
+    <nav>
+      <form method="POST">
+        {% csrf_token %}
+        <div>
+          <span>Title</span>
+          <input type="text" name="title" value="{{quiz.title}}" required>
+        </div>
+        <hr>
+        <div>
+          <span>Duration</span>
+          <input type="number" name="duration" step="1" value="{{quiz.duration}}" required>
+          <i>minutes</i>
+        </div>
+        <hr>
+        <div>
+          <span>Difficulty</span>
+          <span id="quiz_level" style="color: salmon;">{{quiz.level}}</span>
+          <select name="level" id="quiz_level_select" onchange="changeQuizLevel(event.target)" required>
+            <option value="easy">Easy</option>
+            <option value="normal">Normal</option>
+            <option value="difficult">Difficult</option>
+          </select>
+        </div>
+        <hr>
+        <div>
+          <button type="submit" onclick="sessionStorage.clear()">Update</button>
+        </div>
+      </form>
+    </nav>
+    <div class="quiz_actions">
+      <i class="material-symbols-outlined">analytics</i>
+      <a onclick="deleteQuiz(event.target)" class="material-symbols-outlined">delete</a>
+    </div>
+
+
+
+    <style>
+      .quiz_actions {
+        border: 1px solid black;
+      }
+    </style>
+
+    <footer>
+      <a href="{% url 'get_quizes_page' quiz.topic.slug %}" class="material-symbols-outlined">arrow_back_ios_new</a>
+    </footer>
+  </section>
+  <section class="main hide">
+    <div class="palette_box">
+      <p style="background: #f9d783;" data-code="#f9d783"></p>
+      <p style="background: rgb(57, 199, 255);" data-code="rgb(57, 199, 255)"></p>
+      <p style="background: #dc2641;" data-code="#dc2641"></p>
+    </div>
+    <div class="prompt_box">
+      <span>Are you sure you want to delete</span>
+      <i style="color: black; font-weight: 600;">{{quiz.title}}</i>
+      <p>
+        <button style="background: rgb(22, 211, 117);">yes</button>
+        <button style="background: salmon;">No</button>
+      </p>
+    </div>
+
+    <section class="screen">
+      <div class="timer_box">
+        <div class="timer">
+        </div>
+        <i class="material-symbols-outlined" onclick="startTimer()">play_arrow</i>
+        <i class="material-symbols-outlined" onclick="resetTimer()">restart_alt</i>
+      </div>
+      <a href="{% url 'set_quiz_page' quiz.slug %}" class="q_prompt_box">
+        <span>No Questions Yet</span>
+        <hr>
+        <i class="material-symbols-outlined">psychology_alt</i>
+      </a>
+      <section data-json="{{quiz.con}}" class="quiz_box swiper" onsubmit="run(event)">
+        <button type="button" class="quiz_box_next material-symbols-outlined">chevron_right</button>
+        <button type="button" class="quiz_box_prev material-symbols-outlined">chevron_left</button>
+        <div class="swiper-wrapper"></div>
+      </section>
+      <div class="mark_box">
+
+      </div>
+    </section>
+  </section>
+</section>
+
+
+
+
+<style>
+  .mark_box {
+    background: var(--var-bg);
+    position: absolute;
+    top: -150px;
+    z-index: 20;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    border-radius: 50%;
+    height: 140px;
+    left: 50px;
+    transition: 0.4s ease;
+  }
+
+  .mark_box.show {
+    top: 10px;
+  }
+
+  .screen .timer_box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    top: 10px;
+    z-index: 10;
+  }
+
+  .screen .timer_box i {
+    color: var(--var-bg);
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+  .screen .timer {
+    font-size: 1.3rem;
+    letter-spacing: 1px;
+    font-weight: 600;
+    border: 1px solid var(--var-bg);
+    color: var(--var-bg);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    border-radius: 3px;
+    padding: 3px;
+  }
+
+  .quiz_submit {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--var-bg);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    background: transparent;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const prompt_box = document.querySelector('.prompt_box')
+
+  const deleteQuiz = (a_tag) => {
+    prompt_box.classList.add('show');
+    [...prompt_box.children[2].children].forEach((el, i) => {
+      el.onclick = () => {
+        if (i === 0) {
+          console.log(a_tag)
+          a_tag.href = '{% url "delete_quiz_page" quiz.slug %}'
+          window.location.href = a_tag.href
+          console.log(el)
+        } else {
+          prompt_box.remove('show')
+        }
+      }
+    })
+  }
+
+</script>
+{% endblock page %}
+
+
+{% block response %}
+<script>
+  const handleData = (response) => {
+    mark_box.innerHTML = ''
+    mark_box.classList.add('show')
+    mark_box.innerHTML = `${response.data.info.toFixed(2)}%`
+
+    mark_box.onclick = () => {
+      mark_box.classList.remove('show')
+    }
+  }
+</script>
+{% endblock response %}
+
+
+
+{% block js %}
+<script>
+  var rootElement = document.documentElement;
+
+  document.querySelectorAll('.palette_box p').forEach(el => {
+    el.onclick = () => {
+      rootElement.style.setProperty('--var-bg', `${el.dataset.code}`);
+    }
+  })
+</script>
+
+<script>
+  const quiz_level = document.getElementById('quiz_level')
+  const quiz_level_select = document.getElementById('quiz_level_select')
+
+  quiz_level_select.value = quiz_level.innerHTML
+
+  const changeQuizLevel = (el) => {
+    quiz_level.innerHTML = el.value
+  }
+</script>
+
+
+<script>
+  const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
+  const quiz_box = document.querySelector('.quiz_box')
+
+  if (quiz_box.dataset.json != 'None') {
+    JSON.parse(quiz_box.dataset.json).forEach((el, i) => {
+      const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
+      var slide_sheet = document.createElement('div')
+      slide_sheet.classList.add('swiper-slide')
+      var question_tag = document.createElement('p')
+      question_tag.classList.add('question_tag')
+      question_tag.innerHTML = `Question ${el.num}`
+      slide_sheet.appendChild(question_tag)
+      var question_box = document.createElement('div')
+      question_box.innerHTML = el.question
+      question_box.classList.add('question_box')
+      slide_sheet.appendChild(question_box)
+      var answer_box = document.createElement('div')
+      answer_box.classList.add('answer_box')
+      let tag_box = ['A', 'B', 'C', 'D']
+      el.ans_set.forEach((ans, ii) => {
+        var answer_label = document.createElement('label')
+        var answer_label_radio = document.createElement('input')
+        answer_label_radio.type = 'radio'
+        answer_label_radio.value = ans
+        answer_label_radio.name = `ar${i}`
+        answer_label.appendChild(answer_label_radio)
+        var answer = document.createElement('div')
+        answer.classList.add('answer')
+        var answer_small = document.createElement('small')
+        answer_small.innerHTML = tag_box[ii]
+        answer.appendChild(answer_small)
+        var answer_text = document.createElement('span')
+        answer_text.innerHTML = ans
+        answer.appendChild(answer_text)
+        var ans_rad = document.createElement('div')
+        ans_rad.classList.add('ans_rad')
+        ans_rad.classList.add('material-symbols-outlined')
+        ans_rad.innerHTML = 'verified'
+        answer.appendChild(ans_rad)
+        answer_label.appendChild(answer)
+        answer_box.appendChild(answer_label)
+      })
+      slide_sheet.appendChild(answer_box)
+      quiz_box_wrapper.appendChild(slide_sheet)
+    })
+    var slide_sheet = document.createElement('div')
+    slide_sheet.classList.add('swiper-slide')
+    var q_submit = document.createElement('button')
+    q_submit.innerHTML = `<i class="material-symbols-outlined">psychology_alt</i>  Submit <i class="material-symbols-outlined">psychology_alt</i>`
+    q_submit.classList.add('quiz_submit')
+    slide_sheet.appendChild(q_submit)
+    quiz_box_wrapper.appendChild(slide_sheet)
+  }
+</script>
+<script>
+  var quiz_swiper = new Swiper('.quiz_box', {
+    loop: false,
+    pagination: {
+      el: '.swiper-pagination',
+    },
+    speed: 500,
+    navigation: {
+      nextEl: '.quiz_box_next',
+      prevEl: '.quiz_box_prev',
+    },
+  });
+</script>
+
+
+<script>
+  const timer = document.querySelector('.screen .timer')
+  var quiz_time = parseInt('{{quiz.duration}}')
+
+  var s = quiz_time * 60
+  const setTime = () => {
+    if (!sessionStorage.getItem('seconds')) {
+      sessionStorage.setItem('seconds', s)
+    }
+  }
+  setTime()
+
+
+  const setTimer = () => {
+    if (sessionStorage.getItem('seconds')) {
+      var time_left = sessionStorage.getItem('seconds')
+    } else {
+      var time_left = quiz_time * 60
+    }
+    var h = Math.floor(time_left / 60 / 60 % 60)
+    if (h < 10) { h = `0${h}` }
+    var m = Math.floor(time_left / 60 % 60)
+    if (m < 10) { m = `0${m}` }
+    var s = time_left % 60
+    if (s < 10) { s = `0${s}` }
+    timer.innerHTML = `${h} : ${m} : ${s}`
+  }
+  setTimer()
+
+  const startTimer = () => {
+    var val = 0
+    var h = 0
+    var m = 0
+    var s = 0
+    if (sessionStorage.getItem('seconds')) {
+      var runTimer =
+        setInterval(() => {
+          val = sessionStorage.getItem('seconds')
+          if (val > -1) {
+            sessionStorage.setItem('seconds', val - 1)
+            s = (val % 60)
+            if (s < 10) { s = `0${s}` }
+            m = Math.floor(val / 60 % 60)
+            if (m < 10) { m = `0${m}` }
+            h = Math.floor(val / 60 / 60 % 60)
+            if (h < 10) { h = `0${h}` }
+            timer.innerHTML = ` ${h} : ${m} : ${s}`
+          } else {
+            clearInterval(runTimer)
+            sessionStorage.removeItem('seconds')
+            console.log('done')
+            sendResults()
+          }
+        }, 1000)
+    }
+  }
+
+  const resetTimer = () => {
+    sessionStorage.removeItem('seconds')
+    window.location.reload()
+  }
+
+
+  const quiz_submit = document.querySelector('.quiz_submit')
+  const mark_box = document.querySelector('.mark_box')
+  quiz_submit.onclick = () => {
+    sendResults()
+  }
+
+  const sendResults = () => {
+    let choiceBox = []
+    document.querySelectorAll(`.quiz_box .answer_box`).forEach((ans_box, i) => {
+      let opt = ''
+      document.querySelectorAll(`.quiz_box input[name='ar${i}']`).forEach(rad => {
+        if (rad.checked) {
+          opt = rad.value
+        }
+      })
+      choiceBox.push(opt)
+    })
+    runAxios('test_quiz', ['{{quiz.id}}', choiceBox])
+  }
+
+</script>
+
+
+
+<script>
+  const q_prompt_box = document.querySelector('.q_prompt_box')
+  var slideCount = document.querySelectorAll('.swiper-slide').length
+  if (slideCount < 1) {
+    q_prompt_box.classList.add('show')
+  }
+</script>
+<script src="{% static 'schemes.js' %}"></script>
+{% endblock js %}

@@ -17,7 +17,7 @@ body {
   top: 0;
   left: 0;
   background: white;
-  z-index: 100;
+  z-index: 1000;
   transition: 0.4s ease;
 }
 .sideBar.change{
@@ -80,6 +80,7 @@ body {
   right: -400px;
   height: 400px;
   width: 350px;
+  z-index: 120;
   background: ghostwhite;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   transition: 0.4s ease;
@@ -147,7 +148,7 @@ body {
   height: 80vh;
   /* border: 1px solid black; */
 }
-.sideBar nav button{
+.sideBar nav button[type='button']{
   height: 20px;
   position: absolute;
   width: 20px;
@@ -266,6 +267,39 @@ body {
   padding: 2% 5%;
   font-size: 1.1rem;
   background: white;
+}
+
+.prompt_box,
+.edit_screen .m_box,
+.del_prompt_box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  width: 250px;
+  height: 100px;
+  padding: 15px;
+  right: -280px;
+  background: rgb(33, 189, 250);
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  color: white;
+  border-radius: 0 0 0 40px;
+  z-index: 50;
+  transition: 0.4s ease;
+  overflow-y: auto;
+}
+
+.del_prompt_box {
+  gap: 1rem;
+}
+
+.prompt_box.show,
+.del_prompt_box.show,
+.edit_screen .m_box.show {
+  right: 0;
 }
 
 @media all and (max-width:1200px){

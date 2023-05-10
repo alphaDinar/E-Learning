@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     'Log',
     'Course',
     'Scheme',
+    'Manager',
+    'Quiz',
+    'Student' 
 ]
 
 MIDDLEWARE = [

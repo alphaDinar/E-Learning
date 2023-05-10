@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'get_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'quiz.css' %}">
+<link rel="stylesheet" href="{% static 'set_quiz.css' %}">
+<title>Document</title>
+{% endblock styles %}
+
+
+{% block page %}
+<section class="page">
+  <section class="sideBar">
+    <button type="button" id="sideBar_tag" class="material-symbols-outlined">linear_scale</button>
+    <header>
+      <strong>{{quiz.title}}</strong>
+    </header>
+    <nav>
+      <div>
+        <span>Add Questions</span>
+        <input type="number" min="1" max="60" placeholder="1 - 60">
+        <i onclick="addQuestion()">Add</i>
+      </div>
+      <hr>
+      <div class="quick_add">
+        <span>Quick Add</span>
+        <p data-val="5">5</p>
+        <p data-val="10">10</p>
+        <p data-val="20">20</p>
+        <p data-val="30">30</p>
+        <p data-val="60">60</p>
+      </div>
+      <hr>
+      <div>
+        <span class="quiz_submit">Save changes</span>
+      </div>
+    </nav>
+    <footer>
+      <a href="{% url 'get_quizes_page' quiz.topic.slug %}" class="material-symbols-outlined">arrow_back_ios_new</a>
+    </footer>
+  </section>
+  <section class="main hide">
+    <div class="prompt_box"></div>
+    <section class="stat_box">
+      last_touched
+      ----
+      images
+      passages
+      videos
+      ----
+      add res
+      -----
+      status -> pending
+      ----
+      toggle stat button
+    </section>
+
+    <section class="screen">
+      <div class="q_prompt_box">
+        <i style="font-size: 2.3rem;" class="material-symbols-outlined">psychology_alt</i>
+      </div>
+      <form class="quiz_box swiper" data-json="{{quiz.con}}" data-marking_scheme="{{quiz.marking_scheme}}" onsubmit="run(event)">
+        <button type="button" class="quiz_box_next material-symbols-outlined">chevron_right</button>
+        <button type="button" class="quiz_box_prev material-symbols-outlined">chevron_left</button>
+        <div class="swiper-wrapper"></div>
+      </form>
+      <span class="material-symbols-outlined" onclick="togglePageBox()"
+        style="color: rgb(87, 87, 87);cursor: pointer;">hdr_weak</span>
+      <div class="page_box"></div>
+    </section>
+  </section>
+</section>
+
+<style>
+  textarea {
+    min-height: 10px !important;
+    max-height: 100px !important;
+    height: auto !important;
+  }
+
+  .question_del {
+    color: salmon;
+    font-size: 1.5rem;
+  }
+</style>
+{% endblock page %}
+
+
+{% block js %}
+<script>
+  const quiz_box = document.querySelector('.quiz_box')
+  const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
+  window.onblur = () => {
+    sessionStorage.clear()
+  }
+
+  const generateQuestions = (i, qel, marking_scheme) => {
+    var slide_sheet = document.createElement('div')
+    slide_sheet.classList.add('swiper-slide')
+    slide_sheet.classList.add('question')
+    var question_del = document.createElement('i')
+    question_del.classList.add('question_del')
+    question_del.classList.add('material-symbols-outlined')
+    question_del.innerHTML = 'delete'
+    slide_sheet.appendChild(question_del)
+    var question_tag = document.createElement('p')
+    question_tag.classList.add('question_tag')
+    question_tag.innerHTML = `Question ${i}`
+    slide_sheet.appendChild(question_tag)
+    var question_box = document.createElement('textarea')
+    question_box.placeholder = 'Question'
+    if (qel) {
+      question_box.value = qel.question
+    }
+    question_box.name = `q${i}`
+    question_box.required = true
+    question_box.classList.add('question_box')
+    slide_sheet.appendChild(question_box)
+    var answer_box = document.createElement('div')
+    answer_box.classList.add('answer_box')
+    let tag_box = ['A', 'B', 'C', 'D']
+    for (var ii = 0; ii < 4; ii++) {
+      var answer = document.createElement('div')
+      answer.classList.add('answer')
+      var answer_small = document.createElement('small')
+      answer_small.innerHTML = tag_box[ii]
+      answer.appendChild(answer_small)
+      var answer_text = document.createElement('input')
+      answer_text.type = 'text'
+      if (qel) {
+        if (qel.ans_set[ii]) {
+          answer_text.value = qel.ans_set[ii]
+        }
+      }
+      answer_text.name = `a${i}`
+      if (ii < 2) {
+        answer_text.required = true
+      }
+      answer.appendChild(answer_text)
+      var answer_label = document.createElement('label')
+      var answer_label_radio = document.createElement('input')
+      answer_label_radio.type = 'radio'
+      if (qel) {
+        if (qel.ans_set[ii]) {
+          answer_label_radio.value = qel.ans_set[ii]
+        }
+        if (answer_label_radio.value ===  marking_scheme.cor_ans) {
+          answer_label_radio.checked = true
+        }
+      }
+      answer_label_radio.name = `ar${i}`
+      if (ii < 2) {
+        answer_label_radio.required = true
+      }
+      answer_label.appendChild(answer_label_radio)
+      var ans_rad = document.createElement('div')
+      ans_rad.classList.add('ans_rad')
+      ans_rad.classList.add('material-symbols-outlined')
+      ans_rad.innerHTML = 'verified'
+      answer_label.appendChild(ans_rad)
+      answer.appendChild(answer_label)
+      answer_box.appendChild(answer)
+    }
+    slide_sheet.appendChild(answer_box)
+    quiz_box_wrapper.appendChild(slide_sheet)
+  }
+
+
+
+  restoreQuizState = (quiz_json_saved, marking_scheme) => {
+    quiz_box_wrapper.innerHTML = ''
+    quiz_json_saved.forEach((el, i) => {
+      generateQuestions(eval(i + 1), el, marking_scheme[i])
+    })
+  }
+
+  let quiz_json_saved = ''
+  let marking_scheme = ''
+  if (quiz_box.dataset.json != 'None') {
+    quiz_json_saved = JSON.parse(quiz_box.dataset.json)
+    marking_scheme = JSON.parse(quiz_box.dataset.marking_scheme)
+    restoreQuizState(quiz_json_saved, marking_scheme)
+  }
+
+  
+
+  if (quiz_json_saved != 'None'){
+    var ini = quiz_json_saved.length
+    var val = parseInt(sessionStorage.getItem('q_num'))
+  } else {
+    var ini = 0
+    var val = parseInt(sessionStorage.getItem('q_num'))
+  }
+  for (var i = ini + 1; i < val; i++) {
+    generateQuestions(i)
+  }
+
+  const q_num_val = document.querySelector('.sideBar nav input[type="number"]')
+  const addQuestion = () => {
+    if (q_num_val.value > 0) {
+      if (q_num_val.value > 60) {
+        q_num_val.value = 60
+      }
+      let val_out = ''
+      val_out = eval(parseInt(q_num_val.value) + 1)
+      if (val_out > 0) {
+        sessionStorage.setItem('q_num', val_out)
+        window.location.reload()
+      }
+    }
+  }
+
+  const quick_add_tab = document.querySelectorAll('.quick_add p')
+  quick_add_tab.forEach(tab => {
+    tab.onclick = () => {
+      val = parseInt(tab.dataset.val) + 1
+      sessionStorage.setItem('q_num', val)
+      window.location.reload()
+    }
+  })
+
+
+  let all_questions = document.querySelectorAll('.quiz_box .question')
+  let question_del = document.querySelectorAll('.quiz_box .question_del')
+  all_questions.forEach((el, i) => {
+    question_del[i].onclick = () => {
+      quiz_json_saved.splice(i, 1)
+      runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json_saved)])
+      if(sessionStorage.getItem('q_num')){
+        sessionStorage.setItem('q_num', sessionStorage.getItem('q_num')-1)
+      }
+      anime({
+        targets : el,
+        scale : [1,0.5],
+        duration : 800,
+        complete :()=>{
+          // el.remove()
+          window.location.reload()
+        }
+      })      
+    }
+  })
+</script>
+
+<script>
+  const run = (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+  }
+
+  const prompt_box = document.querySelector('.prompt_box')
+  const quiz_submit = document.querySelector('.quiz_submit')
+
+  quiz_submit.onclick = () => {
+    if (quiz_box.checkValidity()) {
+      let questions = document.querySelectorAll('.question_box')
+      let quiz_json = []
+      let marking_scheme = []
+      questions.forEach((question, qi) => {
+        var counter = parseInt(qi + 1)
+        var q_tag = `q${counter}`
+        var a_tag = `a${counter}`
+        let ans_set = []
+        document.querySelectorAll(`input[name="${a_tag}"]`).forEach((ans, ai) => {
+          if (ans.value) {
+            ans_set.push(ans.value)
+          }
+          document.querySelectorAll(`input[name="ar${counter}"]`)[ai].value = ans.value
+        })
+        let cor_ans = ''
+        document.querySelectorAll(`input[name="ar${counter}"]`).forEach(rad => {
+          if (rad.checked) {
+            cor_ans = rad.value
+          }
+        })
+        quiz_json.push({ 'num': counter, 'question': question.value, 'ans_set': ans_set})
+        marking_scheme.push({'cor_ans': cor_ans})
+      })
+      checkQuizJson(quiz_json, marking_scheme)
+    } else {
+      console.log('wrong_form')
+    }
+  }
+
+
+  const checkQuizJson = (quiz_json,marking_scheme) => {
+    prompt_box.innerHTML = ''
+    let q_prompt = []
+    marking_scheme.forEach((ans, ji) => {
+      if (ans.cor_ans.length < 1) {
+        q_prompt.push(ji + 1)
+      }
+    })
+    if (q_prompt.length > 0) {
+      q_prompt.forEach(prompt => {
+        var prompt_span = document.createElement('span')
+        prompt_span.innerHTML = `check Ques. ${prompt}`
+        prompt_box.appendChild(prompt_span)
+      })
+      prompt_box.classList.add('show')
+      setTimeout(() => {
+        prompt_box.classList.remove('show')
+      }, 3300)
+    } else {
+      runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json) , JSON.stringify(marking_scheme)])
+    }
+  }
+
+</script>
+
+<script>
+  const page_box = document.querySelector('.main .page_box')
+
+  const togglePageBox = () => {
+    page_box.classList.toggle('show')
+  }
+
+  document.querySelectorAll('.question_box').forEach((el, i) => {
+    var page_bullet = document.createElement('p')
+    page_bullet.innerHTML = eval(i + 1)
+    page_bullet.classList.add('page_bullet')
+    page_box.appendChild(page_bullet)
+  })
+
+  var quiz_swiper = new Swiper('.quiz_box', {
+    loop: false,
+    allowTouchMove: false,
+    speed: 500,
+    navigation: {
+      nextEl: '.quiz_box_next',
+      prevEl: '.quiz_box_prev',
+    },
+  });
+  document.querySelectorAll('.page_bullet').forEach((el, i) => {
+    el.onclick = () => {
+      quiz_swiper.slideTo(i)
+    }
+  })
+</script>
+<script>
+  const q_prompt_box = document.querySelector('.q_prompt_box')
+  var slideCount = all_questions.length
+  if (slideCount < 1) {
+    q_prompt_box.classList.add('show')
+  }
+</script>
+<script src="{% static 'schemes.js' %}"></script>
+{% endblock js %}

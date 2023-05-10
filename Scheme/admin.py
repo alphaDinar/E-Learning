@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Scheme,Image,Passage,Video
+from .models import Scheme,Image,Passage,Video,Slide
 
 class ImageTable(admin.TabularInline):
     model = Image
@@ -16,7 +16,8 @@ class SchemeAdmin(admin.ModelAdmin):
         model = Scheme
 
 
-admin.site.register(Scheme)
+admin.site.register(Scheme,SchemeAdmin)
 admin.site.register(Image)
 admin.site.register(Passage)
 admin.site.register(Video)
+admin.site.register(Slide)

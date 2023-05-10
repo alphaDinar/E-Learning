@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from Course.models import Course
+from Course.models import Course,Grade
 
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=False)
     
 class Teacher(models.Model):
     name = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -18,10 +19,17 @@ class Manager(models.Model):
     def __str__(self):
         return self.name.username
 
-class LogBox(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=3000)
+class Student(models.Model):
+    name = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     def __str__(self):
-        return f'{self.user.username} = Active' 
-    class Meta:
-        verbose_name_plural = 'Log Boxes'
+        return f'{self.name.username} {self.grade}' 
+
+
+# class LogBox(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     token = models.CharField(max_length=3000)
+#     def __str__(self):
+#         return f'{self.user.username} = Active' 
+#     class Meta:
+#         verbose_name_plural = 'Log Boxes'
