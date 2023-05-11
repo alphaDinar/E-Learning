@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'student_dash.css' %}">
+<title>Document</title>
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  {% include 'student_sideBar.html' %}
+  <section class="main">
+    <section class="main_top">
+      <div class="assignment_box">
+        <i class="material-symbols-outlined">assignment</i>
+        <p>current Assignment</p>
+        <span>English Assignment</span>
+        <small>3 days left</small>
+        <p class="material-symbols-outlined">east</p>
+      </div>
+      <div class="avg_box" data-avg="86">
+        <span>86%</span>
+        <small>Semester Average</small>
+      </div>
+      <div class="assignment_box">
+        <i class="material-symbols-outlined">assignment</i>
+        <p>Last Assignment</p>
+        <span>English Assignment</span>
+        <small>3 days ago</small>
+        <p class="material-symbols-outlined">east</p>
+      </div>
+    </section>
+    <hr>
+    <section class="main_low">
+      <div class="progress_chart">
+        <canvas id="myChart"></canvas>
+      </div>
+      <section class="history_box">
+        <a class="box" data-mark="83">
+          <span>83%</span>
+          <small>a weeks ago</small>
+        </a>
+        <a class="box" data-mark="68">
+          <span>68%</span>
+          <small>2 weeks ago</small>
+        </a>
+        <a class="box" data-mark="74">
+          <span>74%</span>
+          <small>3 weeks ago</small>
+        </a>
+        <a class="material-symbols-outlined more_history" href="">east</a>
+      </section>
+
+    </section>
+  </section>
+</section>
+{% endblock page %}
+
+
+{% block js %}
+<script src="{% static 'schemes.js' %}"></script>
+<script>
+  const rootElement = document.documentElement
+  const avg_box = document.querySelector('.avg_box')
+
+  if (avg_box.dataset.avg > 70) {
+    rootElement.style.setProperty('--avg_box_bg', 'rgb(13, 220, 116)')
+  } else if (avg_box.dataset > 40 && avg_box.dataset < 70) {
+    rootElement.style.setProperty('--avg_box_bg', 'orange')
+  } else {
+    rootElement.style.setProperty('--avg_box_bg', 'salmon')
+  }
+
+</script>
+<script>
+  const mark_box = document.querySelectorAll('.history_box .box')
+  mark_box.forEach(box => {
+    console.log(box.dataset.mark > 70)
+    if (box.dataset.mark > 40 && box.dataset.mark < 70) {
+      box.classList.add('pass')
+    } else if (box.dataset.mark > 70) {
+      box.classList.add('great')
+    } else {
+      box.classList.add('fail')
+    }
+  }) 
+</script>
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'March', 'April', 'May', 'June'],
+      datasets: [{
+        label: 'Progress',
+        data: [4, 6, 8, 6, 15, 9],
+        borderWidth: 3
+      }]
+    },
+  });
+</script>
+{% endblock js %}

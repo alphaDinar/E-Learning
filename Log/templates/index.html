@@ -1,120 +1,117 @@
+{% extends "base.html" %}
+
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{% static 'base.css' %}">
-  <title>Document</title>
-</head>
-<body>
-  <section class="page">
-    <section class="head_box">
-      
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'log.css' %}">
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  <nav>
+    <strong>Edumanager</strong>
+    <div id="blur">
+      <a id="trigger"><i class="material-symbols-outlined">more_vert</i> Student</a>
+      <a id="trigger"><i class="material-symbols-outlined">more_vert</i> Teacher</a>
+      <a id="trigger"><i class="material-symbols-outlined">more_vert</i> Manager</a>
+      <a href=""><i class="material-symbols-outlined">more_vert</i> Contact</a>
+    </div>
+  </nav>
+  <section class="head_box">
+    <article>
+      <span>Your Ultimate Teaching App Solution!</span>
+      <p>Are you a passionate educator looking to take your teaching methods to new heights? Look no further!
+        TeachWise, Edumanager is here to transform the way you engage and educate your students. </p>
+      <div>
+        <a id="trigger" style="border: 1px solid #39c7ff;">Student</a>
+        <a id="trigger" style="border: 1px solid #e58090;">Teacher</a>
+      </div>
+    </article>
+    <div class="image_box" id="blur2">
+      <div class="box" style="background-image: url(https://res.cloudinary.com/dvnemzw0z/image/upload/v1683803753/bag_nobtj4.jpg);"></div>
+    </div>
+  </section>
+  <section class="low_box">
+    <div class="con">
+      <div class="material-symbols-outlined" style="background: #e58090;">family_restroom</div>
+      <span>Parental Involvement</span>
+      <p>Foster strong parent-teacher collaboration by providing parents with access to their child's
+        grades,attendance, and academic updates</p>
+    </div>
+    <div class="con">
+      <div class="material-symbols-outlined" style="background: skyblue;">lock</div>
+      <span>Secure and Private</span>
+      <p>We prioritize the security and privacy of all users. Our app incorporates robust data encryption and follows
+        strict privacy protocols,</p>
+    </div>
+    <div class="con" id="blur">
+      <div class="material-symbols-outlined" style="background: salmon;">privacy_tip</div>
+      <span>Support and Training</span>
+      <p>We provide comprehensive support and training to ensure a smooth implementation and adoption of our app.</p>
+    </div>
+    <div class="con" id="blur">
+      <div class="material-symbols-outlined" style="background: #39c7ff;">monitoring</div>
+      <span>Progress Tracking and Analytics</span>
+      <p>Monitor student progress and performance with our app's robust tracking and analytics tools. Teachers can
+        generate reports.</p>
+    </div>
+  </section>
+  <section class="form_box">
+    <div class="form_close material-symbols-outlined" onclick="closeForm()">close</div>
+    <form method="post">
+      {% csrf_token %}
       {% if messages %}
         {% for message in messages %}
-        <p>{{message}}</p>
+        <span class="m_box">{{message}}</span>
         {% endfor %}
-        {% else %}
-        <p>Please Login to continue</p>
       {% endif %}
-        
-      <form method="post">
-        {% csrf_token %}
+      <i class="material-symbols-outlined">verified_user</i>
+      <div class="con">
         <div class="input_field">
           <span>Username</span>
-          <input type="text" name="username" required>
+          <input type="text" name="username">
         </div>
         <div class="input_field">
           <span>Password</span>
-          <input type="password" name="password" required>
+          <input type="password" name="password">
         </div>
-        <button type="submit">Login</button>
-      </form>
-    </section>
+      </div>
+      <button type="submit" class="material-symbols-outlined">login</button>
+    </form>
   </section>
-</body>
-</html>
+</section>
+{% endblock page %}
 
 
-<style>
-  .page{
-    display: flex;
-    /* flex-direction: column; */
-    align-items: center;
-    justify-content: center;
-    /* background: #f8f9fd;
-    background: skyblue;
-    background: salmon;
-    background: green; */
-    min-height: 100vh;
-    /* gap: 1rem; */
-  }
-  .head_box{
-    width: 80%;
-    padding: 0 5%;
-    height: 480px;
-    background-image: url(https://res.cloudinary.com/dvnemzw0z/image/upload/v1683309556/media/Elearning/yank_y9jhie.png);
-    background-position: center;
-    /* margin-top: 10vh; */
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: cover;
-    gap: 2rem;
-    flex-direction: column;
-  }
-  .head_box p{
-    /* background: white; */
-    padding: 5px;
-    font-weight: 600;
-    font-size: 1.1rem;
-  }
-  .head_box form{
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    /* height: 200px; */
-    padding: 20px 0;
-    gap: 2rem;
-    background: white;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border-radius: 15px;
-  }
-  .head_box form .input_field{
-    display: flex;
-    gap: 0.3rem;
-    align-items: center;
-    flex-direction: column;
-  }
-  .input_field span{
-    font-weight: 600;
-  }
-  .head_box form input{
-    padding: 10px;
-    background: #f8f9fd;
-    width: 200px;
-    border-radius: 10px;
-    border: 1px dotted darkgray;
-    font-size: 1.1rem;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    /* border: 1px solid black; */
-  }
-  .head_box form button{
-    padding: 10px 25px;
-    cursor: pointer;
-    background: #e9dd84;
-    color: ghostwhite;
-    font-weight: 600;
-  }
-</style>
-
+{% block js %}
 <script>
-  if(window.history.replaceState){
-    window.history.replaceState(null,null, window.location.href)
+  const form_box = document.querySelector('.form_box')
+  const blur_div = document.querySelectorAll('[id="blur"]')
+  const blur2 = document.getElementById('blur2')
+  const trigger = document.querySelectorAll('[id="trigger"]')
+
+  trigger.forEach(el => {
+    el.onclick = () => {
+      form_box.classList.add('change')
+      blur_div.forEach(div => {
+        div.classList.add('change')
+      })
+      blur2.classList.add('change')
+      document.querySelector('nav').classList.add('change')
+      document.querySelector('.head_box').classList.add('change')
+      document.querySelector('.low_box').classList.add('change')
+    }
+  })
+
+  const closeForm = () => {
+    form_box.classList.remove('change')
+    blur_div.forEach(div => {
+      div.classList.remove('change')
+    })
+    blur2.classList.remove('change')
+    document.querySelector('nav').classList.remove('change')
+    document.querySelector('.head_box').classList.remove('change')
+    document.querySelector('.low_box').classList.remove('change')
   }
 </script>
+{% endblock js %}

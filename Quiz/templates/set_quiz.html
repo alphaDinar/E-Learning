@@ -227,7 +227,9 @@
   all_questions.forEach((el, i) => {
     question_del[i].onclick = () => {
       quiz_json_saved.splice(i, 1)
-      runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json_saved)])
+      marking_scheme.splice(i,1)
+      console.log(marking_scheme)
+      runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json_saved), JSON.stringify(marking_scheme)])
       if(sessionStorage.getItem('q_num')){
         sessionStorage.setItem('q_num', sessionStorage.getItem('q_num')-1)
       }
@@ -236,7 +238,7 @@
         scale : [1,0.5],
         duration : 800,
         complete :()=>{
-          // el.remove()
+          el.remove()
           window.location.reload()
         }
       })      

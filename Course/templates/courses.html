@@ -20,13 +20,7 @@
           <i class="material-symbols-outlined">self_improvement</i> {{user.username}}
         </span>
       </p>
-
-      
-      {% if user.is_manager %}
-      {{user.email}}
-      {% endif %}
-        
-      <a href="{% url 'homepage' %}" style="color: salmon; font-weight: 600;" class="material-symbols-outlined">power_settings_new</a>
+      <a href="{% url 'logout_page' %}" style="color: salmon; font-weight: 600;" class="material-symbols-outlined">power_settings_new</a>
     </div>
   </nav>
   <section class="course_box">

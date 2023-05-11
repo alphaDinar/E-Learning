@@ -8,7 +8,8 @@ urlpatterns = [
     path('', include('Log.urls')),
     path('', include('Course.urls')),
     path('', include('Scheme.urls')),
-    path('', include('Quiz.urls'))
+    path('', include('Quiz.urls')),
+    path('',include('Student.urls'))
 ]
 
 if settings.DEBUG:
