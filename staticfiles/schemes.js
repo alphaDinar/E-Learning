@@ -1,5 +1,6 @@
 const sideBar = document.querySelector('.sideBar')
 const sideBar_tag = document.getElementById('sideBar_tag')
+console.log(sideBar_tag)
 
 if (sideBar) {
   sideBar_tag.onclick = () => {
