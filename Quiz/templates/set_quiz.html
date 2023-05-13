@@ -3,12 +3,11 @@
 {% load static %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'get_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'SideBar.css' %}">
 <link rel="stylesheet" href="{% static 'quiz.css' %}">
 <link rel="stylesheet" href="{% static 'set_quiz.css' %}">
 <title>Document</title>
 {% endblock styles %}
-
 
 {% block page %}
 <section class="page">
@@ -43,46 +42,97 @@
   </section>
   <section class="main hide">
     <div class="prompt_box"></div>
-    <section class="stat_box">
-      last_touched
-      ----
-      images
-      passages
-      videos
-      ----
-      add res
-      -----
-      status -> pending
-      ----
-      toggle stat button
-    </section>
-
+    <div class="page_box"></div>
     <section class="screen">
       <div class="q_prompt_box">
         <i style="font-size: 2.3rem;" class="material-symbols-outlined">psychology_alt</i>
       </div>
-      <form class="quiz_box swiper" data-json="{{quiz.con}}" data-marking_scheme="{{quiz.marking_scheme}}" onsubmit="run(event)">
+      <form class="quiz_box swiper" data-json="{{quiz.con}}" data-marking_scheme="{{quiz.marking_scheme}}"
+        onsubmit="run(event)">
         <button type="button" class="quiz_box_next material-symbols-outlined">chevron_right</button>
         <button type="button" class="quiz_box_prev material-symbols-outlined">chevron_left</button>
         <div class="swiper-wrapper"></div>
       </form>
       <span class="material-symbols-outlined" onclick="togglePageBox()"
         style="color: rgb(87, 87, 87);cursor: pointer;">hdr_weak</span>
-      <div class="page_box"></div>
     </section>
   </section>
 </section>
 
 <style>
-  textarea {
-    min-height: 10px !important;
-    max-height: 100px !important;
-    height: auto !important;
+  .main{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .page_box {
+    min-height: 50px;
+    max-height: 50px;
+    width: 80%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 5px;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    font-size: 1.2rem;
+    align-items: center;
+    transition: 0.4s ease;
   }
 
+  .page_box.show {
+    right: 10px;
+  }
+
+  .page_box::-webkit-scrollbar {
+    width: 10px;
+    background: lightgray;
+    border-radius: 40px;
+  }
+
+  .page_box::-webkit-scrollbar-thumb {
+    background: darkgray;
+    border-radius: 40px;
+  }
+
+  .page_box p {
+    height: 30px;
+    min-width: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 3px;
+    justify-content: center;
+    background: white;
+    border: 1px solid darkgray;
+    color: darkgrey;
+  }
+
+
+  textarea {
+    min-height: 80px;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    resize: none;
+    font-size: 1.1rem;
+    border: 1px dotted darkgray;
+    min-width: 90%;
+  }
+  .answer_box{
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+  }
   .question_del {
     color: salmon;
     font-size: 1.5rem;
+  }
+  @media all and (max-width:1000px){
+    .main .screen{
+      width: 95%;
+    }
   }
 </style>
 {% endblock page %}
@@ -146,7 +196,7 @@
         if (qel.ans_set[ii]) {
           answer_label_radio.value = qel.ans_set[ii]
         }
-        if (answer_label_radio.value ===  marking_scheme.cor_ans) {
+        if (answer_label_radio.value === marking_scheme.cor_ans) {
           answer_label_radio.checked = true
         }
       }
@@ -184,9 +234,9 @@
     restoreQuizState(quiz_json_saved, marking_scheme)
   }
 
-  
 
-  if (quiz_json_saved != 'None'){
+
+  if (quiz_json_saved != 'None') {
     var ini = quiz_json_saved.length
     var val = parseInt(sessionStorage.getItem('q_num'))
   } else {
@@ -227,21 +277,21 @@
   all_questions.forEach((el, i) => {
     question_del[i].onclick = () => {
       quiz_json_saved.splice(i, 1)
-      marking_scheme.splice(i,1)
+      marking_scheme.splice(i, 1)
       console.log(marking_scheme)
       runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json_saved), JSON.stringify(marking_scheme)])
-      if(sessionStorage.getItem('q_num')){
-        sessionStorage.setItem('q_num', sessionStorage.getItem('q_num')-1)
+      if (sessionStorage.getItem('q_num')) {
+        sessionStorage.setItem('q_num', sessionStorage.getItem('q_num') - 1)
       }
       anime({
-        targets : el,
-        scale : [1,0.5],
-        duration : 800,
-        complete :()=>{
+        targets: el,
+        scale: [1, 0.5],
+        duration: 800,
+        complete: () => {
           el.remove()
           window.location.reload()
         }
-      })      
+      })
     }
   })
 </script>
@@ -277,8 +327,8 @@
             cor_ans = rad.value
           }
         })
-        quiz_json.push({ 'num': counter, 'question': question.value, 'ans_set': ans_set})
-        marking_scheme.push({'cor_ans': cor_ans})
+        quiz_json.push({ 'num': counter, 'question': question.value, 'ans_set': ans_set })
+        marking_scheme.push({ 'cor_ans': cor_ans })
       })
       checkQuizJson(quiz_json, marking_scheme)
     } else {
@@ -287,7 +337,7 @@
   }
 
 
-  const checkQuizJson = (quiz_json,marking_scheme) => {
+  const checkQuizJson = (quiz_json, marking_scheme) => {
     prompt_box.innerHTML = ''
     let q_prompt = []
     marking_scheme.forEach((ans, ji) => {
@@ -306,7 +356,7 @@
         prompt_box.classList.remove('show')
       }, 3300)
     } else {
-      runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json) , JSON.stringify(marking_scheme)])
+      runAxios('save_quiz', ['{{quiz.id}}', JSON.stringify(quiz_json), JSON.stringify(marking_scheme)])
     }
   }
 
@@ -348,5 +398,4 @@
     q_prompt_box.classList.add('show')
   }
 </script>
-<script src="{% static 'schemes.js' %}"></script>
 {% endblock js %}

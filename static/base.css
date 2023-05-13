@@ -34,3 +34,6 @@ strong{
   font-family: 'DessauProDrei';
   font-weight: 400;
 }
+a{
+  cursor: pointer;
+}

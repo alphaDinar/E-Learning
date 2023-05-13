@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'Student/sideBar.css' %}">
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  {% include 'student_sideBar.html' %}
+  <section class="main">
+    <nav>
+      <div>
+        <i class="material-symbols-outlined">blur_on</i>
+        <span>Quiz Courses | {{courses.count}}</span>
+      </div>
+      <input type="text" id="item_in" placeholder="Search Course"
+        oninput="runSchemeSearch(event.target.value.toLowerCase())">
+    </nav>
+    <section class="scheme_box">
+      {% for course in courses %}
+      <a href="{% url 'student_get_quizes_schemes_page' course.slug %}" class="scheme" data-name="{{course}}" data-subject="{{course.subject}}">
+        <i class="material-symbols-outlined">psychology_alt</i>
+        <span>{{course}}</span>
+        <small>{{course.subject}}</small>
+      </a>
+      {% endfor %}
+    </section>
+  </section>
+</section>
+
+
+
+
+<style>
+  .scheme {
+    width: 280px;
+    height: 180px;
+    border-radius: 100px;
+    background: black;
+    background: rgb(57, 199, 255);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scheme span {
+    font-size: 1.3rem;
+  }
+
+  .scheme small {
+    color: wheat;
+  }
+</style>
+
+<style>
+  .main nav {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    min-height: 8vh;
+    background: white;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  .main div {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .main nav input {
+    height: 30px;
+    padding: 5px 15px;
+    width: 230px;
+    text-align: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+    border-radius: 40px;
+  }
+
+  .main .scheme_box {
+    width: 90%;
+    display: flex;
+
+    flex-wrap: wrap;
+    max-height: 84vh;
+    justify-content: space-around;
+    gap: 2rem 0;
+    overflow-y: auto;
+    padding: 3vh 5%;
+  }
+
+  .main {
+    min-height: 100vh;
+    width: 80%;
+    background: #f4f7fa;
+  }
+</style>
+
+<style>
+  .page {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .main {
+    display: flex;
+    border-left: 1px solid darkgray;
+    overflow-y: auto;
+  }
+</style>
+
+{% endblock page %}
+
+
+{% block js %}
+
+<script>
+  const items = document.querySelectorAll('.scheme')
+
+  runSchemeSearch = (val) => {
+    items.forEach(item => {
+      if (!item.dataset.name.toLowerCase().includes(val) && !item.dataset.subject.toLowerCase().includes(val)) {
+        item.style.display = 'none'
+      } else {
+        item.style.display = 'flex'
+      }
+      runAnime(item)
+    })
+  }
+
+  runAnime = (item) => {
+    anime({
+      targets: item,
+      translateX: [50, 0],
+      opacity: [0, 1],
+      duration: 500,
+      easing: 'spring(1, 80, 10, 0)'
+    })
+  }
+</script>
+{% endblock js %}

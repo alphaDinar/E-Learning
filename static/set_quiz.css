@@ -1,15 +1,16 @@
 
-
 .answer_box .answer {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 38%;
+  text-align: center;
   color: white;
   background: rgb(57, 199, 255);
   background: radial-gradient(circle at left, transparent 5px, rgb(57, 199, 255) 0);
   border-radius: 5px;
-  height: 50px;
+  min-height: 50px;
+  min-width: 50%;
+  max-width: 100%;
   padding: 2.5px 1%;
 }
 

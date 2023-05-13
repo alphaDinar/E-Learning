@@ -1,0 +1,162 @@
+.page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid darkgray;
+  overflow-y: auto;
+}
+
+.sideBar,
+.main {
+  transition: 0.4s ease;
+}
+
+.sideBar.change {
+  width: 3%;
+  justify-content: center;
+  gap: 30%;
+}
+
+.sideBar.change header {
+  display: none;
+}
+
+.sideBar.change nav a span,
+.sideBar.change footer a span {
+  display: none;
+}
+
+.main.change {
+  width: 95%;
+}
+
+.sideBar {
+  width: 18%;
+  padding: 5vh 1%;
+  height: 90vh;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  top: 0;
+  border-right: 1px solid darkgray;
+  z-index: 50;
+  background: white;
+  left: 0;
+
+}
+
+.sideBar button {
+  top: 0;
+  right: 0;
+  background: #24282e;
+  color: white;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 0 0 0 10px;
+  position: absolute;
+}
+
+.sideBar hr {
+  width: 100%;
+  border-top: 2px dotted darkgray;
+}
+
+.sideBar header,
+.sideBar nav,
+.sideBar footer {
+  display: flex;
+  flex-direction: column;
+}
+
+.sideBar header,
+.sideBar footer {
+  width: 100%;
+  align-items: center;
+}
+
+.sideBar header {
+  gap: 1rem;
+}
+
+.sideBar header div {
+  width: 150px;
+  height: 150px;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+}
+
+.sideBar header span {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.sideBar nav,
+.sideBar footer {
+  gap: 0.5rem;
+}
+
+.sideBar nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgb(54, 54, 54);
+  font-size: 1.1rem;
+}
+
+@media all and (max-width:1300px) {
+
+  .sideBar,
+  .sideBar.change {
+    z-index: 10;
+    width: 230px;
+    padding: 5vh 10px;
+    gap: revert;
+    justify-content: space-between;
+    display: flex;
+  }
+
+  .sideBar,
+  .sideBar.change header {
+    display: flex;
+  }
+
+  .sideBar {
+    left: -250px;
+  }
+
+  .sideBar.change {
+    left: 0;
+  }
+
+  .sideBar.change nav a span,
+  .sideBar.change footer a span,
+  .sideBar.change header strong {
+    display: flex;
+  }
+
+  .sideBar button {
+    left: 100%;
+    width: 40px;
+    height: 40px;
+    border-radius: 0 0 10px 0;
+    background: black;
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  .main.change {
+    width: 100%;
+  }
+}

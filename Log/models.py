@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from Course.models import Course,Grade
+from django.contrib.auth.hashers import make_password
 
 class User(AbstractUser):
     is_teacher = models.BooleanField(default=False)
@@ -32,7 +33,7 @@ class Manager(models.Model):
 
 class Student(models.Model):
     name = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE) 
     def save(self, *args, **kwargs):
         user = User.objects.get(username=self.name.username)
         user.is_student = True

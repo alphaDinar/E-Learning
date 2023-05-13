@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'Portal/portal.css' %}">
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  <nav class="main_nav">
+    {{user.username}}
+
+    <a href="{% url 'teacher_portal' %}">Add Teacher</a>
+  </nav>
+  <section class="form_box">
+    <form method="post" id="teacher_form">
+      {% csrf_token %}
+      <div class="form_left">
+        {% if messages %}
+        {% for message in messages %}
+        <span class="mBox">{{message}}</span>
+        {% endfor %}
+        {% endif %}
+        <header>Student Portal</header>
+        <div class="info">
+          <div>
+            <input type="text" name="username" placeholder="Username" id="i1" required>
+          </div>
+          <div>
+            <input type="password" name="password" class="pass1" placeholder="Password" id="i2" required>
+            <p class="material-symbols-outlined" id="pass_prompt">dangerous</p>
+            <input type="password" class="pass2" placeholder="Confirm Password" id="i2" required>
+          </div>
+        </div>
+        <hr>
+        <div class="course_box"></div>
+        <button type="submit">+ add Student</button>
+      </div>
+      <div class="form_right">
+        <header>
+          <input type="text" placeholder="Search Grade" oninput="runGradeSearch(event.target.value)">
+        </header>
+        <div>
+          {% for grade in grades %}
+          <label data-name="{{grade}}" data-code="{{course.code}}">
+            <input type="radio" name="grade" value="{{grade}}" id="{{grade}}">
+            <div class="course_label">{{grade}}</div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </form>
+  </section>
+</section>
+<script>
+  const grades = document.querySelectorAll('.form_right div label')
+  const course_box = document.querySelector('.course_box')
+
+  runGradeSearch = (val) => {
+    grades.forEach(grade => {
+      if (!grade.dataset.code.toLowerCase().includes(val) && !grade.dataset.name.toLowerCase().includes(val)) {
+        grade.style.display = 'none'
+      } else {
+        anime({
+          targets: grade,
+          translateX: [30, 0],
+          duration: 1000,
+          opacity: [0, 1],
+          backgroundColor: 'skyblue',
+        })
+        grade.style.display = 'flex'
+      }
+    })
+  }
+
+  const gradeList = document.querySelectorAll('.form_right div label input')
+
+  gradeList.forEach(grade => {
+    grade.onclick = () => {
+      course_box.innerHTML = ''
+      var grade_tile = document.createElement('div')
+      grade_tile.innerHTML = grade.value
+      grade_tile.id = `child${grade.value}`
+      course_box.appendChild(grade_tile)
+      anime({
+        targets: grade_tile,
+        translateY: [30, 0],
+        duration: 500
+      })
+    }
+  })
+</script>
+{% endblock page %}
+
+
+
+{% block js %}
+<script src="{% static 'Portal/portal.js' %}"></script>
+{% endblock js %}

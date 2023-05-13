@@ -3,7 +3,8 @@
 {% load static %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'student_dash.css' %}">
+<link rel="stylesheet" href="{% static 'Student/student_dash.css' %}">
+<link rel="stylesheet" href="{% static 'Student/sideBar.css' %}">
 <title>Document</title>
 {% endblock styles %}
 
@@ -59,7 +60,6 @@
 
 
 {% block js %}
-<script src="{% static 'schemes.js' %}"></script>
 <script>
   const rootElement = document.documentElement
   const avg_box = document.querySelector('.avg_box')

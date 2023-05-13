@@ -12,9 +12,4 @@ urlpatterns = [
 
     path('set_quiz/<str:slug>', views.set_quiz, name='set_quiz_page'),
     path('save_quiz', views.save_quiz),
-    
-
-    path('start_quiz/<str:slug>', views.start_quiz, name='start_quiz_page'),
-    path('mark_quiz', views.mark_quiz),
-    path('quiz_results/<int:id>', views.quiz_results, name='quiz_results_page')
 ]

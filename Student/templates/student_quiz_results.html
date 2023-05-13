@@ -9,185 +9,45 @@
 {% endblock styles %}
 
 
-
 {% block page %}
 <section class="page">
+  <p class="score_box" data-score="{{score.mark}}">
+    <span>{{score.mark}}%</span>
+  </p>
   <section class="screen">
-    <p class="score_box" data-score="{{score.mark}}">
-      <span>{{score.mark}}%</span>
-    </p>
-
     <section data-json="{{score.quiz_con}}" data-user_choice="{{score.choice_box}}"
       data-com_choice="{{score.quiz_ans_box}}" class="quiz_box swiper" onsubmit="run(event)">
       <button type="button" class="quiz_box_next material-symbols-outlined">chevron_right</button>
       <button type="button" class="quiz_box_prev material-symbols-outlined">chevron_left</button>
       <div class="swiper-wrapper"></div>
     </section>
-
   </section>
-</section>
 
+  <button>Continue</button>
+</section>
 
 <style>
   :root {
-    --var-score_box: wheat;
+    --var-score_box: transparent;
   }
-
+  .page{
+    flex-direction: column;
+    padding: 5vh 0;
+    gap: 2rem;
+    align-items: center;
+  }
+  .quiz_box .swiper-slide{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  @media all and (max-width:1300px) {
   .page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 20px 0;
   }
-
-  .screen {
-    width: 1200px;
-    height: 650px;
-    display: flex;
-    align-items: center;
-    border: none;
-    justify-content: center;
-    position: relative;
-  }
-
-  .score_box {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    right: -60px;
-    top: -60px;
-    display: flex;
-    font-size: 1.5rem;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: 600;
-    z-index: 10;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border-radius: 50%;
-    background: radial-gradient(circle at bottom, transparent 8px, var(--var-score_box) 0);
-  }
-
-  .main {
-    min-height: 100vh;
-    width: 100%;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .main .screen {
-    width: 80%;
-    height: 80vh;
-    border: none;
-    position: none;
-  }
-
-  .quiz_box {
-    width: 100%;
-    height: 100%;
-
-  }
-
-  .revision_box {
-    top: 0;
-    left: 0;
-    border: 1px solid black;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-  }
-
-  .revision_box p {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .ans_rad {
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.3s ease;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  }
-
-  .answer_box .answer.change {
-    background: white;
-    color: var(--var-bg);
-    border: 1px solid var(--var-bg);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  }
-
-  .answer_box .answer.change .ans_rad {
-    background: white;
-    rotate: 360deg;
-    color: var(--var-bg);
-  }
-  .question_box{
-    max-height: 100px;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .cor_ans {
-    padding: 10px;
-    width: 90%;
-    text-align: center;
-    font-size: 1.3rem;
-    /* border: 1px solid black; */
-    border-top: 2px dotted var(--var-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-weight: 600;
-  }
-
-  @media all and (max-width:1300px){
-    .page{
-      justify-content: flex-start;
-      min-height: auto;
-      padding: 20px 0;
-      height: auto;
-    }
-    .screen{
-      gap: 1rem;
-      height: auto;
-      width: 100%;
-      background: white;
-      flex-direction: column;
-    }
-    .answer_box{
-      gap: 1rem;
-    }
-    .score_box{
-      position: revert;
-    }
-    .quiz_box{
-      min-height: 50vh;
-      width: 90%;
-    }
-    .quiz_box .swiper-slide{
-      gap: 2rem;
-    }
-  }
-  @media all and (max-width:800px){
-    .answer_box{
-      display: flex;
-      width: 100% !important;
-    }
-    .answer_box label{
-      width: 70% !important;
-    }
-    .answer_box .answer{
-      width: 100%;
-    }
-  }
+}
 </style>
-
-
 {% endblock page %}
 
 

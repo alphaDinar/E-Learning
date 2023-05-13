@@ -23,6 +23,8 @@ class Grade(models.Model):
     # courses = models.ManyToManyField(Subject)
     def __str__(self):
         return f'{self.name}'
+    def get_courses(self):
+        return self.course_set.all()
 
 class Course(models.Model):
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE) 

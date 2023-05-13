@@ -3,7 +3,8 @@
 {% load static %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'get_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'prompt.css' %}">
 <link rel="stylesheet" href="{% static 'quiz.css' %}">
 <link rel="stylesheet" href="{% static 'use_quiz.css' %}">
 <title>Document</title>
@@ -77,13 +78,13 @@
       </p>
     </div>
 
-    <section class="screen">
-      <div class="timer_box">
-        <div class="timer">
-        </div>
-        <i class="material-symbols-outlined" onclick="startTimer()">play_arrow</i>
-        <i class="material-symbols-outlined" onclick="resetTimer()">restart_alt</i>
+    <div class="timer_box">
+      <div class="timer">
       </div>
+      <i class="material-symbols-outlined" onclick="startTimer()">play_arrow</i>
+      <i class="material-symbols-outlined" onclick="resetTimer()">restart_alt</i>
+    </div>
+    <section class="screen">
       <a href="{% url 'set_quiz_page' quiz.slug %}" class="q_prompt_box">
         <span>No Questions Yet</span>
         <hr>
@@ -101,8 +102,29 @@
   </section>
 </section>
 
+<style>
+  .sideBar{
+    border-right: 1px dotted darkgray;
+  }
+  .page {
+    padding: 5vh 0;
+  }
+  .main{
+    border-left: 1px dotted darkgray;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .quiz_box .swiper-slide{
 
-
+    justify-content: space-around; 
+    min-height: 60vh;
+  }
+  @media all and (max-width:1000px){
+    .main .screen{
+      width: 95%;
+    }
+  }
+  </style>
 
 <style>
   .mark_box {
@@ -115,6 +137,7 @@
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
+    display: none;
     color: white;
     border-radius: 50%;
     height: 140px;
@@ -127,11 +150,9 @@
   }
 
   .screen .timer_box {
-    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
-    top: 10px;
     z-index: 10;
   }
 
@@ -176,7 +197,7 @@
           window.location.href = a_tag.href
           console.log(el)
         } else {
-          prompt_box.remove('show')
+          prompt_box.classList.remove('show')
         }
       }
     })
@@ -296,7 +317,7 @@
 
 
 <script>
-  const timer = document.querySelector('.screen .timer')
+  const timer = document.querySelector('.timer')
   var quiz_time = parseInt('{{quiz.duration}}')
 
   var s = quiz_time * 60
@@ -389,5 +410,4 @@
     q_prompt_box.classList.add('show')
   }
 </script>
-<script src="{% static 'schemes.js' %}"></script>
 {% endblock js %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+
+<!-- {% block styles %}
+  
+{% endblock styles %} -->
+
+
+{% block page %}
+<section class="page">
+  <form method="post">
+    {% csrf_token %}
+    <i class="material-symbols-outlined">verified_user</i>
+    {% if messages %}
+      {% for message in messages %}
+      <span class="m_box">{{message}}</span>
+      {% endfor %}
+    {% endif %}
+    <div class="input_field">
+      <span>Username</span>
+      <input type="text" name="username" required>
+    </div>
+    <div class="input_field">
+      <span>Password</span>
+      <input type="password" name="password" required>
+    </div>
+    <button type="submit" class="material-symbols-outlined">login</button>
+  </form>
+</section>
+
+
+
+
+<style>
+  .page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  form {
+    width: 340px;
+    padding: 10px;
+    border-radius: 15px;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  form .m_box {
+    background: rgb(254, 229, 225);
+    color: rgb(253, 111, 95);
+    padding: 5px;
+    border-radius: 3px;
+  }
+
+
+  form .input_field {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  form input {
+    height: 25px;
+    width: 90%;
+    padding: 5px;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+  }
+
+  form i {
+    position: absolute;
+    top: -20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex !important;
+    align-items: center;
+    font-size: 3rem;
+    justify-content: center;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    background: rgb(27, 234, 131);
+  }
+
+  form button {
+    background: rgb(27, 234, 131);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 10px;
+  }
+</style>
+{% endblock page %}

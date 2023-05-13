@@ -1,3 +1,5 @@
+{% load static %}
+
 <section class="sideBar">
   <button id="sideBar_tag" class="material-symbols-outlined">linear_scale</button>
   <header>
@@ -8,11 +10,13 @@
   <nav>
     <a href=""><i class="material-symbols-outlined">shield_person</i> <span>Panel</span> </a>
     <a href=""><i class="material-symbols-outlined">wallpaper_slideshow</i> <span>Slides</span></a>
-    <a href=""><i class="material-symbols-outlined">psychology_alt</i> <span>Quizes</span></a>
+    <a href="{% url 'student_quizes_page' %}"><i class="material-symbols-outlined">psychology_alt</i> <span>Quizes</span></a>
     <a href=""><i class="material-symbols-outlined">pie_chart</i> <span>Assesment</span></a>
+    <a href=""><i class="material-symbols-outlined">pie_chart</i> <span>Profile</span></a>
   </nav>
   <footer>
     <hr>
-    <i class="material-symbols-outlined">power_settings_new</i>
+    <a href="{% url 'logout_page' %}" class="material-symbols-outlined">power_settings_new</a>
   </footer>
 </section>
+

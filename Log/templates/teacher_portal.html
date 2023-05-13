@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'Portal/portal.css' %}">
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  <nav class="main_nav">
+    {{user.username}}
+    <a href="{% url 'student_portal' %}">Add Student</a>
+  </nav>
+  <section class="form_box">
+    <form method="post" id="teacher_form">
+      {% csrf_token %}
+      <div class="form_left">
+        {% if messages %}
+        {% for message in messages %}
+        <span class="mBox">{{message}}</span>
+        {% endfor %}
+        {% endif %}
+        <header>Teacher Portal</header>
+        <div class="info">
+          <div>
+            <input type="text" name="username" placeholder="Username" id="i1" required>
+          </div>
+          <div>
+            <input type="password" name="password" class="pass1" placeholder="Password" id="i2" required>
+            <p id="pass_prompt" class="material-symbols-outlined"></p>
+            <input type="password" class="pass2" placeholder="Confirm Password" id="i2" required>
+          </div>
+        </div>
+        <hr>
+        <div class="course_box">
+
+        </div>
+        <button type="submit">+ add Teacher</button>
+      </div>
+      <div class="form_right">
+        <header>
+          <input type="text" placeholder="Search Course" oninput="runCourseSearch(event.target.value.toLowerCase())">
+        </header>
+        <div>
+          {% for course in courses %}
+          <label data-name="{{course}}" data-grade="{{course.grade}}" data-subject="{{course.subject}}">
+            <input type="checkbox" name="courses" value="{{course.id}}" id="{{course}}">
+            <div class="course_label">{{course}}</div>
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+    </form>
+  </section>
+</section>
+<script>
+  const courses = document.querySelectorAll('.form_right div label')
+  const course_box = document.querySelector('.course_box')
+
+  runCourseSearch = (val) => {
+    courses.forEach(course => {
+      if (!course.dataset.subject.toLowerCase().includes(val) && !course.dataset.name.toLowerCase().includes(val) && !course.dataset.grade.toLowerCase().includes(val)) {
+        course.style.display = 'none'
+      } else {
+        anime({
+          targets: course,
+          translateX: [30, 0],
+          duration: 1000,
+          opacity: [0, 1],
+          backgroundColor: 'skyblue',
+        })
+        course.style.display = 'flex'
+      }
+    })
+  }
+
+  const courseList = document.querySelectorAll('.form_right div label input')
+
+  courseList.forEach(course => {
+    course.onclick = () => {
+      var course_tile = document.createElement('div')
+      course_tile.innerHTML = course.id
+      course_tile.id = `child${course.value}`
+      if (course.checked) {
+        course_box.appendChild(course_tile)
+        anime({
+          targets: course_tile,
+          translateY: [30, 0],
+          duration: 500
+        })
+      } else {
+        var temp = document.getElementById(`child${course.value}`)
+        anime({
+          targets: temp,
+          translateY: [0, 30],
+          duration: 500,
+          opacity: [1, 0],
+          complete: () => {
+            course_box.removeChild(temp)
+          }
+        })
+      }
+    }
+  })
+</script>
+
+{% endblock page %}
+
+{% block js %}
+<script src="{% static 'Portal/portal.js' %}"></script>
+{% endblock js %}
