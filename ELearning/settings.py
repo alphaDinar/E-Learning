@@ -14,7 +14,8 @@ SECRET_KEY = 'django-insecure-1xs3%5o8tt9r-ltsfo&*iwco$s)6xkcz32vl$y)8knugur*liy
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['e-learning-qjk3.onrender.com','*']
+ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://e-learning-production.up.railway.app/']
 AUTH_USER_MODEL = 'Log.User'
 
 # Application definition
