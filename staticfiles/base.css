@@ -26,11 +26,13 @@
     position: relative;
     width: 100%;
     display: flex;
-    /* flex-direction: column; */
     align-items: center;
-    /* min-height: 100vh; */
+
 }
 strong{
   font-family: 'DessauProDrei';
   font-weight: 400;
+}
+a{
+  cursor: pointer;
 }
