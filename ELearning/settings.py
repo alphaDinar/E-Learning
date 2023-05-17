@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-1xs3%5o8tt9r-ltsfo&*iwco$s)6xkcz32vl$y)8knugur*liy
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://e-learning-production.up.railway.app/']
+CSRF_TRUSTED_ORIGINS = ['https://e-learning-production.up.railway.app']
 AUTH_USER_MODEL = 'Log.User'
 
 # Application definition
