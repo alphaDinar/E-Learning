@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'ELearning.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse('postgres://e_learning_3di0_user:kFClASjxiv8fQmZNCvVT49e886uBD4kF@dpg-chae9m3hp8u791i4dc80-a.oregon-postgres.render.com/e_learning_3di0')
+    'default': dj_database_url.parse('postgresql://postgres:TZSCp5vFreGdoWiGhQfk@containers-us-west-73.railway.app:7400/railway')
 }
 
 
