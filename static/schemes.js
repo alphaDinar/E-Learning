@@ -1,11 +1,20 @@
 const sideBar = document.querySelector('.sideBar')
 const sideBar_tag = document.getElementById('sideBar_tag')
-console.log(sideBar_tag)
 
 if (sideBar) {
   sideBar_tag.onclick = () => {
     main.classList.toggle('change')
     sideBar.classList.toggle('change')
+  }
+}
+
+const toggle_main = document.querySelector('.main .con form button')
+const main_header = document.querySelector('.main header')
+const main_con = document.querySelector('.main .con')
+
+if(toggle_main){
+  toggle_main.onclick = () => {
+    main.classList.toggle('toggle')
   }
 }
 

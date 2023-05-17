@@ -2,12 +2,7 @@
   --avg_box_bg: black;
 }
 
-.main{
-  width: 70%;
-  min-height: 80vh;
-  padding: 10vh 5%;
-  justify-content: space-between;
-}
+
 
 
 .assignment_box {
@@ -123,19 +118,6 @@
 
 
 @media all and (max-width:1140px) {
-  .page {
-    justify-content: flex-start;
-    min-height: auto;
-    height: auto;
-  }
-
-  .main {
-    min-height: auto;
-    height: auto;
-    padding: 3vh 10%;
-    gap: 2rem;
-  }
-
   .main_top,
   .main_low {
     flex-direction: column;
@@ -153,6 +135,9 @@
 
   .progress_chart {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 200px;
   }
 

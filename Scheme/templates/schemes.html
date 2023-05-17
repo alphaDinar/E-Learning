@@ -3,6 +3,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'dash.css' %}">
+<!-- <link rel="stylesheet" href="{% static 'sideBar.css' %}"> -->
 <title>Document</title>
 {% endblock styles %}
 
@@ -90,23 +91,6 @@
 
 {% block js %}
 <script>
-  const sideBar = document.querySelector('.sideBar')
-  const sideBar_tag = document.querySelector('.sideBar button')
-  const main = document.querySelector('.main')
-
-  sideBar_tag.onclick = () => {
-    main.classList.toggle('change')
-    sideBar.classList.toggle('change')
-  }
-
-  const toggle_main = document.querySelector('.main .con form button')
-  const main_header = document.querySelector('.main header')
-  const main_con = document.querySelector('.main .con')
-  toggle_main.onclick = () => {
-    main.classList.toggle('toggle')
-  }
-</script>
-<script>
   const item_in = document.getElementById('item_in')
   const item_select = document.getElementById('item_select')
   const items = document.querySelectorAll('#item')
@@ -139,15 +123,15 @@
     })
   }
 
-  const runSearchAnime = (el) => {
-    anime({
-      targets: el,
-      translateY: [50, 0],
-      opacity: [0, 1],
-      duration: 500,
-      easing: 'spring(1, 80, 10, 0)'
-    })
-  }
+  // const runSearchAnime = (el) => {
+  //   anime({
+  //     targets: el,
+  //     translateY: [50, 0],
+  //     opacity: [0, 1],
+  //     duration: 500,
+  //     easing: 'spring(1, 80, 10, 0)'
+  //   })
+  // }
 
   items.forEach((el, i) => {
     anime({

@@ -11,6 +11,7 @@
 
 {% block page %}
 <section class="page">
+  <p class="score_user">{{score.student}}</p>
   <p class="score_box" data-score="{{score.mark}}">
     <span>{{score.mark}}%</span>
   </p>
@@ -22,8 +23,32 @@
       <div class="swiper-wrapper"></div>
     </section>
   </section>
+  <style>
+    .score_user{
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      /* border: 1px solid black; */
+      padding: 5px 15px;
+      border-radius: 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+  </style>
 
-  <button>Continue</button>
+  
+  {% if user.is_teacher %}
+  <a href="{% url 'assess_quiz_page' score.quiz.slug %}" class="continue_tag">Return</a>
+  {% else %}
+  <a href="{% url 'student_assessment_page' %}" class="continue_tag">Return</a>
+  {% endif %}
+    
+  <style>
+    .continue_tag{
+      padding: 5px 10px;
+      border: 1px solid darkgray;
+      border-radius: 15px;
+    }
+  </style>
+
 </section>
 
 <style>

@@ -17,6 +17,7 @@
       <p style="background: rgb(57, 199, 255);" data-code="rgb(57, 199, 255)"></p>
       <p style="background: #dc2641;" data-code="#dc2641"></p>
     </div>
+    <div class="page_box"></div>
     <div class="timer_box">
       <div class="timer">1 : 00 : 00</div>
     </div>
@@ -33,29 +34,24 @@
 
 <style>
   .main {
-    min-height: 100vh;
     width: 100%;
     flex-direction: column;
     display: flex;
     align-items: center;
     justify-content: center;
-    /* background: salmon; */
   }
 
   .main .screen {
     width: 80%;
-    height: 80vh;
+    height: 60vh;
     border: none;
     position: none;
-    /* background: skyblue; */
   }
 
   .main .screen .swiper {
     border-radius: 10px;
-    /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
-    /* border: 1px solid black; */
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
   }
 </style>
 
@@ -81,7 +77,6 @@
     font-size: 1rem;
     letter-spacing: 1px;
     font-weight: 600;
-    /* border: 1px solid var(--var-bg); */
     color: var(--var-bg);
     display: flex;
     align-items: center;
@@ -89,9 +84,7 @@
     border-radius: 50%;
     width: 110px;
     position: relative;
-    /* background: black; */
     justify-content: center;
-    /* box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; */
     padding: 3px;
   }
 
@@ -112,6 +105,7 @@
       padding: 20px 0;
       height: auto;
     }
+
     /* .main{
       min-height: auto;
       height: auto;
@@ -181,13 +175,28 @@
 </script>
 {% endblock page %}
 
-
 {% block response %}
 {% endblock response %}
 
-
-
 {% block js %}
+
+<!-- <script>
+  window.onblur =()=>{
+    sessionStorage.clear()
+  }
+</script> -->
+
+
+<!-- <script>
+  // Get the current time
+  const currentTime = new Date();
+
+  // Add 1 minute to the current time
+  const newTime = new Date(currentTime.getTime() + 60000); // 60000 milliseconds = 1 minute
+  console.log(newTime);
+
+</script> -->
+
 <script>
   var rootElement = document.documentElement;
 
@@ -255,6 +264,19 @@
   }
 </script>
 <script>
+  const page_box = document.querySelector('.main .page_box')
+
+  const togglePageBox = () => {
+    page_box.classList.toggle('show')
+  }
+
+  document.querySelectorAll('.question_box').forEach((el, i) => {
+    var page_bullet = document.createElement('p')
+    page_bullet.innerHTML = eval(i + 1)
+    page_bullet.classList.add('page_bullet')
+    page_box.appendChild(page_bullet)
+  })
+
   var quiz_swiper = new Swiper('.quiz_box', {
     loop: false,
     pagination: {
@@ -266,6 +288,12 @@
       prevEl: '.quiz_box_prev',
     },
   });
+
+  document.querySelectorAll('.page_bullet').forEach((el, i) => {
+    el.onclick = () => {
+      quiz_swiper.slideTo(i)
+    }
+  })
 </script>
 
 
@@ -367,5 +395,4 @@
     q_prompt_box.classList.add('show')
   }
 </script>
-<script src="{% static 'schemes.js' %}"></script>
 {% endblock js %}

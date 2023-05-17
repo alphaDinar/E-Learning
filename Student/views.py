@@ -1,27 +1,54 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.middleware.csrf import get_token
-from django.http import JsonResponse
+from django.contrib import messages
+from django.http import JsonResponse,HttpResponseRedirect
 from Log.models import Student
 from Course.models import Course
 from Scheme.models import Scheme
-from Quiz.models import Quiz,Score
+from Quiz.models import Quiz
+from .models import StudentProfile,Score
 import json
 
 
+def checkStudent(request):
+    if Student.objects.filter(name=request.user).exists():
+        return True
+    else:
+        return False
+    
+
 def student_dash(request):
-    return render(request, 'student_dash.html')
+    if not checkStudent(request):
+        messages.error(request,'Login with Student Account')
+        return redirect('homepage')
+    else:
+        student = Student.objects.get(name=request.user)
+        student_profile = StudentProfile.objects.get(student=student)
+    context = {
+        'student' : student,
+        'student_profile' : student_profile
+    }
+    return render(request, 'student_dash.html', context)
 
 def student_quizes(request):
-    student = Student.objects.get(name=request.user)
-    courses = student.grade.get_courses().all()
+    if not checkStudent(request):
+        messages.error(request,'Login with Student Account')
+        return redirect('homepage')
+    else:
+        student = Student.objects.get(name=request.user)
+        courses = student.grade.get_courses().all()
     context = {
         'courses' : courses
     }
     return render(request, 'student_quizes.html', context)
 
 def student_get_quizes_schemes(request,slug):
-    course = Course.objects.get(slug=slug)
-    schemes = Scheme.objects.filter(course=course)
+    if not checkStudent(request):
+        messages.error(request,'Login with Student Account')
+        return redirect('homepage')
+    else:
+        course = Course.objects.get(slug=slug)
+        schemes = Scheme.objects.filter(course=course)
     context = {
         'course' : course,
         'schemes' : schemes
@@ -29,15 +56,23 @@ def student_get_quizes_schemes(request,slug):
     return render(request, 'student_get_quizes_schemes.html', context)
 
 def student_get_quizes(request,slug):
-    scheme = Scheme.objects.get(slug=slug)
+    if not checkStudent(request):
+        messages.error(request,'Login with Student Account')
+        return redirect('homepage')
+    else:
+        scheme = Scheme.objects.get(slug=slug)
     context = {
         'scheme' : scheme
     }
     return render(request, 'student_get_quizes.html', context)
 
 def student_start_quiz(request,slug):
-    quiz = Quiz.objects.get(slug=slug)
-    token = get_token(request)  
+    if not checkStudent(request):
+        messages.error(request,'Login with Student Account')
+        return redirect('homepage')
+    else:
+        quiz = Quiz.objects.get(slug=slug)
+        token = get_token(request)  
     context = {
         'quiz' : quiz,
         'token' : token
@@ -57,18 +92,26 @@ def mark_quiz(request):
             if choice == cor_ans:
                 score_count = score_count + 1
         percent = (score_count * 100)/total_score
-        score = Score()
-        score.quiz_title = quiz.title
+        student = Student.objects.get(name=request.user)
+        if Score.objects.filter(student=student).filter(quiz=quiz).exists():
+            score = Score.objects.filter(quiz=quiz).get(student=student)
+        else:
+            score = Score()
+        score.student = student
+        score.quiz = quiz
         score.quiz_con = quiz.con
         score.quiz_ans_box = quiz.marking_scheme
         score.mark = "{:.2f}".format(percent) 
         score.choice_box = json.dumps(choice_box)
         score.save()
-    return JsonResponse({'info': 'redirect', 'link' : f'/student_quiz_results/{score.id}' })
+    return JsonResponse({'info': 'redirect', 'link' : f'/student_quiz_results/{score.slug}' })
 
-def student_quiz_results(request,id):
-    score = Score.objects.get(id=id)
+def student_quiz_results(request,slug):
+    score = Score.objects.get(slug=slug)
     context = {
         'score' : score
     }
     return render(request, 'student_quiz_results.html', context)
+
+def student_assessment(request):
+    return render(request, 'student_assessment.html')

@@ -3,6 +3,7 @@
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'Student/sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'Student/student_dash.css' %}">
 {% endblock styles %}
 
 {% block page %}
@@ -19,17 +20,41 @@
     </nav>
     <section class="scheme_box">
       {% for quiz in scheme.get_quizes %}
-      <a href="{% url 'student_start_quiz_page' quiz.slug %}" class="scheme" data-name="{{quiz.title}}" data-subject="{{scheme.title}}">
-        <i class="material-symbols-outlined">psychology_alt</i>
-        <span>{{quiz.title}}</span>
-        <small>{{quiz.level}}</small>
-        <p>{{quiz.duration}} minutes</p>
-      </a>
+      <div class="scheme_hold">
+        <a href="{% url 'student_start_quiz_page' quiz.slug %}" class="scheme" data-name="{{quiz.title}}" data-subject="{{scheme.title}}">
+          <i class="material-symbols-outlined">psychology_alt</i>
+          <span>{{quiz.title}}</span>
+          <small>{{quiz.level}}</small>
+          <p>{{quiz.duration}} minutes</p>
+        </a>
+        <a href="" class="material-symbols-outlined correction_tag">history</a>
+      </div>
       {% endfor %}
     </section>
   </section>
 </section>
 
+<style>
+  .scheme_hold{
+    display: flex;
+    gap: 0;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+  }
+  .scheme_hold .correction_tag{
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 0 5px 5px;
+    background: rgb(30, 213, 122);
+  }
+</style>
 
 
 
@@ -93,35 +118,16 @@
   .main .scheme_box {
     width: 90%;
     display: flex;
-
     flex-wrap: wrap;
-    max-height: 84vh;
     justify-content: space-around;
     gap: 2rem 0;
-    overflow-y: auto;
     padding: 3vh 5%;
-  }
-
-  .main {
-    min-height: 100vh;
-    width: 80%;
-    background: #f4f7fa;
   }
 </style>
 
 <style>
-  .page {
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
   .main {
     display: flex;
-    border-left: 1px solid darkgray;
-    overflow-y: auto;
   }
 </style>
 

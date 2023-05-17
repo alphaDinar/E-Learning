@@ -13,5 +13,7 @@ urlpatterns = [
     path('student_start_quiz/<str:slug>', views.student_start_quiz, name='student_start_quiz_page'),
     path('mark_quiz', views.mark_quiz),
 
-    path('student_quiz_results/<int:id>', views.student_quiz_results, name='student_quiz_results_page')
+    path('student_quiz_results/<str:slug>', views.student_quiz_results, name='student_quiz_results_page'),
+    
+    path('student_assessment', views.student_assessment, name='student_assessment_page')
 ]

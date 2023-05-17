@@ -12,4 +12,6 @@ urlpatterns = [
 
     path('set_quiz/<str:slug>', views.set_quiz, name='set_quiz_page'),
     path('save_quiz', views.save_quiz),
+
+    path('assess_quiz/<str:slug>', views.assess_quiz, name='assess_quiz_page'),
 ]

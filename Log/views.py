@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from .models import User,Student,Teacher
 from Course.models import Course,Grade
+from Student.models import StudentProfile
 
 # Create your views here.
 def home(request):
@@ -55,18 +56,23 @@ def student_portal(request):
         return redirect('portal')
     grades = Grade.objects.all()
     if request.method == 'POST':
-        if User.objects.filter(username=request.POST.get('username')).exists():
+        if User.objects.filter(username=request.POST.get('first_name')).exists():
             messages.error(request, 'student already exists')
         else:
             user = User()
-            user.username = request.POST.get('username')
-            user.password = make_password(request.POST.get('password'))
+            user.username = f"{request.POST.get('first_name')}{Grade.objects.get(name=request.POST.get('grade')).code}".lower()
+            user.password = make_password(request.POST.get('last_name'))
             user.save()
             student = Student()
             student.name = user
             grade = Grade.objects.get(name=request.POST.get('grade'))
             student.grade = grade
             student.save()
+            student_profile = StudentProfile()
+            student_profile.student = student
+            student_profile.first_name = request.POST.get('first_name')
+            student_profile.last_name = request.POST.get('last_name')
+            student_profile.save()
             messages.success(request, 'Student Created successfully')
             return redirect('student_portal')
     context = {

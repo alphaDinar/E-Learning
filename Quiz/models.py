@@ -38,15 +38,15 @@ class Quiz(models.Model):
     class Meta:
         verbose_name_plural = 'quizes'
 
-class Score(models.Model):
-    quiz_title = models.CharField(max_length=300)
-    quiz_con = models.JSONField(blank=True,null=True) 
-    quiz_ans_box = models.JSONField(blank=True,null=True) 
-    mark = models.FloatField()
-    choice_box = models.JSONField(blank=True,null=True) 
-    timestamp = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return f'{self.quiz_title} {self.mark}'
+# class TestScore(models.Model):
+#     # quiz_title = models.CharField(max_length=300)
+#     # quiz_con = models.JSONField(blank=True,null=True) 
+#     # quiz_ans_box = models.JSONField(blank=True,null=True) 
+#     mark = models.FloatField()
+#     # choice_box = models.JSONField(blank=True,null=True) 
+#     timestamp = models.DateTimeField(auto_now_add=True)
+#     def __str__(self):
+#         return f'{self.mark}'
 
 # class MarkingScheme(models.Model):
 #     answers = models.JSONField()

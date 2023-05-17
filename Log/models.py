@@ -40,7 +40,7 @@ class Student(models.Model):
         user.save()
         super().save(*args, **kwargs)
     def __str__(self):
-        return f'{self.name.username} {self.grade}' 
+        return f'{self.name.username}' 
 
 
 # class LogBox(models.Model):

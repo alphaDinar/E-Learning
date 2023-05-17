@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'dash.css' %}">
+<title>Document</title>
+{% endblock styles %}
+
+{% block page %}
+<section class="page">
+  {% include 'sideBar.html' %}
+  <section class="main toggle">
+    <section class="con">
+      <form>
+        <div>
+          <i class="material-symbols-outlined">blur_on</i>
+          <span>{{quiz.title}} Quiz Assessment</span>
+        </div>
+        <input type="text" id="item_in">
+        <!-- <button type="button" onclick="show_add_quiz()">+</button> -->
+      </form>
+    </section>
+    <section class="result_box">
+      <article>
+        <span>Position</span>
+        <span>Student</span>
+        <span>Mark(%)</span>
+        <span>Grade</span>
+      </article>
+      {% for score in scores %}
+      <a href="{% url 'student_quiz_results_page' score.slug %}" class="result" data-name="{{score.student}}" data-mark="{{score.mark}}">
+        <span>{{forloop.counter}}</span>
+        <span>{{score.student}}</span>
+        <span>{{score.mark}}</span>
+        {% if score.mark > 70 %}
+        <span><small class="grade" style="background: rgb(12, 220, 116); color: rgb(228, 255, 242);"> Excellent</small></span>
+        {% elif score.mark > 50 %}
+        <span><small class="grade" style="background: orange; color: rgb(228, 255, 242);"> Pass</small></span>
+        {% else %}
+        <span><small class="grade" style="background: salmon; color: rgb(228, 255, 242);"> Fail</small></span>
+        {% endif %}
+
+        <style>
+          .result{
+            color: rgb(51, 51, 51);
+          }
+          .result .grade{
+            padding: 5px;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            border-radius: 5px;
+          }
+        </style>
+          
+      </a>
+      {% endfor %}
+    </section>
+  </section>
+</section>
+
+<!-- <script>
+  const result_box = document.querySelector('.result_box')
+  const result = document.querySelectorAll('.result')[0]
+
+  for (var i = 0; i < 20; i++) {
+    var result_clone = result.cloneNode(true)
+    result_box.appendChild(result_clone)
+  }
+</script> -->
+
+
+<style>
+  .main{
+    align-items: center;
+  }
+  .main .con{
+    width: 100%;
+  }
+  .result_box{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 20px;
+    background: white;
+    padding: 1rem 0;
+    max-height: 80vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    /* height: 200px; */
+  }
+  .result_box article span{
+    color: rgb(80, 80, 80);
+    font-weight: 600;
+  }
+  .result_box article ,.result{
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.1rem;
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+  .result_box article{
+    border-bottom: 2px dotted darkgray;
+  }
+  .result_box span{
+    width: 20%;
+    /* border: 1px saddlebrown solid; */
+  }
+</style>
+
+{% endblock page %}
+
+{% block js %}
+{% endblock js %}

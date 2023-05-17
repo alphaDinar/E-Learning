@@ -24,11 +24,14 @@
           <option value="active">Active</option>
           <option value="completed">Completed</option>
         </select>
-        <button type="button" onclick="show_add_quiz()">+</button>
+        <div class="button" onclick="show_add_quiz()">+</div>
       </form>
       <div class="scheme_box">
         {% for quiz in scheme.get_quizes %}
         <div class="scheme_hold" id="item" data-name="{{quiz.name}}" data-status="{{quiz.status}}">
+          <a href="{% url 'assess_quiz_page' quiz.slug %}" class="assess_scheme">
+            <i class="material-symbols-outlined">show_chart</i>
+          </a>
           <a href="{% url 'use_quiz_page' quiz.slug %}" class="scheme">
             <!-- <i class="material-symbols-outlined">psychology_alt</i> -->
             <span>{{quiz.title}}</span>
@@ -202,26 +205,6 @@
 
 {% block js %}
 <script>
-  // const scheme_box = document.querySelector('.scheme_box')
-  // for (var i = 0; i < 40; i++) {
-  //   var obj_clone = document.querySelectorAll('.scheme_hold')[0].cloneNode(true)
-  //   scheme_box.appendChild(obj_clone)
-  // }
-
-
-
-
-  const sideBar = document.querySelector('.sideBar')
-  const sideBar_tag = document.querySelector('.sideBar button')
-  const main = document.querySelector('.main')
-
-  sideBar_tag.onclick = () => {
-    main.classList.toggle('change')
-    sideBar.classList.toggle('change')
-  }
-
-</script>
-<script>
   const item_in = document.getElementById('item_in')
   const item_select = document.getElementById('item_select')
   const items = document.querySelectorAll('#item')
@@ -251,16 +234,6 @@
         }
       }
       runSearchAnime(el)
-    })
-  }
-
-  const runSearchAnime = (el) => {
-    anime({
-      targets: el,
-      translateY: [50, 0],
-      opacity: [0, 1],
-      duration: 500,
-      easing: 'spring(1, 80, 10, 0)'
     })
   }
 

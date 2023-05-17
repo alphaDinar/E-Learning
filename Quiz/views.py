@@ -4,7 +4,8 @@ from django.middleware.csrf import get_token
 from django.http import JsonResponse
 from Course.models import Course
 from Scheme.models import Scheme
-from Quiz.models import Quiz,Score
+from Quiz.models import Quiz
+from Student.models import Score 
 import json
 
 def quizes(request,slug):
@@ -91,7 +92,15 @@ def test_quiz(request):
         percent = (score * 100)/total_score
     return JsonResponse({'info': percent})
 
-
+def assess_quiz(request, slug):
+    quiz = Quiz.objects.get(slug=slug)
+    course = quiz.topic.course
+    context = {
+        'course' : course,
+        'quiz' : quiz,
+        'scores' : Score.objects.filter(quiz=quiz).order_by('-mark')
+    }
+    return render(request, 'assess_quiz.html', context)
 
 
 

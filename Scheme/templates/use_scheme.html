@@ -3,8 +3,10 @@
 {% load static %}
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'get_scheme.css' %}">
-<link rel="stylesheet" href="{% static 'get_scheme_slides.css' %}">
+<link rel="stylesheet" href="{% static 'sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'prompt.css' %}">
+<link rel="stylesheet" href="{% static 'Schemes/get_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'Schemes/get_scheme_slides.css' %}">
 <title>Document</title>
 {% endblock styles %}
 
@@ -142,8 +144,6 @@
 
 
 {% block js %}
-<script src="{% static 'schemes.js' %}"></script>
-
 <script>
   const screen = document.querySelector('.screen')
   const toggle_slide = document.getElementById('toggle_slide')

@@ -3,8 +3,10 @@
 
 
 {% block styles %}
-<link rel="stylesheet" href="{% static 'get_scheme.css' %}">
-<link rel="stylesheet" href="{% static 'edit_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'prompt.css' %}">
+<link rel="stylesheet" href="{% static 'Schemes/get_scheme.css' %}">
+<link rel="stylesheet" href="{% static 'Schemes/edit_scheme.css' %}">
 <title>Document</title>
 {% endblock styles %}
 
@@ -141,12 +143,14 @@
           </div>
           <div class="res_edit_box">
             {% for passage in scheme.get_passages %}
-            <div class="res" id="passage_res" data-name="{{passage.title}}" data-body="{{passage.body}}" data-id="{{passage.id}}">
+            <div class="res" id="passage_res" data-name="{{passage.title}}" data-body="{{passage.body}}"
+              data-id="{{passage.id}}">
               <div style="background-image: url({{passage.thumb.url}});"></div>
               <span>{{passage.title}}</span>
               <p>
                 <a id="set_res" class="material-symbols-outlined">settings</a>
-                <a data-link="delete_scheme_passage" data-id="{{passage.id}}" id="del_res" class="material-symbols-outlined">delete</a>
+                <a data-link="delete_scheme_passage" data-id="{{passage.id}}" id="del_res"
+                  class="material-symbols-outlined">delete</a>
               </p>
             </div>
             {% endfor %}
@@ -175,15 +179,14 @@
 
 
 {% block js %}
-<script src="{% static 'schemes.js' %}"></script>
 <script>
   const m_box = document.querySelector('.m_box')
   const m_info = document.querySelector('.m_info')
-  if(m_info){
+  if (m_info) {
     m_box.classList.add('show')
-    setTimeout(()=>{
+    setTimeout(() => {
       m_box.classList.remove('show')
-    },3200)
+    }, 3200)
   }
 </script>
 <script>

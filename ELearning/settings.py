@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'Scheme',
     'Manager',
     'Quiz',
+    'Assessment',
     'Student' 
 ]
 
