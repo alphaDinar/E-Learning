@@ -94,7 +94,7 @@ def mark_quiz(request):
         percent = (score_count * 100)/total_score
         student = Student.objects.get(name=request.user)
         if Score.objects.filter(student=student).filter(quiz=quiz).exists():
-            pass
+            return JsonResponse({'info': 'redirect', 'link' : f'/student_quizes' })
         else:
             score = Score()
             score.student = student
@@ -104,7 +104,7 @@ def mark_quiz(request):
             score.mark = "{:.2f}".format(percent) 
             score.choice_box = json.dumps(choice_box)
             score.save()
-    return JsonResponse({'info': 'redirect', 'link' : f'/student_quiz_results/{score.slug}' })
+            return JsonResponse({'info': 'redirect', 'link' : f'/student_quiz_results/{score.slug}' })
 
 def student_quiz_results(request,slug):
     score = Score.objects.get(slug=slug)

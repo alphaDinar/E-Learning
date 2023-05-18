@@ -80,22 +80,11 @@
     color: var(--var-bg);
     display: flex;
     align-items: center;
-    height: 110px;
     border-radius: 50%;
     width: 110px;
     position: relative;
     justify-content: center;
-    padding: 3px;
-  }
-
-  .quiz_submit {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--var-bg);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    background: transparent;
-    font-size: 1.5rem;
-    cursor: pointer;
+    padding: 10px 3px;
   }
 
   @media all and (max-width:1300px) {
@@ -105,11 +94,6 @@
       padding: 20px 0;
       height: auto;
     }
-
-    /* .main{
-      min-height: auto;
-      height: auto;
-    } */
     .screen {
       gap: 1rem;
       height: auto !important;
@@ -161,10 +145,8 @@
     [...prompt_box.children[2].children].forEach((el, i) => {
       el.onclick = () => {
         if (i === 0) {
-          console.log(a_tag)
           a_tag.href = '{% url "delete_quiz_page" quiz.slug %}'
           window.location.href = a_tag.href
-          console.log(el)
         } else {
           prompt_box.remove('show')
         }
