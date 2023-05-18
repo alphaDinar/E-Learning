@@ -34,7 +34,7 @@
           </a>
           <a href="{% url 'use_quiz_page' quiz.slug %}" class="scheme">
             <!-- <i class="material-symbols-outlined">psychology_alt</i> -->
-            <span>{{quiz.title}}</span>
+            <span style="text-align: center;">{{quiz.title}}</span>
             {% if quiz.status == 'pending' %}
             <p style="background: #fe6265;"></p>
             {% else %}

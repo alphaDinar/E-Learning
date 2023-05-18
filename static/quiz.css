@@ -1,5 +1,13 @@
 :root {
-  --var-bg: rgb(57, 199, 255);
+  --var-bg: #f6d482;
+}
+
+.sideBar header {
+  text-align: center;
+}
+
+.sideBar {
+  border-right: 1px dotted darkgray;
 }
 
 .sideBar nav {
@@ -7,6 +15,8 @@
   flex-direction: column;
   align-items: center;
   height: auto;
+  width: 90%;
+  padding: 10px 0;
   gap: 1.3rem;
 }
 
@@ -21,6 +31,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.sideBar nav input {
+  width: 90%;
+  text-align: center;
+  padding: 10px 5px;
+  border-radius: 40px;
+  border: 1px solid darkgray;
 }
 
 .sideBar nav div input::-webkit-inner-spin-button {
@@ -85,6 +103,24 @@
 .sideBar nav hr {
   width: 90%;
   border-top: 2px dotted darkgrey;
+}
+
+.quiz_actions {
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.quiz_actions hr {
+  height: 20px;
+  border-right: 1px solid black;
+}
+
+.quiz_actions a {
+  font-size: 1.5rem;
 }
 
 .palette_box {
@@ -158,6 +194,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 2rem;
+  overflow-x: hidden;
 }
 
 .main .screen {
@@ -171,7 +209,7 @@
 }
 
 .quiz_box button[type='button'] {
-  bottom: 5px;
+  top: 10%;
 }
 
 .ans_rad {
@@ -200,7 +238,10 @@
   max-height: 100px;
   overflow-y: auto;
   overflow-x: hidden;
+  color: rgb(1, 54, 54);
+  font-size: 1.1rem;
 }
+
 
 .question_box::-webkit-scrollbar {
   width: 8px;
@@ -321,6 +362,17 @@
   width: 100%;
   border-top: 2px dotted darkgray;
 }
+
+.quiz_submit {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--var-bg);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 
 @media all and (max-width:1300px) {
   .screen {

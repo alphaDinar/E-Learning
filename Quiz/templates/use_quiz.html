@@ -47,18 +47,10 @@
       </form>
     </nav>
     <div class="quiz_actions">
-      <i class="material-symbols-outlined">analytics</i>
-      <a onclick="deleteQuiz(event.target)" class="material-symbols-outlined">delete</a>
+      <a style="color: skyblue;" class="material-symbols-outlined">analytics</a>
+      <hr>
+      <a style="color: salmon;" onclick="deleteQuiz(event.target)" class="material-symbols-outlined">delete</a>
     </div>
-
-
-
-    <style>
-      .quiz_actions {
-        border: 1px solid black;
-      }
-    </style>
-
     <footer>
       <a href="{% url 'get_quizes_page' quiz.topic.slug %}" class="material-symbols-outlined">arrow_back_ios_new</a>
     </footer>
@@ -101,31 +93,21 @@
     </section>
   </section>
 </section>
-
 <style>
-  .sideBar{
-    border-right: 1px dotted darkgray;
-  }
+  
   .page {
     padding: 5vh 0;
   }
-  .main{
-    border-left: 1px dotted darkgray;
-    justify-content: center;
-    overflow-x: hidden;
-    gap: 2rem;
-  }
-  .quiz_box .swiper-slide{
-
-    justify-content: space-around; 
+  .quiz_box .swiper-slide {
+    justify-content: space-around;
     min-height: 60vh;
   }
-  @media all and (max-width:1000px){
-    .main .screen{
+  @media all and (max-width:1000px) {
+    .main .screen {
       width: 95%;
     }
   }
-  </style>
+</style>
 
 <style>
   .mark_box {
@@ -172,16 +154,6 @@
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     border-radius: 3px;
     padding: 3px;
-  }
-
-  .quiz_submit {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid var(--var-bg);
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    background: transparent;
-    font-size: 1.5rem;
-    cursor: pointer;
   }
 </style>
 
