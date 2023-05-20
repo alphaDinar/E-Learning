@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'dash.css' %}">
+<link rel="stylesheet" href="{% static 'sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'Super/super.css' %}">
+{% endblock styles %}
+
+
+{% block page %}
+<section class="page">
+  {% include 'super_sideBar.html' %}
+  <section class="main">
+    <section class="add_form">
+
+      <form method="post">
+        {% csrf_token %}
+        <i class="close_form material-symbols-outlined" onclick="closeForm()">close</i>
+        <section>
+          <input type="text" name="type" style="display: none;" id="in_type">
+          <input type="text" name="username" placeholder="Username" required>
+          <input type="text" name="password" placeholder="Password" required>
+        </section>
+        <div class="course_box">
+          {% for course in courses %}
+          <label data-name="{{course}}" data-grade="{{course.grade}}" data-subject="{{course.subject}}">
+            <input type="checkbox" name="courses" value="{{course.id}}" id="{{course}}">
+            <div class="course_label">{{course}}</div>
+          </label>
+          {% endfor %}
+        </div>
+        <input type="text" name="name" style="display: none;">
+
+        <style>
+          .course_box {
+            padding: 15px;
+          }
+
+          .course_box label input {
+            display: none;
+          }
+
+          .course_label {
+            padding: 10px;
+            width: inherit;
+            width: 70px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgb(31, 231, 131);
+          }
+
+          .course_box label input:checked+.course_label {
+            background: rgb(25, 228, 126);
+            color: white;
+          }
+        </style>
+
+
+        <style>
+          .add_form form {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+          }
+
+          .course_box {
+            width: 330px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 1rem;
+            justify-content: space-around;
+          }
+        </style>
+
+        <button type="submit">+</button>
+      </form>
+    </section>
+
+    <header>
+      <span><i class="material-symbols-outlined">blur_on</i> Teachers</span>
+      <input type="text" placeholder="Search Grade" oninput="runGradeSearch(event.target.value.toLowerCase())">
+      <button type="button" onclick="showForm('new')"> + Add Teacher</button>
+    </header>
+
+    
+    {% if messages %}
+    {% for message in messages %}
+    <span class="mBox">{{message}}</span>
+    {% endfor %}
+    {% endif %}
+
+    <section class="student_list">
+      <div class="teacher_row" style="border-bottom: 2px dotted darkcyan; padding: 10px 0; font-weight: 600;">
+        <small>#</small>
+        <span>Username</span>
+        <span>Password</span>
+        <div class="course_list">
+          Courses
+        </div>
+        <button class="material-symbols-outlined">edit</button>
+        <button class="material-symbols-outlined">delete</button>
+      </div>
+
+      {% for teacher in teachers %}
+      <div class="teacher_row">
+        <small>{{forloop.counter}}</small>
+        <span>{{teacher}}</span>
+        <span>{{teacher.password}}</span>
+        <div class="course_list">
+          {% for course in teacher.course.all %}
+          <small data-course="{{course.id}}">{{course}}</small>
+          {% endfor %}
+        </div>
+        <button class="material-symbols-outlined" onclick="showForm('old',event.target)" data-username="{{teacher}}" data-password="{{teacher.password}}">edit</button>
+        <button class="material-symbols-outlined">delete</button>
+      </div>
+      {% endfor %}
+
+
+      <style>
+        .teacher_row {
+          width: 100%;
+          /* border: 1px solid gold; */
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .teacher_row span {
+          width: 15%;
+        }
+
+        .teacher_row .course_list {
+          width: 50%;
+          display: flex;
+          gap: 0 0.5rem;
+          overflow-x: auto;
+        }
+
+        .teacher_row .course_list small {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgb(75, 152, 229);
+          background: rgb(25, 228, 126);
+          font-weight: 600;
+          font-size: 1.1rem;
+          min-width: 100px;
+          color: white;
+          height: 30px;
+          padding: 3px;
+        }
+      </style>
+
+    </section>
+  </section>
+</section>
+
+<style>
+  .main {
+    align-items: center !important;
+    padding: 0 !important;
+  }
+</style>
+
+<script>
+  const add_form = document.querySelector('.add_form')
+  const register_form = document.querySelector('.add_form form')
+  const in_type = document.getElementById('in_type')
+
+  closeForm = () => {
+    add_form.classList.remove('change')
+  }
+
+  const course_in = document.querySelectorAll('.course_box input')
+
+  console.log(course_in)
+
+  showForm = (val, event) => {
+    if(val == 'new'){
+      register_form.children[3].value = ''
+      register_form.children[4].value = ''
+      in_type.value = 'new'
+    }else{
+      register_form.children[2].children[1].value = ''
+      register_form.children[2].children[2].value = ''
+      course_in.forEach(item=>{
+        item.checked = false
+      })
+
+      let user_courses = [...event.parentElement.children[3].children]
+      user_courses.forEach(course=>{
+        course_in.forEach(item=>{
+          if(course.dataset.course === item.value){
+            item.checked = true
+          }
+        })
+      })
+      in_type.value = 'old'
+      register_form.children[2].children[1].value = event.dataset.username
+      register_form.children[2].children[2].value = event.dataset.password
+      register_form.children[4].value = event.dataset.username
+    }
+    add_form.classList.add('change')
+  }
+</script>
+
+{% endblock page %}
+
+
+
+{% block js %}
+<script>
+  const grades = document.querySelectorAll('.grade')
+
+  runGradeSearch = (val) => {
+    grades.forEach(grade => {
+      if (!grade.dataset.name.toLowerCase().includes(val)) {
+        grade.style.display = 'none'
+      } else {
+        grade.style.display = 'flex'
+      }
+    })
+  }
+</script>
+
+{% endblock js %}

@@ -6,7 +6,7 @@
 .sideBar {
   width: 18%;
   min-height: 95vh;
-  padding: 2.5vh 1%;
+  /* padding: 2.5vh 1%; */
   justify-content: space-between;
   display: flex;
   flex-direction: column;
@@ -16,14 +16,14 @@
   left: 0;
   background: white;
   border-right: 1px dotted rgb(50, 50, 50);
-  z-index: 1000;
   transition: 0.4s ease;
 }
 
-.sideBar.change {
-  position: absolute;
-  left: -20%;
+.sideBar,.sideBar.change{
+  z-index: 1000;
 }
+
+
 
 #sideBar_tag {
   position: absolute;
@@ -33,7 +33,7 @@
   width: 35px;
   cursor: pointer;
   z-index: 50;
-  background: white;
+  color: white;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
@@ -42,7 +42,8 @@
 }
 
 .main.change {
-  width: 100%;
+  display: flex;
+  width: 95%;
 }
 
 .main {
@@ -52,7 +53,7 @@
   width: 80%;
 }
 
-@media all and (max-width:1200px) {
+@media all and (max-width:1300px) {
 
   .main,
   .main.change {

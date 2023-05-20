@@ -15,5 +15,8 @@ urlpatterns = [
 
     path('student_quiz_results/<str:slug>', views.student_quiz_results, name='student_quiz_results_page'),
     
-    path('student_assessment', views.student_assessment, name='student_assessment_page')
+    path('student_assessment', views.student_assessment, name='student_assessment_page'),
+    path('student_assessment_quizes/<str:slug>', views.student_assessment_quizes, name='student_assessment_quizes_page'),
+
+    path('student_report', views.student_report, name='student_report_page'),
 ]

@@ -4,7 +4,6 @@ from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from .models import User,Student,Teacher
 from Course.models import Course,Grade
-from Student.models import StudentProfile
 
 # Create your views here.
 def home(request):
@@ -51,34 +50,7 @@ def portal(request):
             messages.error(request, 'Username doesn"t exist')
     return render(request, 'portal.html')
 
-def student_portal(request):
-    if not request.user.is_superuser:
-        return redirect('portal')
-    grades = Grade.objects.all()
-    if request.method == 'POST':
-        if User.objects.filter(username=request.POST.get('first_name')).exists():
-            messages.error(request, 'student already exists')
-        else:
-            user = User()
-            user.username = f"{request.POST.get('first_name')}{Grade.objects.get(name=request.POST.get('grade')).code}".lower()
-            user.password = make_password(request.POST.get('last_name'))
-            user.save()
-            student = Student()
-            student.name = user
-            grade = Grade.objects.get(name=request.POST.get('grade'))
-            student.grade = grade
-            student.save()
-            student_profile = StudentProfile()
-            student_profile.student = student
-            student_profile.first_name = request.POST.get('first_name')
-            student_profile.last_name = request.POST.get('last_name')
-            student_profile.save()
-            messages.success(request, 'Student Created successfully')
-            return redirect('student_portal')
-    context = {
-        'grades' : grades
-    }
-    return render(request, 'student_portal.html', context)
+
 
 
 # from app_name.models import RelatedModel

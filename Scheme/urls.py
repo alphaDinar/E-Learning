@@ -13,8 +13,5 @@ urlpatterns = [
     path('delete_scheme_passage', views.delete_scheme_passage),
 
     # path('edit_scheme/<str:slug>/delete_video/<int:id>', views.delete_video, name='delete_video'),
-
-    path('hello', views.hello),
-    # path('head',views.head),
-    path('test', views.test)
+    path('assessment/<str:slug>', views.assessment, name='assessment_page'),
 ]

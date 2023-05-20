@@ -4,6 +4,7 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'Student/student_dash.css' %}">
 <link rel="stylesheet" href="{% static 'Student/sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'Student/assessment.css' %}">
 {% endblock styles %}
 
 {% block page %}
@@ -18,103 +19,86 @@
       <input type="text" id="item_in" placeholder="Search Course"
         oninput="runSchemeSearch(event.target.value.toLowerCase())">
     </nav>
-    <section class="scheme_box">
-      {% for course in courses %}
-      <a href="{% url 'student_get_quizes_schemes_page' course.slug %}" class="scheme" data-name="{{course}}" data-subject="{{course.subject}}">
-        <i class="material-symbols-outlined">psychology_alt</i>
+    <section class="top_box">
+      <div class="avg_box"><span>83%</span></div>
+      <a href="{% url 'student_report_page' %}">-Report-</a>
+    </section>
+    <section class="low_box">
+      {% for course in grade.get_courses %}
+      <a href="{% url 'student_assessment_quizes_page' course.slug %}" class="course_box">
         <span>{{course}}</span>
         <small>{{course.subject}}</small>
+        <p class="small_box">
+        {% for scheme in course.get_schemes %}
+          {% for quiz in scheme.get_quizes %}
+            {% for score in quiz.get_user_scores %}
+                <small data-mark="{{score.mark}}"></small>
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+        </p>
+        <hr>
+        <div class="course_tag"></div>
+        <div class="course_avg"> </div>
       </a>
       {% endfor %}
     </section>
   </section>
 </section>
 
-
-
-
 <style>
-  .scheme {
-    width: 280px;
-    height: 180px;
-    border-radius: 100px;
-    background: black;
-    background: rgb(57, 199, 255);
-    color: white;
+  .top_box{
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
   }
-
-  .scheme span {
-    font-size: 1.3rem;
-  }
-
-  .scheme small {
-    color: wheat;
+  .avg_box{
+    background: #2a2a46;
   }
 </style>
 
-<style>
-  .main nav {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    min-height: 8vh;
-    background: white;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  }
 
-  .main div {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
+<script>
+  const courses = document.querySelectorAll('.course_box')
+  const course_avg = document.querySelectorAll('.course_avg')
+  const course_tag = document.querySelectorAll('.course_tag')
 
-  .main nav input {
-    height: 30px;
-    padding: 5px 15px;
-    width: 230px;
-    text-align: center;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  let avg_box = [];
+  courses.forEach((course,i)=>{
+    var avg = 0;
+    [...course.children[2].children].forEach(mark_box=>{
+      avg = eval(avg + parseFloat(mark_box.dataset.mark))
+    })
+    var quiz_count = [...course.children[2].children].length 
+    avg = avg / quiz_count || 0
+    avg_box.push(avg)
+    if(avg > 60){
+      course.style.background = '#0ddc74'
+    }else if (avg > 40) {
+      course.style.background = '#ffa500'
+    }else{
+      course.style.background = 'salmon'
+    }
+    course_tag[i].innerHTML = quiz_count
+    course_avg[i].innerHTML = `${avg.toFixed(2)}%`
+  })
 
-    border-radius: 40px;
-  }
+  const total_avg_box = document.querySelector('.avg_box span')
 
-  .main .scheme_box {
-    width: 90%;
-    display: flex;
+  var total_avg = 0
+  avg_box.forEach(avg => {
+    total_avg = total_avg + avg
+  })
+  console.log(avg_box)
 
-    flex-wrap: wrap;
-    max-height: 84vh;
-    justify-content: space-around;
-    gap: 2rem 0;
-    overflow-y: auto;
-    padding: 3vh 5%;
-  }
+  total_avg = (total_avg / avg_box.length)
+  total_avg_box.innerHTML = total_avg.toFixed(2) + '%'
 
-  .main {
-    min-height: 100vh;
-    width: 80%;
-    background: #f4f7fa;
-  }
-</style>
 
-<style>
-  .main {
-    display: flex;
-    border-left: 1px solid darkgray;
-  }
-</style>
+</script>
 
 {% endblock page %}
 
 
 {% block js %}
-
 <script>
   const items = document.querySelectorAll('.scheme')
 

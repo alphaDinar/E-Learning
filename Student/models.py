@@ -4,14 +4,11 @@ from Log.models import Student
 from Quiz.models import Quiz
 from cloudinary.models import CloudinaryField
 
-class StudentProfile(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    # profile_pic = models.ImageField(default='student.jpg', upload_to='students')
-    # profile_pic = CloudinaryField("Image" ,folder='TM/Students', resource_type='auto', default='https://res.cloudinary.com/dvnemzw0z/image/upload/v1683386036/5064889_wpiq8e.png')
-    first_name = models.CharField(max_length=200) 
-    last_name = models.CharField(max_length=200)
+class StudentReport(models.Model):
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    report = models.JSONField(null=True, blank=True)
     def __str__(self):
-        return f'{self.student.name}'
+        return f'{self.student}"s Report'
 
 class Score(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -28,3 +25,4 @@ class Score(models.Model):
         super().save(*args, **kwargs)  
     def __str__(self):
         return f'{self.student.name}   {self.quiz.title} {self.mark}'
+

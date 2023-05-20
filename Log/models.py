@@ -11,6 +11,7 @@ class User(AbstractUser):
 class Teacher(models.Model):
     name = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     course = models.ManyToManyField(Course,blank=True)
+    password = models.CharField(max_length=100)
     def save(self, *args, **kwargs):
         user = User.objects.get(username=self.name.username)
         user.is_teacher = True
@@ -29,11 +30,14 @@ class Manager(models.Model):
         super().save(*args, **kwargs)
     def __str__(self):
         return self.name.username
-    
 
 class Student(models.Model):
     name = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE) 
+    # profile_pic = models.ImageField(default='student.jpg', upload_to='students')
+    # profile_pic = CloudinaryField("Image" ,folder='TM/Students', resource_type='auto', default='https://res.cloudinary.com/dvnemzw0z/image/upload/v1683386036/5064889_wpiq8e.png')
+    first_name = models.CharField(max_length=200) 
+    last_name = models.CharField(max_length=200)
     def save(self, *args, **kwargs):
         user = User.objects.get(username=self.name.username)
         user.is_student = True
@@ -41,6 +45,8 @@ class Student(models.Model):
         super().save(*args, **kwargs)
     def __str__(self):
         return f'{self.name.username}' 
+    def get_scores(self):
+        return self.score_set.all()
 
 
 # class LogBox(models.Model):

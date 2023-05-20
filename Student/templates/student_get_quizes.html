@@ -20,8 +20,8 @@
     </nav>
     <section class="scheme_box">
       {% for quiz in scheme.get_quizes %}
-      <div class="scheme_hold">
-        <a href="{% url 'student_start_quiz_page' quiz.slug %}" class="scheme" data-name="{{quiz.title}}" data-subject="{{scheme.title}}">
+      <div class="scheme_hold" data-name="{{quiz.title}}" data-subject="{{scheme.title}}">
+        <a href="{% url 'student_start_quiz_page' quiz.slug %}" class="scheme">
           <i class="material-symbols-outlined">psychology_alt</i>
           <span>{{quiz.title}}</span>
           <small>{{quiz.level}}</small>
@@ -33,111 +33,13 @@
     </section>
   </section>
 </section>
-
-<style>
-  .scheme_hold{
-    display: flex;
-    gap: 0;
-    position: relative;
-    flex-direction: column;
-    align-items: center;
-  }
-  .scheme_hold .correction_tag{
-    width: 30px;
-    height: 30px;
-    position: absolute;
-    top: 100%;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0 0 5px 5px;
-    background: rgb(30, 213, 122);
-  }
-</style>
-
-
-
-<style>
-  .scheme {
-    width: 280px;
-    height: 180px;
-    border-radius: 100px;
-    background: black;
-    background: rgb(57, 199, 255);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid transparent;
-    transition: 0.4s ease;
-  }
-  .scheme:hover{
-    background: white;
-    border: 2px dotted rgb(57, 199, 255);
-    color: rgb(57, 199, 255);
-  }
-  .scheme span {
-    font-size: 1.3rem;
-  }
-
-  .scheme small {
-    color: wheat;
-  }
-</style>
-
-<style>
-  .main nav {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    min-height: 8vh;
-    background: white;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  }
-
-  .main div {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .main nav input {
-    height: 30px;
-    padding: 5px 15px;
-    width: 230px;
-    text-align: center;
-    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
-    border-radius: 40px;
-  }
-
-  .main .scheme_box {
-    width: 90%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 2rem 0;
-    padding: 3vh 5%;
-  }
-</style>
-
-<style>
-  .main {
-    display: flex;
-  }
-</style>
-
 {% endblock page %}
 
 
 {% block js %}
 
 <script>
-  const items = document.querySelectorAll('.scheme')
+  const items = document.querySelectorAll('.scheme_hold')
 
   runSchemeSearch = (val) => {
     items.forEach(item => {

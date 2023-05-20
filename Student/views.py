@@ -5,8 +5,8 @@ from django.http import JsonResponse,HttpResponseRedirect
 from Log.models import Student
 from Course.models import Course
 from Scheme.models import Scheme
-from Quiz.models import Quiz
-from .models import StudentProfile,Score
+from Quiz.models import Quiz,CurStudent
+from .models import Score,StudentReport
 import json
 
 
@@ -23,10 +23,8 @@ def student_dash(request):
         return redirect('homepage')
     else:
         student = Student.objects.get(name=request.user)
-        student_profile = StudentProfile.objects.get(student=student)
     context = {
         'student' : student,
-        'student_profile' : student_profile
     }
     return render(request, 'student_dash.html', context)
 
@@ -114,4 +112,26 @@ def student_quiz_results(request,slug):
     return render(request, 'student_quiz_results.html', context)
 
 def student_assessment(request):
-    return render(request, 'student_assessment.html')
+    CurStudent.objects.all().delete()
+    CurStudent.objects.create(sid=request.user.id).save()
+    grade = Student.objects.get(name=request.user).grade
+    context = {
+        'grade' : grade
+    }
+    return render(request, 'student_assessment.html', context)
+
+def student_assessment_quizes(request,slug):
+    course = Course.objects.get(slug=slug)
+    context = {
+        'course' : course
+    }
+    return render(request, 'student_assessment_quizes.html', context)
+
+def student_report(request):
+    CurStudent.objects.all().delete()
+    CurStudent.objects.create(sid=request.user.id).save()
+    grade = Student.objects.get(name=request.user).grade
+    context = {
+        'grade' : grade
+    }
+    return render(request, 'student_report.html', context)

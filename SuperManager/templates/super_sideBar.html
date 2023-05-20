@@ -1,0 +1,20 @@
+<section class="sideBar">
+  <button class="material-symbols-outlined" id="sideBar_tag">linear_scale</button>
+  <header>
+    <i class="material-symbols-outlined">school</i>
+    <strong>{{course}}</strong>
+  </header>
+  <nav>
+    <a href="{% url 'super_student_assessment_page' %}"><i class="material-symbols-outlined">analytics</i> <span>Student Assessment</span></a>
+    <a href=""><i class="material-symbols-outlined">analytics</i> <span>Teacher Assessment</span></a>
+    <a href="{% url 'super_add_student_page'  %}"><i class="material-symbols-outlined">person_add</i> <span>Add Student</span></a>
+    <a href="{% url 'super_add_teacher_page' %}"><i class="material-symbols-outlined">person_add</i> <span>Add Teacher</span></a>
+    <a href="{% url 'super_grades_page' %}"><i class="material-symbols-outlined">school</i> <span>Grades</span></a>
+  </nav>
+  <footer>
+    <a href="" style="border-bottom: 1px solid black; color: rgb(55, 185, 236);"><i
+        class="material-symbols-outlined">west</i> <span>Back to Courses</span> </a>
+    <a href="" style="color: salmon; font-weight: 600;"
+      class="material-symbols-outlined">power_settings_new</a>
+  </footer>
+</section>

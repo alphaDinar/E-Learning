@@ -63,8 +63,8 @@
 }
 
 .answer_box .answer.change {
-  background: white;
-  color: var(--var-bg);
+  background: var(--var-bg);
+  color: white;
   border: 1px solid var(--var-bg);
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }

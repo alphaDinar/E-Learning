@@ -12,11 +12,6 @@
 {% block page %}
 <section class="page">
   <section class="main">
-    <div class="palette_box">
-      <p style="background: #f9d783;" data-code="#f9d783"></p>
-      <p style="background: rgb(57, 199, 255);" data-code="rgb(57, 199, 255)"></p>
-      <p style="background: #dc2641;" data-code="#dc2641"></p>
-    </div>
     <div class="page_box"></div>
     <div class="timer_box">
       <div class="timer">1 : 00 : 00</div>
@@ -51,7 +46,6 @@
   .main .screen .swiper {
     border-radius: 10px;
     width: 100%;
-    /* height: 100%; */
   }
 </style>
 
@@ -178,17 +172,6 @@
   console.log(newTime);
 
 </script> -->
-
-<script>
-  var rootElement = document.documentElement;
-
-  document.querySelectorAll('.palette_box p').forEach(el => {
-    el.onclick = () => {
-      rootElement.style.setProperty('--var-bg', `${el.dataset.code}`);
-    }
-  })
-</script>
-
 
 <script>
   const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')

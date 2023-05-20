@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -17,12 +16,16 @@ Q_status = (
     ('completed','completed')
 )
 
+class CurStudent(models.Model):
+    sid = models.IntegerField()
+    def __str__(self):
+        return str(self.sid)
+
 class Quiz(models.Model):
     title = models.CharField(max_length=100)
     topic = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     question_num = models.IntegerField(blank=True, null=True, default=10)
-    duration = models.IntegerField(
-        help_text='Duration allowed for Quiz in minutes')
+    duration = models.IntegerField(help_text='Duration allowed for Quiz in minutes')
     level = models.CharField(max_length=30, choices=Q_level)
     con = models.JSONField(blank=True,null=True)
     marking_scheme = models.JSONField(blank=True, null=True)
@@ -33,10 +36,14 @@ class Quiz(models.Model):
         if self.slug == None:
             self.slug = slugify(self.title)
         super().save(*args,**kwargs)
+    def get_user_scores(self):
+        return self.score_set.filter(student = CurStudent.objects.last().sid).order_by('-id')
     def __str__(self):
         return self.title
     class Meta:
         verbose_name_plural = 'quizes'
+
+
 
 # class TestScore(models.Model):
 #     # quiz_title = models.CharField(max_length=300)

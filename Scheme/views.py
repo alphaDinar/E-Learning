@@ -132,18 +132,14 @@ def delete_scheme_passage(request):
         Passage.objects.get(id=res_id).delete()
     return JsonResponse({'test':'good'})
 
-# @csrf_exempt
-def hello(request):
-    if request.method == 'POST':
-        print(request.POST)
-    return JsonResponse({'test':'good'})
-
-def test(request):
-    token = get_token(request)
-    context = {
-        'token' : token
-    }
-    return render(request,'test.html', context)
-
 def head(request):
     return render(request, 'head.html')
+
+def assessment(request, slug):
+    course = Course.objects.get(slug=slug)
+    schemes = course.get_schemes()
+    context ={
+        'course' : course
+    }
+    return render(request, 'assessment.html', context)
+

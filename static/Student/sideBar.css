@@ -45,11 +45,10 @@
   align-items: center;
   justify-content: space-between;
   top: 0;
-  border-right: 1px solid darkgray;
   z-index: 50;
   background: white;
+  border-right: 1px dotted darkgray;
   left: 0;
-
 }
 
 .sideBar button {
@@ -119,6 +118,7 @@
     width: 230px;
     padding: 5vh 10px;
     gap: revert;
+    border: none;
     justify-content: space-between;
     display: flex;
   }

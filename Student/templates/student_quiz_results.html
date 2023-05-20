@@ -26,7 +26,6 @@
   <style>
     .score_user{
       box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-      /* border: 1px solid black; */
       padding: 5px 15px;
       border-radius: 40px;
       font-size: 1.1rem;
@@ -53,6 +52,7 @@
 
 <style>
   :root {
+    /* --var-bg : rgb(197, 197, 197); */
     --var-score_box: transparent;
   }
   .page{
@@ -84,14 +84,9 @@
   const quiz_box = document.querySelector('.quiz_box')
   let user_choice = JSON.parse(quiz_box.dataset.user_choice)
   let com_choice = JSON.parse(quiz_box.dataset.com_choice)
-  // console.log(user_choice, com_choice)
-
 
   if (quiz_box.dataset.json != 'None') {
     JSON.parse(quiz_box.dataset.json).forEach((el, i) => {
-      console.log(user_choice[i])
-      console.log(com_choice[i].cor_ans)
-
       const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
       var slide_sheet = document.createElement('div')
       slide_sheet.classList.add('swiper-slide')
@@ -115,8 +110,16 @@
         answer_small.innerHTML = tag_box[ii]
         answer.appendChild(answer_small)
         var answer_text = document.createElement('span')
+        
         if (user_choice[i] === ans) {
           answer.classList.add('change')
+          if (user_choice[i] === com_choice[i].cor_ans) {
+            answer.style.background = '#1be685'
+            answer.style.border = '1px solid #1be685'
+          }else{
+            answer.style.background = '#ee4747'
+            answer.style.border = '1px solid #ee4747'
+          }
         }
         answer_text.innerHTML = ans
         answer.appendChild(answer_text)
@@ -131,13 +134,8 @@
       slide_sheet.appendChild(answer_box)
       var cor_ans = document.createElement('span')
       cor_ans.classList.add('cor_ans')
-      if (user_choice[i] === com_choice[i].cor_ans) {
-        cor_ans.style.color = '#1de182'
-        cor_ans.innerHTML = `<i class='material-symbols-outlined'>verified</i>${com_choice[i].cor_ans}`
-      } else {
-        cor_ans.style.color = 'salmon'
-        cor_ans.innerHTML = `<i class='material-symbols-outlined'>dangerous</i>${com_choice[i].cor_ans}`
-      }
+      cor_ans.style.color = '#1de182'
+      cor_ans.innerHTML = `<i class='material-symbols-outlined'>verified</i>${com_choice[i].cor_ans}`
       slide_sheet.appendChild(cor_ans)
       quiz_box_wrapper.appendChild(slide_sheet)
     })
