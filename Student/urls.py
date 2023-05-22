@@ -19,4 +19,7 @@ urlpatterns = [
     path('student_assessment_quizes/<str:slug>', views.student_assessment_quizes, name='student_assessment_quizes_page'),
 
     path('student_report', views.student_report, name='student_report_page'),
+
+
+    path('mark2', views.mark2)
 ]

@@ -15,29 +15,50 @@
   <section class="main">
     <header>
       <span><i class="material-symbols-outlined">blur_on</i> Grades</span>
-      <input type="text" placeholder="Search" oninput="runGradeSearch(event.target.value.toLowerCase())">
-      <button onclick="generatePDF()">Generate PDF</button>
+      <input type="text" placeholder="Search Grade" oninput="runGradeSearch(event.target.value.toLowerCase())">
     </header>
     <div class="report_box">
       <section class="header">
-        <span id="sh" style="font-weight: 600;">Student</span>
+        <span>Student</span>
         <div class="mark_box_header">
           {% for course in grade.get_courses %}
-          <span style="font-weight: 600; border: none;" class="course cell" data-course="{{course.id}}"
-            id="course_row">{{course}}</span>
+          <span class="course cell" data-course="{{course.id}}" id="course_row">{{course}}</span>
           {% endfor %}
         </div>
-        <span id="sh" style="font-weight: 600;">Average</span>
+        <span>Average</span>
       </section>
-      <hr>
 
-      <section class="record_box_holder">
+      <style>
+        .report_box .header{
+          display: flex;
+          justify-content: space-around;
+          border: 3px solid salmon;
+        }
+        
+        .cell{
+          width: 70px;
+          padding: 3px;
+          height: 30px;
+          font-size: 0.9rem;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 1px solid white;
+          background: salmon;
+        }
+      </style>
+
+      <section>
         {% for student in grade.get_students %}
-        <div class="record" data-name="{{student}}" data-full_name="{{student.first_name}} {{student.last_name}}">
-          <span id="sh">{{student.first_name}} {{student.last_name}}</span>
+        <div class="record">
+          <span>{{student}}</span>
           <div class="mark_box">
+
           </div>
-          <span id="sh" class="total_box"></span>
+          <div class="total_box">
+
+          </div>
           <div class="record_bank" style="display: none;">
             {% for score in student.get_scores %}
             <small data-course="{{score.quiz.topic.course.id}}" data-mark="{{score.mark}}">{{score}}</small>
@@ -46,16 +67,10 @@
         </div>
         {% endfor %}
       </section>
+
     </div>
   </section>
 </section>
-
-<style>
-  .main {
-    padding: 0 !important;
-    align-items: center;
-  }
-</style>
 
 <script>
   const course_rows = document.querySelectorAll('[id="course_row"]')
@@ -98,71 +113,71 @@
       })
       total = total / mark_box[ii].length || 0
       avg.push(total)
-      el.innerHTML = `${total.toFixed(2)} %`
+      el.innerHTML = total.toFixed(2)
     })
 
     var avg_score = 0
     avg.forEach(el => {
       avg_score = avg_score + el
     })
-    total_box[i].parentElement.dataset.avg = (avg_score / avg.length).toFixed(2)
-    total_box[i].innerHTML = `${(avg_score / avg.length).toFixed(2)} %`
-  })
-
-  records.forEach(box => {
-    console.log(box.dataset.avg)
+    total_box[i].innerHTML = (avg_score / avg.length).toFixed(2)
   })
 </script>
 
+
+<style>
+  .mark_box, .mark_box_header{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border: 2px solid salmon;
+    /* width: 60%; */
+  }
+
+  .record {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+</style>
+
+<style>
+  .main {
+    padding: 0 !important;
+    align-items: center;
+  }
+
+  .report_box {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    gap: 1.5rem;
+    border: 2px solid black;
+    /* height: 100px; */
+  }
+
+  .report_box header {
+    border: 3px solid gold;
+  }
+</style>
 {% endblock page %}
 
 
+
 {% block js %}
-<script>
-  const grades = document.querySelectorAll('.record')
+<!-- <script>
+    const grades = document.querySelectorAll('.grade')
 
-  runGradeSearch = (val) => {
-    grades.forEach(grade => {
-      if (!grade.dataset.name.toLowerCase().includes(val) && !grade.dataset.avg.toLowerCase().includes(val)) {
-        grade.style.display = 'none'
-      } else {
-        grade.style.display = 'flex'
-      }
-    })
-  }
-</script>
+    runGradeSearch =(val)=>{
+      grades.forEach(grade=>{
+        if(!grade.dataset.name.toLowerCase().includes(val)){
+          grade.style.display = 'none'
+        }else{
+          grade.style.display = 'flex'
+        }
+      })
+    }
+  </script> -->
 
-
-
-<script>
-  const results = []
-
-  var cur_time = new Date()
-  console.log(cur_time)
-
-  let courses = ['A', 'B', 'C']
-
-  records.forEach((record) => {
-    results.push({student: record.dataset.full_name, avg: record.dataset.avg})
-  })
-
-  console.log(results)
-
-  function generatePDF() {
-    // Create a new jsPDF instance
-    const doc = new jsPDF();
-    const headers = [["Student", "Average"]];
-    const data = results.map((result) => [result.student, result.avg]);
-
-    doc.setFontSize(12);
-    doc.text(`{{user}}  Semester Report`, 10, 10);
-    doc.autoTable({
-      head: headers,
-      body: data,
-      startY: 20,
-    });
-
-    doc.save("books.pdf");
-  }
-</script>
 {% endblock js %}

@@ -73,7 +73,7 @@
         <span>{{student.name}}</span>
         <span>{{student.first_name}}</span>
         <span>{{student.last_name}}</span>
-        <button class="material-symbols-outlined" data-first_name="{{student.first_name}}"
+        <button class="material-symbols-outlined edit_student" data-first_name="{{student.first_name}}"
           data-last_name="{{student.last_name}}" data-name="{{student}}"
           onclick="showForm('old', event.target)">edit</button>
         <button data-name="{{student.name}}" class="material-symbols-outlined del_student">delete</button>
@@ -140,14 +140,35 @@
         if (event.target.id === 'no') {
           prompt_box.classList.remove('show')
         } else {
-          runAxios('super_delete_student', del.dataset.name, '{{token}}')
-          del.parentElement.remove()
+          runAxios('super_delete_user', del.dataset.name, '{{token}}')
+          anime({
+            target: del.parentElement,
+            translateX: [-30, 0],
+            opacity: [1, 0],
+            duration: 500,
+            complete: () => {
+              del.parentElement.remove()
+            }
+          })
           prompt_box.classList.remove('show')
         }
       }
     }
   })
 
+  runGradeSearchAnime = (grade, i) => {
+    anime({
+      targets: grade,
+      translateY: [-30, 0],
+      opacity: [0, 1],
+      duration: 1800,
+      delay: 30 * i,
+    })
+  }
+
+  grades.forEach((grade, i) => {
+    runGradeSearchAnime(grade, i)
+  })
 
   runGradeSearch = (val) => {
     grades.forEach(grade => {

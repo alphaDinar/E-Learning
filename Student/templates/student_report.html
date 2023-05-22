@@ -158,18 +158,7 @@
     // Create a new jsPDF instance
     const doc = new jsPDF();
     const headers = [["Course", "Mark", "Grade"]];
-
-    // Extract data from your model or use sample data
-    // const books = [
-    //   { title: "Book 1", author: "Author 1", publication_date: "2022-01-01" },
-    //   { title: "Book 2", author: "Author 2", publication_date: "2022-02-01" },
-    //   { title: "Book 3", author: "Author 3", publication_date: "2022-03-01" },
-    // ];
-
-    const data = results.map((result) => [result.course, result.avg, result.grade]);
-
-
-    
+    const data = results.map((result) => [result.course, result.avg, result.grade]);    
 
     doc.setFontSize(12);
     doc.text(`{{user}}  Semester Report`, 10, 10);

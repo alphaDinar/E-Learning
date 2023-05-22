@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from Course.models import Course,Grade
-from Log.models import Student,User,Teacher
+from Log.models import Student,User,Teacher,Manager
 import json
 
 def supermanager(request):
@@ -32,6 +32,9 @@ def super_add_student(request):
     }
     return render(request, 'super_add_student.html', context)
 
+def capitalize(string):
+    return string[0].upper() + string[1:]
+    
 def super_get_students(request,slug):
     grade = Grade.objects.get(slug=slug)
     token = get_token(request)
@@ -48,8 +51,8 @@ def super_get_students(request,slug):
                 student.name = user
                 grade = grade
                 student.grade = grade
-                student.first_name = request.POST.get('first_name')
-                student.last_name = request.POST.get('last_name')
+                student.first_name = capitalize(request.POST.get('first_name'))
+                student.last_name = capitalize(request.POST.get('last_name'))
                 student.save()
                 messages.success(request, f'{user.username} Created successfully')
         else :
@@ -57,8 +60,8 @@ def super_get_students(request,slug):
             user.password = make_password(request.POST.get('last_name'))
             user.save()
             student = Student.objects.get(name=user)
-            student.first_name = request.POST.get('first_name')
-            student.last_name = request.POST.get('last_name')
+            student.first_name = capitalize(request.POST.get('first_name'))
+            student.last_name = capitalize(request.POST.get('last_name'))
             student.save()
             messages.success(request, f'{student} Updated successfully')
     context = {
@@ -67,15 +70,31 @@ def super_get_students(request,slug):
     }
     return render(request, 'super_get_students.html', context)
 
-def super_delete_student(request):
-    if request.method == 'POST':
-        json_data = json.loads(request.body)
-        User.objects.get(username=json_data['data']).delete()
-    return JsonResponse({'info':'success'})
-
 def super_add_teacher(request):
     teachers = Teacher.objects.all()
     courses = Course.objects.all()
+    token = get_token(request)
+    super_add(request, Teacher)
+    context = {
+        'teachers' : teachers,
+        'courses' : courses,
+        'token' : token
+    }
+    return render(request, 'super_add_teacher.html', context)
+
+def super_add_manager(request):
+    managers = Manager.objects.all()
+    courses = Course.objects.all()
+    token = get_token(request)
+    super_add(request, Manager)
+    context = {
+        'managers' : managers,
+        'courses' : courses,
+        'token' : token
+    }
+    return render(request, 'super_add_manager.html', context)
+
+def super_add(request , Staff):
     if request.method == 'POST':
         if request.POST.get('type') == 'new':
             if User.objects.filter(username=request.POST.get('username')).exists():
@@ -87,12 +106,12 @@ def super_add_teacher(request):
                     user.username = request.POST.get('username')
                     user.password = make_password(request.POST.get('password'))
                     user.save()
-                    teacher = Teacher()
-                    teacher.name = user
-                    teacher.password = request.POST.get('password')
-                    teacher.save()
-                    teacher.course.set(courseList)
-                    teacher.save()
+                    staff = Staff()
+                    staff.name = user
+                    staff.password = request.POST.get('password')
+                    staff.save()
+                    staff.course.set(courseList)
+                    staff.save()
                     messages.info(request, f'{user.username} Created successfully')
                 else:
                     messages.error(request, 'Select at least one Course')
@@ -102,22 +121,17 @@ def super_add_teacher(request):
             user.username = request.POST.get('username')
             user.password = make_password(request.POST.get('password'))
             user.save()
-            teacher = Teacher.objects.get(name=user)
-            teacher.password = request.POST.get('password')
-            teacher.course.set(courseList)
-            teacher.save()
+            staff = Staff.objects.get(name=user)
+            staff.password = request.POST.get('password')
+            staff.course.set(courseList)
+            staff.save()
             messages.success(request, f'{user} Updated successfully')
-    context = {
-        'teachers' : teachers,
-        'courses' : courses
-    }
-    return render(request, 'super_add_teacher.html', context)
 
-# def super_delete_student(request):
-#     if request.method == 'POST':
-#         json_data = json.loads(request.body)
-#         User.objects.get(username=json_data['data']).delete()
-#     return JsonResponse({'info':'success'})
+def super_delete_user(request):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        User.objects.get(username=json_data['data']).delete()
+    return JsonResponse({'info':'success'})
 
 
 def super_grades(request):
@@ -143,12 +157,6 @@ def super_grades(request):
     }
     return render(request, 'super_grades.html', context)
 
-def super_delete_grade(request):
-    if request.method == 'POST':
-        json_data = json.loads(request.body)
-        Grade.objects.get(id=json_data['data']).delete()
-    return JsonResponse({'test':'good'})
-
 def super_get_grade(request,slug):
     grade = Grade.objects.get(slug=slug)
     token = get_token(request)
@@ -172,6 +180,19 @@ def super_get_grade(request,slug):
         'token' : token
     }
     return render(request, 'super_get_grade.html', context)
+
+def super_delete_grade(request):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        Grade.objects.get(id=json_data['data']).delete()
+    return JsonResponse({'test':'good'})
+
+def super_courses(request):
+    courses = Course.objects.all()
+    context = {
+        'courses' : courses
+    }
+    return render(request, 'super_courses.html', context)
 
 def super_delete_course(request):
     if request.method == 'POST':

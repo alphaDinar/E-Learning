@@ -8,7 +8,6 @@ class Grade(models.Model):
     name = models.CharField(max_length=300)
     code = models.CharField(max_length=100)
     slug = models.SlugField(max_length=400, null=True, blank=True)
-    # courses = models.ManyToManyField(Subject)
     def save(self, *args, **kwargs):
         if self.slug == None:
             self.slug = slugify(self.name)

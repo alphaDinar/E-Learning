@@ -75,6 +75,7 @@
             } else {
               runAxios('super_delete_course', main_event.dataset.id, '{{token}}')
               main_event.parentElement.remove()
+              prompt_box.remove('show')
             }
           }
         }
@@ -114,6 +115,7 @@
   }
 
   showForm = (val, event) => {
+    register_form.children[4].value = ''
     if (val == 'new') {
       register_form.children[0].value = 'new'
     } else {

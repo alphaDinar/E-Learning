@@ -135,3 +135,11 @@ def student_report(request):
         'grade' : grade
     }
     return render(request, 'student_report.html', context)
+
+
+def mark2(request):
+    student = Student.objects.get(name=request.user)
+    context = {
+        'student' : student
+    }
+    return render(request, 'mark2.html', context)

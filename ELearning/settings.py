@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'ELearning.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse('postgresql://postgres:TZSCp5vFreGdoWiGhQfk@containers-us-west-73.railway.app:7400/railway')
+    'default': dj_database_url.parse('postgresql://postgres:NS5UdfIJAEYp0XKnphHZ@containers-us-west-52.railway.app:6198/railway')
 }
 
 

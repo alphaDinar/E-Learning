@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{% static 'sideBar.css' %}">
 <link rel="stylesheet" href="{% static 'Super/super.css' %}">
 {% endblock styles %}
-  
+
 
 {% block page %}
 <section class="page">
@@ -19,8 +19,12 @@
     </header>
     <div class="grade_box">
       {% for grade in grades %}
-      <a href="{% url 'super_get_students_page' grade.slug %}" class="grade" data-name="{{grade}}">
-        {{grade}}
+      <a href="{% url 'super_get_students_page' grade.slug %}" class="grade" data-name="{{grade}}" data-code="{{grade.code}}">
+        <div>
+          <small class="material-symbols-outlined">school</small>
+          {{grade}}
+        </div>
+        <p></p>
       </a>
       {% endfor %}
     </div>
@@ -28,28 +32,28 @@
 </section>
 
 <style>
-  .main{
+  .main {
     padding: 0 !important;
   }
 </style>
 {% endblock page %}
-  
-  
+
+
 
 {% block js %}
-  <script>
-    const grades = document.querySelectorAll('.grade')
+<script>
+  const grades = document.querySelectorAll('.grade')
 
-    runGradeSearch =(val)=>{
-      grades.forEach(grade=>{
-        if(!grade.dataset.name.toLowerCase().includes(val)){
-          grade.style.display = 'none'
-        }else{
-          grade.style.display = 'flex'
-        }
-      })
-    }
-  </script>
+  runGradeSearch = (val) => {
+    grades.forEach((grade,i) => {
+      if (!grade.dataset.name.toLowerCase().includes(val) && !grade.dataset.code.toLowerCase().includes(val)) {
+        grade.style.display = 'none'
+      } else {
+        grade.style.display = 'flex'
+      }
+      runGradeSearchAnime(grade,i)
+    })
+  }
+</script>
 
 {% endblock js %}
-  
