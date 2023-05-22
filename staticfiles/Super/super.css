@@ -25,31 +25,63 @@
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
+.main header button{
+  background: rgb(29, 224, 127);
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
 .grade_box {
   width: 90%;
   padding: 2rem 5%;
-  gap: 1.5rem 2rem;
+  gap: 2rem 2rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  justify-content: flex-start;
 }
 
 .grade {
   width: 250px;
-  color: darkcyan;
   font-size: 1.6rem;
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: 8px;
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border: 1px solid darkcyan;
-  background: white;
+  height: 140px;
+  background: #2a2a46;
+  color: skyblue;
   position: relative;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.grade div{
+  display: flex;
+  flex-direction: column;
+}
+
+.grade p{
+  display: inline-block;
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background: skyblue;
+  transition: 0.4s ease;
+  z-index: 30;
+}
+.grade:hover p{
+  scale: 67;
+}
+.grade:hover div{
+  z-index: 40;
+  color: #2a2a46;
+}
+.main.change .grade_box{
+  justify-content: space-around;
 }
 
 .grade i{
@@ -59,18 +91,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  top: -15px;
-  border-radius: 50%;
+  top: 0;
   z-index: 10;
   cursor: pointer;
   color: white;
 }
 .grade #edit{
-  left: -15px;
+  left: 0;
+  border-radius: 0 50%;
   background: rgb(36, 216, 126);
 }
 .grade #del{
-  right: -15px;
+  right: 0;
+  border-radius: 50% 0;
   background: salmon;
 }
 
@@ -115,6 +148,23 @@
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
+  align-items: center;
+  border-bottom: 1px solid rgb(239, 239, 239);
+}
+
+.student_row button, .teacher_row button{
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.student_row .edit_student, .teacher_row .edit_student{
+  background: rgb(34, 188, 249);
+  color: white;
+}
+.student_row .del_student, .teacher_row .del_student{
+  background: salmon;
+  color: white;
 }
 
 .close_form{
@@ -132,11 +182,12 @@
 }
 
 .add_form{
-  position: fixed;
+  position: absolute;
   display: none;
   align-items: center;
   justify-content: center;
   top: 0;
+  left: 0;
   min-height: 100vh;
   width: 100%;
   z-index: 100;
@@ -145,6 +196,53 @@
 .add_form.change{
   display: flex;
 }
+
+.course_box {
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  justify-content: space-around;
+  padding: 15px;
+}
+
+.course_display {
+  width: 90%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  gap: 0.5rem 0;
+  padding: 10px;
+  height: 230px;
+  border: 2px solid darkcyan;
+}
+
+.course_box label input {
+  display: none;
+}
+
+.course_label,
+.course_display div {
+  padding: 10px;
+  width: inherit;
+  width: 100px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgb(31, 231, 131);
+}
+
+.course_box label input:checked+.course_label,
+.course_display div {
+  background: rgb(25, 228, 126);
+  color: white;
+}
+
 .mBox{
   padding: 5px 10px;
   background: rgb(255, 228, 225);
@@ -186,4 +284,96 @@
   border-radius: 20px;
   cursor: pointer;
   justify-content: center;
+}
+
+.cell{
+  min-width: 70px;
+  padding: 3px;
+  height: 30px;
+  font-size: 0.9rem;
+  color: rgb(20, 74, 74);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid darkcyan;
+}
+
+#sh{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 12vw;
+  width: inherit;
+}
+
+.mark_box, .mark_box_header{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 0 0.3rem;
+}
+.report_box{
+  gap: 0.5rem;
+}
+.record_box_holder{
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.report_box hr{
+  width: 100%;
+  border-top: 2px dotted darkcyan;
+}
+.record , .report_box .header{
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.report_box {
+  max-width: 80vw;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  overflow-x: auto;
+  padding: 15px;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 15px;
+}
+
+.teacher_row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.teacher_row span {
+  width: 15%;
+}
+
+.teacher_row .course_list {
+  width: 50%;
+  display: flex;
+  gap: 0 0.5rem;
+  overflow-x: auto;
+}
+
+.teacher_row .course_list small {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(98, 170, 243);
+  background: rgb(25, 228, 126);
+  font-size: 1.1rem;
+  min-width: 100px;
+  color: white;
+  height: 30px;
+  padding: 3px;
+}
+
+@media all and (max-width:1300px){
+  .main .grade_box{
+    justify-content: space-around;
+  }
 }

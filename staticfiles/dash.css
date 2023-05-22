@@ -210,7 +210,7 @@ body {
   border: 1px dotted #24282e;
 }
 
-.main .con form button, .main .con form .button {
+.main .con form button, .main .con form .button, .main .con form p{
   position: absolute;
   right: 10px;
   font-size: 1rem;

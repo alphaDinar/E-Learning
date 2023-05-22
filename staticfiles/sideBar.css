@@ -48,7 +48,7 @@
 
 .main {
   transition: 0.4s ease;
-  overflow-x:hidden;
+  /* overflow-x:hidden; */
   position: relative;
   width: 80%;
 }
