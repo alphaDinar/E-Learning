@@ -17,94 +17,141 @@
           <i class="material-symbols-outlined">blur_on</i>
           <span>{{quiz.title}} Quiz Assessment</span>
         </div>
-        <input type="text" id="item_in">
+        <input type="text" id="item_in" oninput="runStudentSearch(event.target)">
         <!-- <button type="button" onclick="show_add_quiz()">+</button> -->
       </form>
     </section>
-    <section class="result_box">
-      <article>
-        <span>Position</span>
-        <span>Student</span>
-        <span>Mark(%)</span>
-        <span>Grade</span>
-      </article>
-      {% for score in scores %}
-      <a href="{% url 'student_quiz_results_page' score.slug %}" class="result" data-name="{{score.student}}" data-mark="{{score.mark}}">
-        <span>{{forloop.counter}}</span>
-        <span>{{score.student}}</span>
-        <span>{{score.mark}}</span>
-        {% if score.mark > 70 %}
-        <span><small class="grade" style="background: rgb(12, 220, 116); color: rgb(228, 255, 242);"> Excellent</small></span>
+    <table class="result_box">
+      <tr>
+        <th>Position</th>
+        <th>Username</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Mark(%)</th>
+        <th>View Work</th>
+        <th>Remarks</th>
+      </tr>
+      {% for score in quiz_scores %}
+      {% if score.student %}
+      <tr data-name="{{score.student}} {{score.student.first_name}} {{score.student.last_name}}" data-score="{{score.mark}}" class="student_row">
+        <td>{{forloop.counter}}</td>
+        <td>{{score.student}}</td>
+        <td>{{score.student.first_name}}</td>
+        <td>{{score.student.last_name}}</td>
+        {% if score.mark > 60 %}
+        <td id="mark_box" style="background: #1de07f; color: white;">{{score.mark}}</td>
         {% elif score.mark > 40 %}
-        <span><small class="grade" style="background: orange; color: rgb(228, 255, 242);"> Pass</small></span>
+        <td id="mark_box" style="background: orange; color: white;">{{score.mark}}</td>
         {% else %}
-        <span><small class="grade" style="background: salmon; color: rgb(228, 255, 242);"> Fail</small></span>
+        <td id="mark_box" style="background: salmon; color: white;">{{score.mark}}</td>
         {% endif %}
-
-        <style>
-          .result{
-            color: rgb(51, 51, 51);
-          }
-          .result .grade{
-            padding: 5px;
-            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-            border-radius: 5px;
-          }
-        </style>
-          
-      </a>
+        <td><a href="{% url 'student_quiz_results_page' score.id %}" class="material-symbols-outlined">link</a></td> 
+        <td><i class="material-symbols-outlined">message</i></td>
+      </tr>
+      {% else %}
+      <tr data-name="{{score}} {{score.first_name}} {{score.last_name}}" data-score="0" class="student_row">
+        <td>{{forloop.counter}}</td>
+        <td>{{score}}</td>
+        <td>{{score.first_name}}</td>
+        <td>{{score.last_name}}</td>
+        <td style="background: lightgray; color: white;"><i class="material-symbols-outlined">unknown_med</i></td>
+        <td><i class="material-symbols-outlined">unknown_med</i></td>
+        <td><i class="material-symbols-outlined">message</i></td>
+      </tr>
+      {% endif %}
       {% endfor %}
-    </section>
+      <tr>
+        <th>#</th>
+        <td><i class="material-symbols-outlined">person</i></td>
+        <td><i class="material-symbols-outlined">person</i></td>
+        <th>Class avg.</th>
+        <th class="avg_box">25 %</th>
+      </tr>
+    </table>
   </section>
 </section>
+<script>
+  const mark_box = document.querySelectorAll('[id="mark_box"]')
+  const avg_box = document.querySelector('.avg_box')
 
-<!-- <script>
-  const result_box = document.querySelector('.result_box')
-  const result = document.querySelectorAll('.result')[0]
-
-  for (var i = 0; i < 20; i++) {
-    var result_clone = result.cloneNode(true)
-    result_box.appendChild(result_clone)
+  avg_mark = 0
+  mark_box.forEach(el=>{
+    avg_mark = avg_mark + parseFloat(el.innerHTML)
+  })
+  avg_mark = avg_mark/mark_box.length
+  if(avg_mark > 60){
+    avg_box.style.background = '#11dd77'
+  }else if (avg_mark > 40) {
+    avg_box.style.background = 'orange'
+  }else{
+    avg_box.style.background = 'salmon'
   }
-</script> -->
+  avg_box.innerHTML = avg_mark.toFixed(2) || 0
 
+
+  const student_row = document.querySelectorAll('.student_row')
+  runStudentSearch =(event)=>{
+    student_row.forEach(row=>{
+      console.log(row.dataset.name.toLowerCase())
+      if(!row.dataset.name.toLowerCase().includes(event.value.toLowerCase()) && !row.dataset.score.includes(event.value.toLowerCase())){
+        row.style.display = 'none'
+      }else{
+        row.style.display = 'table-row'
+      }
+      runAnime(row)
+    })
+  }
+
+  runAnime = (row)=>{
+    anime({
+      targets : row,
+      translateY : [-30, 0],
+      opacity : [0,1],
+      duration : 600,
+    })
+  }
+</script>
 
 <style>
-  .main{
+  table {
+    border-spacing: 0.5vw 1vw;
+  }
+
+  th {
+    font-weight: 400;
+  }
+
+  tr {
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+
+  td,
+  th {
+    text-align: center;
+    padding: 5px 1vw;
+    background: white;
+    border-radius: 5px;
+  }
+
+  th {
+    background: #2a2a46;
+    color: white;
+  }
+</style>
+
+<style>
+  .main {
     align-items: center;
   }
-  .main .con{
+
+  .main .con {
     width: 100%;
   }
-  .result_box{
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 20px;
-    background: white;
-    padding: 1rem 0;
-    max-height: 80vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-    /* height: 200px; */
-  }
-  .result_box article span{
-    color: rgb(80, 80, 80);
-    font-weight: 600;
-  }
-  .result_box article ,.result{
-    display: flex;
-    justify-content: space-between;
-    font-size: 1.1rem;
-    text-align: center;
-    padding: 0.5rem 0;
-  }
-  .result_box article{
-    border-bottom: 2px dotted darkgray;
-  }
-  .result_box span{
-    width: 20%;
-    /* border: 1px saddlebrown solid; */
+
+  .result_box {
+    min-width: 50%;
+    /* background: white; */
+    padding: 10px;
   }
 </style>
 

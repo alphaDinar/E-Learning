@@ -46,9 +46,12 @@ class Student(models.Model):
         super().save(*args, **kwargs)
     def __str__(self):
         return f'{self.name.username}' 
-    def get_scores(self):
-        return self.score_set.all()
-
+    def get_quiz_scores(self):
+        return self.quizscore_set.all()
+    def get_assignment_scores(self):
+        return self.assignmentscore_set.all()
+    def get_scheme_progress(self):
+        return self.schemeprogress_set.all()
 
 # class LogBox(models.Model):
 #     user = models.OneToOneField(User, on_delete=models.CASCADE)

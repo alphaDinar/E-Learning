@@ -5,6 +5,7 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'dash.css' %}">
 <link rel="stylesheet" href="{% static 'sideBar.css' %}">
+<link rel="stylesheet" href="{% static 'add_form.css' %}">
 <link rel="stylesheet" href="{% static 'prompt.css' %}">
 <link rel="stylesheet" href="{% static 'Super/super.css' %}">
 {% endblock styles %}
@@ -197,14 +198,13 @@
   const course_in = document.querySelectorAll('.course_box input')
 
   showForm = (val, event) => {
-
     if (val == 'new') {
-      register_form.children[3].value = ''
-      register_form.children[4].value = ''
+      register_form.children[2].children[0].children[1].value = ''
+      register_form.children[2].children[0].children[2].value = ''
       in_type.value = 'new'
     } else {
-      register_form.children[2].children[1].value = ''
-      register_form.children[2].children[2].value = ''
+      register_form.children[2].children[0].children[1].value = ''
+      register_form.children[2].children[0].children[2].value = ''
       course_in.forEach(item => {
         item.checked = false
       })
@@ -218,11 +218,12 @@
         })
       })
       in_type.value = 'old'
-      register_form.children[2].children[1].value = event.dataset.username
-      register_form.children[2].children[2].value = event.dataset.password
+      register_form.children[2].children[0].children[1].value = event.dataset.username
+      register_form.children[2].children[0].children[2].value = event.dataset.password
       register_form.children[4].value = event.dataset.username
     }
 
+    course_display.innerHTML = ''
     courseList.forEach(course => {
       var course_tile = document.createElement('div')
       course_tile.innerHTML = course.id
@@ -274,4 +275,6 @@
     })
   }
 </script>
+
+<script src="{% static 'Super/anime.js' %}"></script>
 {% endblock js %}

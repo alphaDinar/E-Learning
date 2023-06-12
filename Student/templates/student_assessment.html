@@ -4,123 +4,115 @@
 {% block styles %}
 <link rel="stylesheet" href="{% static 'Student/student_dash.css' %}">
 <link rel="stylesheet" href="{% static 'Student/sideBar.css' %}">
-<link rel="stylesheet" href="{% static 'Student/assessment.css' %}">
 {% endblock styles %}
 
 {% block page %}
 <section class="page">
   {% include 'student_sideBar.html' %}
   <section class="main">
+    <div class="sum_box_holder">
+      <div class="sum_box">
+        <span></span>
+        <i class="material-symbols-outlined"></i>
+      </div>
+    </div>
     <nav>
       <div>
         <i class="material-symbols-outlined">blur_on</i>
-        <span>Quiz Courses | {{courses.count}}</span>
+        <span>Assessment Courses | {{grade.get_courses.count}}</span>
       </div>
       <input type="text" id="item_in" placeholder="Search Course"
         oninput="runSchemeSearch(event.target.value.toLowerCase())">
     </nav>
-    <section class="top_box">
-      <div class="avg_box"><span>83%</span></div>
-      <a href="{% url 'student_report_page' %}">-Report-</a>
-    </section>
-    <section class="low_box">
+    <section class="report_box" data-course_avg_list="{{course_avg_list}}">
       {% for course in grade.get_courses %}
-      <a href="{% url 'student_assessment_quizes_page' course.slug %}" class="course_box">
-        <span>{{course}}</span>
-        <small>{{course.subject}}</small>
-        <p class="small_box">
-        {% for scheme in course.get_schemes %}
-          {% for quiz in scheme.get_quizes %}
-            {% for score in quiz.get_user_scores %}
-                <small data-mark="{{score.mark}}"></small>
-            {% endfor %}
-          {% endfor %}
-        {% endfor %}
-        </p>
-        <hr>
-        <div class="course_tag"></div>
-        <div class="course_avg"> </div>
+      <a class="report" href="{% url 'student_get_quizes_schemes_page' course.slug %}" data-name="{{course.subject}}" data-subject="{{course.subject}}">
+        <span style="color: rgb(104, 104, 104); font-size: 1.3rem;">{{course.subject}}</span>
+        <hr style="width: 90%; border-top: 2px dotted darkgray;">
+        <span class="mark_span">50%</span> 
       </a>
       {% endfor %}
     </section>
   </section>
 </section>
 
-<style>
-  .top_box{
-    display: flex;
-  }
-  .avg_box{
-    background: #2a2a46;
-  }
-</style>
-
-
 <script>
-  const courses = document.querySelectorAll('.course_box')
-  const course_avg = document.querySelectorAll('.course_avg')
-  const course_tag = document.querySelectorAll('.course_tag')
+  const mark_span = document.querySelectorAll('.mark_span')
+  let courseAvgList = JSON.parse(document.querySelector('.report_box').dataset.course_avg_list)
+  const sum_box = document.querySelector('.sum_box')
+  const sum_span = document.querySelector('.sum_box span')
+  const sum_info = document.querySelector('.sum_box i')
 
-  let avg_box = [];
-  courses.forEach((course,i)=>{
-    var avg = 0;
-    [...course.children[2].children].forEach(mark_box=>{
-      avg = eval(avg + parseFloat(mark_box.dataset.mark))
-    })
-    var quiz_count = [...course.children[2].children].length 
-    avg = avg / quiz_count || 0
-    avg_box.push(avg)
+  var sum = 0
+  courseAvgList.forEach((avg,i)=>{
     if(avg > 60){
-      course.style.background = '#0ddc74'
+      mark_span[i].style.color = '#11dd77'
     }else if (avg > 40) {
-      course.style.background = '#ffa500'
+      mark_span[i].style.color = 'orange'
     }else{
-      course.style.background = 'salmon'
+      mark_span[i].style.color = 'salmon'
     }
-    course_tag[i].innerHTML = quiz_count
-    course_avg[i].innerHTML = `${avg.toFixed(2)}%`
+    if(avg%1 != 0){
+      mark_span[i].innerHTML = `${parseFloat(avg).toFixed(2)} %`
+    }else{
+      mark_span[i].innerHTML = `${parseFloat(avg)} %`
+    }
+    sum = sum + avg 
   })
-
-  const total_avg_box = document.querySelector('.avg_box span')
-
-  var total_avg = 0
-  avg_box.forEach(avg => {
-    total_avg = total_avg + avg
-  })
-  console.log(avg_box)
-
-  total_avg = (total_avg / avg_box.length)
-  total_avg_box.innerHTML = total_avg.toFixed(2) + '%'
-
-
+  sum = sum / courseAvgList.length 
+  if(sum > 60){
+    sum_box.style.background = '#11dd77'
+    sum_info.innerHTML = 'verified'
+  }else if (sum > 40) {
+    sum_box.style.background = 'orange'   
+    sum_info.innerHTML = 'balance'
+  }else{
+    sum_box.style.background = 'salmon'
+    sum_info.innerHTML = 'Warning'
+  }
+  sum_span.innerHTML = `${sum.toFixed(2)}%`
 </script>
 
+<style>
+  .report_box{
+    width: 100%;
+    display: flex;
+    gap: 1.5rem 0;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  .mark_span{
+    font-size: 2rem;
+  }
+  .sum_box{
+    width: 280px;
+    height: 170px;
+    font-size: 2rem;
+    color: white;
+    font-weight: 600;
+  }
+  .report{
+    width: 180px;
+    height: 250px;
+    background: white;
+  }
+  .sum_box, .report{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    cursor: pointer;
+    flex-direction: column;
+    border-radius: 140px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+</style>
 {% endblock page %}
 
 
 {% block js %}
 <script>
-  const items = document.querySelectorAll('.scheme')
-
-  runSchemeSearch = (val) => {
-    items.forEach(item => {
-      if (!item.dataset.name.toLowerCase().includes(val) && !item.dataset.subject.toLowerCase().includes(val)) {
-        item.style.display = 'none'
-      } else {
-        item.style.display = 'flex'
-      }
-      runAnime(item)
-    })
-  }
-
-  runAnime = (item) => {
-    anime({
-      targets: item,
-      translateX: [50, 0],
-      opacity: [0, 1],
-      duration: 500,
-      easing: 'spring(1, 80, 10, 0)'
-    })
-  }
+  const items = document.querySelectorAll('.report')
 </script>
+<script src="{% static 'Student/student.js' %}"></script>
 {% endblock js %}

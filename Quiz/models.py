@@ -5,68 +5,57 @@ from Log.models import User, Teacher
 from Course.models import Course
 from Scheme.models import Scheme
 
-Q_level = (
-    ('easy', 'easy'),
-    ('normal', 'normal'),
-    ('difficult', 'difficult'),
-)
-Q_status = (
-    ('pending','pending'),
-    ('active','active'),
-    ('completed','completed')
-)
-
-class CurStudent(models.Model):
-    sid = models.IntegerField()
-    def __str__(self):
-        return str(self.sid)
-
 class Quiz(models.Model):
     title = models.CharField(max_length=100)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     topic = models.ForeignKey(Scheme, on_delete=models.CASCADE)
-    question_num = models.IntegerField(blank=True, null=True, default=10)
-    duration = models.IntegerField(help_text='Duration allowed for Quiz in minutes')
-    level = models.CharField(max_length=30, choices=Q_level)
-    con = models.JSONField(blank=True,null=True)
-    marking_scheme = models.JSONField(blank=True, null=True)
-    status = models.CharField(max_length=20, choices=Q_status, default='pending')
+    duration = models.IntegerField(help_text='Duration allowed for Quiz in minutes', default=60)
+    con = models.JSONField(default=list)
+    marking_scheme = models.JSONField(default=list)
     created_on = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(max_length=100, blank=True, null=True)
     def save(self, *args, **kwargs):
         if self.slug == None:
             self.slug = slugify(self.title)
         super().save(*args,**kwargs)
-    def get_user_scores(self):
-        return self.score_set.filter(student = CurStudent.objects.last().sid).order_by('-id')
+    def get_quiz_scores(self):
+        return self.quizscore_set.all()
     def __str__(self):
         return self.title
     class Meta:
         verbose_name_plural = 'quizes'
 
+class Assignment(models.Model):
+    STATUS = (
+        ('pending','pending'),
+        ('completed','completed')
+    )
+    PROTECTION = (
+        ('locked', 'locked'),
+        ('unlocked', 'unlocked')
+    )
+    title = models.CharField(max_length=100)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Scheme, on_delete=models.CASCADE)
+    deadline = models.DateTimeField(default=timezone.now)
+    con = models.JSONField(default=list)
+    marking_scheme = models.JSONField(default=list)
+    status = models.CharField(max_length=20, choices=STATUS, default='pending')
+    created_on = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(max_length=100, blank=True, null=True)
+    protection = models.CharField(max_length=50, choices=PROTECTION, default='locked')
+    def save(self, *args, **kwargs):
+        if self.slug == None:
+            self.slug = slugify(self.title)
+        super().save(*args,**kwargs)
+    def get_assignment_scores(self):
+        return self.assignmentscore_set.all()
+    def __str__(self):
+        return self.title
 
+class AssignmentSession(models.Model):
+    assignment = models.OneToOneField(Assignment, on_delete=models.CASCADE)
+    time = models.CharField(max_length=100, null=True, blank=True)
+    def __str__(self):
+        return f'{self.assignment} session'
 
-# class TestScore(models.Model):
-#     # quiz_title = models.CharField(max_length=300)
-#     # quiz_con = models.JSONField(blank=True,null=True) 
-#     # quiz_ans_box = models.JSONField(blank=True,null=True) 
-#     mark = models.FloatField()
-#     # choice_box = models.JSONField(blank=True,null=True) 
-#     timestamp = models.DateTimeField(auto_now_add=True)
-#     def __str__(self):
-#         return f'{self.mark}'
-
-# class MarkingScheme(models.Model):
-#     answers = models.JSONField()
-#     quiz = models.OneToOneField(Quiz, on_delete=models.CASCADE)
-#     def str__(self):
-#         return f"{self.quiz.name}'s marking scheme"
-
-
-# class Score(models.Model):
-#     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-#     user_choice = models.JSONField()
-#     score = models.FloatField()
-#     time_taken = models.IntegerField(default=10)
-#     time_completed = models.DateTimeField(default=timezone.now)
-#     def __str__(self):
-#         return f'{self.quiz} score'

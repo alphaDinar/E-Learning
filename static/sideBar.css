@@ -5,7 +5,7 @@
 
 .sideBar {
   width: 18%;
-  min-height: 95vh;
+  min-height: 90vh;
   /* padding: 2.5vh 1%; */
   justify-content: space-between;
   display: flex;
@@ -14,9 +14,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  background: white;
-  border-right: 1px dotted rgb(50, 50, 50);
   transition: 0.4s ease;
+  background: white;
+  background: #0d0c22;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 }
 
 .sideBar,.sideBar.change{
@@ -39,6 +40,7 @@
 
 .sideBar strong {
   font-size: 1.5rem;
+  color: wheat;
 }
 
 .main.change {
@@ -62,6 +64,7 @@
 
   .sideBar,
   .sideBar.change {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     position: fixed;
     width: 280px;
     padding: 5vh 10px;

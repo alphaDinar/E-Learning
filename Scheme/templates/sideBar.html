@@ -6,8 +6,14 @@
   </header>
   <nav>
     <a href="{% url 'schemes_page' course.slug %}"><i class="material-symbols-outlined">inventory_2</i> <span>Schemes</span></a>
-    <a href="{% url 'quizes_page' course.slug %}"><i class="material-symbols-outlined">psychology_alt</i> <span>QuizHub</span></a>
+    
+    {% if user.is_teacher %}
+    <a href="{% url 'quizes_page' course.slug %}"><i class="material-symbols-outlined">psychology_alt</i> <span>Quizes</span></a>
+    <a href="{% url 'assignments_page' course.slug %}"><i class="material-symbols-outlined">assignment</i> <span>Assignments</span></a>
+    {% else %}
     <a href="{% url 'assessment_page' course.slug %}"><i class="material-symbols-outlined">stacked_bar_chart</i> <span>Assesment</span></a>
+    {% endif %}
+
     <a href=""><i class="material-symbols-outlined">admin_panel_settings</i> <span>Manager</span></a>
   </nav>
   <footer>

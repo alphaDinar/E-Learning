@@ -13,48 +13,58 @@
     <nav>
       <div>
         <i class="material-symbols-outlined">blur_on</i>
-        <span>{{course}} | Quiz Schemes | {{courses.count}}</span>
+        <p>
+          <a href="{% url 'student_quizes_page'%}">Quiz ></a>
+          <a href="{% url 'student_quizes_page'%}">Courses ></a>
+          <a href="{% url 'student_get_quizes_schemes_page' course.slug %}">Schemes :</a>
+          <a href=""><i class="material-symbols-outlined">numbers</i> {{schemes.count}}</a>
+        </p>
       </div>
       <input type="text" id="item_in" placeholder="Search Course"
         oninput="runSchemeSearch(event.target.value.toLowerCase())">
     </nav>
-    <section class="scheme_box">
+    <header data-progress_list="{{progress_list}}">
       {% for scheme in schemes %}
-      <a href="{% url 'student_get_quizes_page' scheme.slug %}" class="scheme" data-name="{{scheme.topic}}" data-subject="{{scheme.topic}}">
+      <a href="{% url 'student_get_quizes_page' scheme.slug %}" class="item" data-name="{{scheme.topic}}"
+        data-subject="{{scheme.topic}}">
         <i class="material-symbols-outlined">psychology_alt</i>
         <span>{{scheme.topic}}</span>
         <small>{{scheme.get_quizes.count}}</small>
+        <div class="progress_box">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+        </div>
       </a>
       {% endfor %}
-    </section>
+    </header>
   </section>
 </section>
+
+<script>
+  let progressList = JSON.parse(document.querySelector('.main header').dataset.progress_list)
+  const progress = document.querySelectorAll('.progress')
+
+  progressList.forEach((el,i)=>{
+    progress[i].style.width = `${el}%`
+  })
+</script>
+
+<style>
+  .item{
+    background: #0093ec;
+    color: white;
+  }
+  .progress{
+    background: rgb(6, 225, 116);
+  }
+</style>
 {% endblock page %}
 
 
 {% block js %}
 <script>
-  const items = document.querySelectorAll('.scheme')
-
-  runSchemeSearch = (val) => {
-    items.forEach(item => {
-      if (!item.dataset.name.toLowerCase().includes(val) && !item.dataset.subject.toLowerCase().includes(val)) {
-        item.style.display = 'none'
-      } else {
-        item.style.display = 'flex'
-      }
-      runAnime(item)
-    })
-  }
-
-  runAnime = (item) => {
-    anime({
-      targets: item,
-      translateX: [50, 0],
-      opacity: [0, 1],
-      duration: 500,
-      easing: 'spring(1, 80, 10, 0)'
-    })
-  }
+  let items = document.querySelectorAll('.item')
 </script>
+<script src="{% static 'Student/student.js' %}"></script>
 {% endblock js %}

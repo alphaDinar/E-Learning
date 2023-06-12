@@ -18,44 +18,69 @@
       <input type="text" placeholder="Search" oninput="runGradeSearch(event.target.value.toLowerCase())">
       <button onclick="generatePDF()">Generate PDF</button>
     </header>
-    <div class="report_box">
-      <section class="header">
-        <span id="sh" style="font-weight: 600;">Student</span>
-        <div class="mark_box_header">
-          {% for course in grade.get_courses %}
-          <span style="font-weight: 600; border: none;" class="course cell" data-course="{{course.id}}"
-            id="course_row">{{course}}</span>
+    <div class="inst_box">
+      <span>Select a Student to view Assesment</span>
+    </div>
+    <table class="report_box">
+      <tr class="header">
+        <td id="sh" style="font-weight: 600;">Student</td>
+        {% for course in grade.get_courses %}
+        <td style="font-weight: 600; border: none;" class="course cell" data-course="{{course.id}}" id="course_row">
+          {{course}}</td>
+        {% endfor %}
+        <td id="sh" style="font-weight: 600;">Average</td>
+      </tr>
+
+
+      {% for student in grade.get_students %}
+      <tr class="record" data-name="{{student}}" data-full_name="{{student.first_name}} {{student.last_name}}">
+        <td id="sh">
+          <a href="">{{student.first_name}} {{student.last_name}}</a>
+        </td>
+
+        <div class="record_bank" style="display: none;">
+          {% for score in student.get_scores %}
+          <small data-course="{{score.quiz.topic.course.id}}" data-mark="{{score.mark}}">{{score}}</small>
           {% endfor %}
         </div>
-        <span id="sh" style="font-weight: 600;">Average</span>
-      </section>
+      </tr>
       <hr>
+      {% endfor %}
 
-      <section class="record_box_holder">
-        {% for student in grade.get_students %}
-        <div class="record" data-name="{{student}}" data-full_name="{{student.first_name}} {{student.last_name}}">
-          <span id="sh">{{student.first_name}} {{student.last_name}}</span>
-          <div class="mark_box">
-          </div>
-          <span id="sh" class="total_box"></span>
-          <div class="record_bank" style="display: none;">
-            {% for score in student.get_scores %}
-            <small data-course="{{score.quiz.topic.course.id}}" data-mark="{{score.mark}}">{{score}}</small>
-            {% endfor %}
-          </div>
-        </div>
-        {% endfor %}
-      </section>
-    </div>
+    </table>
   </section>
 </section>
 
 <style>
   .main {
     padding: 0 !important;
+    gap: 0 !important;
     align-items: center;
   }
+
+  .report_box {
+    margin-top: 2rem;
+  }
+
+  table{
+    border-spacing: 0;
+  }
+  table hr{
+    width: 100px;
+    border-top: 1px solid black;
+  }
+  td {
+    padding: 15px 10px;
+    text-align: center;
+    border-bottom: 1px solid black;
+    /* border-radius: 3px; */
+  } 
+  tr{
+    padding: 10px 0;
+  }
 </style>
+
+
 
 <script>
   const course_rows = document.querySelectorAll('[id="course_row"]')
@@ -63,14 +88,21 @@
   const record_banks = document.querySelectorAll('.record_bank')
   const record_mark_box = document.querySelectorAll('.record .mark_box')
 
-  record_mark_box.forEach(mark_box => {
+  records.forEach(record => {
     course_rows.forEach((row, i) => {
-      var mark_row = document.createElement('span')
+      var mark_row = document.createElement('td')
       mark_row.classList.add('mark_row')
       mark_row.classList.add('cell')
       mark_row.innerHTML = `A${i}`
-      mark_box.appendChild(mark_row)
+      record.appendChild(mark_row)
     })
+  })
+
+  records.forEach(record => {
+    var total_box = document.createElement('td')
+    total_box.classList.add('total_box')
+    total_box.innerHTML = 'T box'
+    record.appendChild(total_box)
   })
 
 
@@ -91,7 +123,8 @@
     });
 
     let avg = [];
-    [...mark_box_holder[i].children].forEach((el, ii) => {
+    var last = records[i].children.length - 1;
+    [...records[i].children].slice(1, last).forEach((el, ii) => {
       var total = 0
       mark_box[ii].forEach(mark => {
         total = total + parseFloat(mark)
@@ -105,19 +138,40 @@
     avg.forEach(el => {
       avg_score = avg_score + el
     })
-    total_box[i].parentElement.dataset.avg = (avg_score / avg.length).toFixed(2)
-    total_box[i].innerHTML = `${(avg_score / avg.length).toFixed(2)} %`
+    avg_score = (avg_score / avg.length).toFixed(2)
+    if(avg_score > 59){
+      total_box[i].style.background = 'springreen'
+    }else if (avg_score > 39) {
+      total_box[i].style.background = 'orange'
+    }else{
+      total_box[i].style.background = 'salmon'
+    }
+    total_box[i].style.color = 'white'
+    total_box[i].parentElement.dataset.avg = avg_score 
+    total_box[i].innerHTML = `${avg_score} %`
+
   })
 
-  records.forEach(box => {
-    console.log(box.dataset.avg)
-  })
 </script>
 
 {% endblock page %}
 
 
 {% block js %}
+
+
+<script>
+  document.querySelectorAll('tr').forEach((td,i)=>{
+    anime({
+      targets : td,
+      translateX : [-20,0],
+      opacity : [0,1],
+      duration : 600,
+      delay : i * 30
+    })
+  })
+</script>
+
 <script>
   const grades = document.querySelectorAll('.record')
 
@@ -126,7 +180,8 @@
       if (!grade.dataset.name.toLowerCase().includes(val) && !grade.dataset.avg.toLowerCase().includes(val)) {
         grade.style.display = 'none'
       } else {
-        grade.style.display = 'flex'
+        console.log('me')
+        grade.style.display = 'table-row'
       }
     })
   }
@@ -138,12 +193,12 @@
   const results = []
 
   var cur_time = new Date()
-  console.log(cur_time)
+
 
   let courses = ['A', 'B', 'C']
 
   records.forEach((record) => {
-    results.push({student: record.dataset.full_name, avg: record.dataset.avg})
+    results.push({ student: record.dataset.full_name, avg: record.dataset.avg })
   })
 
   console.log(results)

@@ -244,6 +244,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
 }
 
 .edit_screen {
@@ -251,6 +252,10 @@
   transition: 0.4s ease;
   height: 92vh;
   width: 100%;
+}
+
+.edit_screen .swiper-slide{
+  overflow-y: auto;
 }
 
 .res_edit_box_nav {
@@ -262,11 +267,10 @@
 .res_edit_box {
   display: flex;
   width: 90%;
-  height: 80vh;
   padding: 2vh 5%;
-  overflow-y: auto;
   flex-wrap: wrap;
-  gap: 2rem 1rem;
+  justify-content: flex-start;
+  gap: 2rem 4rem;
 }
 
 .res_edit_box::-webkit-scrollbar {
@@ -280,7 +284,7 @@
   border-radius: 40px;
 }
 
-.res_edit_box .res {
+.res_edit_box .res , .pdf_res{
   width: 136px;
   cursor: pointer;
   gap: 0.5rem;
@@ -301,7 +305,7 @@
 }
 
 .res_edit_box .res div,
-.res_edit_box .res video {
+.res_edit_box .res video, .pdf_res div{
   width: 100%;
   display: flex;
   align-items: center;
@@ -357,10 +361,15 @@
 
 
 
+
 @media all and (max-width:1000px) {
   .add_form {
     position: revert;
     width: 80%;
+  }
+  .res_edit_box{
+    justify-content: space-around;
+    gap: 1rem 0;
   }
 }
 

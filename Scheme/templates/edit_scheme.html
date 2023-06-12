@@ -28,6 +28,8 @@
             class="material-symbols-outlined">chevron_right</i></span>
         <span><i class="material-symbols-outlined">description</i> Passage <i
             class="material-symbols-outlined">chevron_right</i></span>
+        <span><i class="material-symbols-outlined">picture_as_pdf</i> PDF <i
+            class="material-symbols-outlined">chevron_right</i></span>
       </p>
     </nav>
     <footer>
@@ -148,6 +150,7 @@
               data-id="{{passage.id}}">
               <div style="background-image: url({{passage.thumb.url}});"></div>
               <span>{{passage.title}}</span>
+              <!-- <span>{{passage.thumb}}</span> -->
               <p>
                 <a id="set_res" class="material-symbols-outlined">settings</a>
                 <a data-link="delete_scheme_passage" data-id="{{passage.id}}" id="del_res"
@@ -157,7 +160,40 @@
             {% endfor %}
           </div>
         </div>
+        <div class="swiper-slide">
+          <div class="res_edit_box_nav">
+            <span>PDF</span>
+            <input type="text" class="pdf_search">
+            <button type="button" id="add_res_pdf">+<i class="material-symbols-outlined">picture_as_pdf</i></button>
+          </div>
+          <div class="res_edit_box">
+            {% for pdf in scheme.get_pdfs %}
+            <div class="res" id="pdf_res" data-name="{{pdf.name}}" data-id="{{pdf.id}}">
+              <div
+                style="background-image: url(https://res.cloudinary.com/dvnemzw0z/image/upload/v1685608527/a2eb80ff08a23b6f4c828da0b0d74f5e_t_rkjtf9.jpg);">
+              </div>
+              <a href="{{pdf.pdf.url}}" target="_blank">{{pdf.name}}</a>
+              <!-- <span>{{passage.thumb}}</span> -->
+              <p>
+                <a data-link="delete_scheme_pdf" data-id="{{pdf.id}}" id="del_res"
+                  class="material-symbols-outlined">delete</a>
+              </p>
+            </div>
+            {% endfor %}
+
+            <section class="add_form_box_2">
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="text" name="res_type" value="pdf" readonly>
+                <input type="text" name="name">
+                <input type="file" name="res" accept="application/pdf">
+                <button type="submit">ADD</button>
+              </form>
+            </section>
+          </div>
+        </div>
       </div>
+
       <section class="del_prompt_box">
         <span>Are You sure you want to delete</span>
         <i class="del_prompt_box_res">Cocoa</i>
@@ -318,7 +354,6 @@
     add_form_box.classList.add('change')
   }
 
-
   add_res_document.onclick = () => {
     add_passage_form.classList.add('change')
   }
@@ -336,19 +371,73 @@
 
   console.log(image_in)
 
-  image_in.onchange = () => {
-    const [file] = image_in.files
-    var src = URL.createObjectURL(file)
-    if (image_in.classList.contains('image')) {
-      dis_box.style.backgroundImage = `url(${src})`
-      console.log(image_in.files)
-    } else {
-      dis_box.innerHTML = ''
-      const dis_box_video = document.createElement('video')
-      dis_box_video.controls = true
-      dis_box_video.src = src
-      dis_box.appendChild(dis_box_video)
+  function resizeImage(file, maxWidth, maxHeight, callback) {
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      var image = new Image();
+      image.onload = function () {
+        var width = image.width;
+        var height = image.height;
+
+        // Calculate the new dimensions
+        var newWidth, newHeight;
+        if (width > height) {
+          newWidth = maxWidth;
+          newHeight = Math.floor(height * (maxWidth / width));
+        } else {
+          newHeight = maxHeight;
+          newWidth = Math.floor(width * (maxHeight / height));
+        }
+
+        // Create a canvas element
+        var canvas = document.createElement('canvas');
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+
+        // Resize the image and draw it on the canvas
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, newWidth, newHeight);
+
+        // Get the resized data URL from the canvas and pass it to the callback function
+        var resizedDataURL = canvas.toDataURL(file.type);
+        callback(resizedDataURL);
+      }
+      image.src = event.target.result;
     }
+    reader.readAsDataURL(file);
+  }
+
+
+
+  image_in.onchange = (event) => {
+    var file_in = event.target.files[0];
+
+    resizeImage(file_in, 400, 400, function (resizedDataURL) {
+      // Use the resized data URL here
+      console.log(resizedDataURL);
+      dis_box.style.backgroundImage = `url(${resizedDataURL})`
+    });
+
+    // const [file] = image_in.files
+    // var src = URL.createObjectURL(file)
+    // if (image_in.classList.contains('image')) {
+    //   dis_box.style.backgroundImage = `url(${src})`
+    //   console.log(image_in.files)
+    // } else {
+    //   dis_box.innerHTML = ''
+    //   const dis_box_video = document.createElement('video')
+    //   dis_box_video.controls = true
+    //   dis_box_video.src = src
+    //   dis_box.appendChild(dis_box_video)
+    // }
   }
 </script>
+
+<style>
+  .dis_box{
+    background-position: revert !important;
+    background-size: revert !important;
+    background-repeat: no-repeat;
+  }
+</style>
 {% endblock js %}

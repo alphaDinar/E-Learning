@@ -1,363 +1,84 @@
 {% extends "base.html" %}
 
 {% load static %}
+{% load humanize %}
 
 {% block styles %}
-<!-- <link rel="stylesheet" href="{% static 'get_scheme.css' %}"> -->
-<link rel="stylesheet" href="{% static 'quiz.css' %}">
-<link rel="stylesheet" href="{% static 'use_quiz.css' %}">
+<link rel="stylesheet" href="{% static 'Quiz/quiz.css' %}">
+<link rel="stylesheet" href="{% static 'Quiz/start_quiz.css' %}">
 <title>Document</title>
 {% endblock styles %}
 
 {% block page %}
 <section class="page">
-  <section class="main">
-    <div class="page_box"></div>
-    <div class="timer_box">
-      <div class="timer">1 : 00 : 00</div>
-    </div>
-    <section class="screen">
-      <section data-json="{{quiz.con}}" class="quiz_box swiper" onsubmit="run(event)">
-        <button type="button" class="quiz_box_next material-symbols-outlined">chevron_right</button>
-        <button type="button" class="quiz_box_prev material-symbols-outlined">chevron_left</button>
-        <div class="swiper-wrapper"></div>
-      </section>
-    </section>
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+    <strong style="font-size: 2rem;" class="quiz_info">{{quiz}}</strong>
+    <section class="timer_box" style="display: flex;"></section>
+  </div>
+  <i class="lock_box material-symbols-outlined" style="display: none;">Lock</i>
+  <section class="page_box"></section>
+
+  <section class="quiz_box swiper">
+    <div class="swiper-wrapper"></div>
   </section>
+
+  <div class="quiz_box_nav">
+    <i class="material-symbols-outlined quiz_box_prev">chevron_left</i>
+    <i class="material-symbols-outlined quiz_box_next">chevron_right</i>
+  </div>
+  <a href="{% url 'student_get_quizes_page' quiz.topic.slug %}" class="return_tag" onclick="sessionStorage.clear()">
+    <i class="material-symbols-outlined">chevron_left</i> Return
+    <i class="material-symbols-outlined">chevron_left</i>
+  </a>
 </section>
-
-
-<style>
-  .main {
-    width: 100%;
-    flex-direction: column;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .main .screen {
-    width: 80%;
-    height: 60vh;
-    border: none;
-    position: none;
-  }
-
-  .main .screen .swiper {
-    border-radius: 10px;
-    width: 100%;
-  }
-</style>
-
-
-
-
-<style>
-  .timer_box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
-    position: relative;
-  }
-
-  .timer_box i {
-    color: var(--var-bg);
-    font-size: 2rem;
-    cursor: pointer;
-  }
-
-  .timer {
-    font-size: 1rem;
-    letter-spacing: 1px;
-    font-weight: 600;
-    color: var(--var-bg);
-    display: flex;
-    align-items: center;
-    border-radius: 50%;
-    width: 110px;
-    position: relative;
-    justify-content: center;
-    padding: 10px 3px;
-  }
-
-  @media all and (max-width:1300px) {
-    .page {
-      justify-content: flex-start;
-      min-height: auto;
-      padding: 20px 0;
-      height: auto;
-    }
-    .screen {
-      gap: 1rem;
-      height: auto !important;
-      width: 100% !important;
-      min-height: 50vh;
-      background: white;
-      flex-direction: column;
-    }
-
-    .answer_box {
-      gap: 1rem;
-    }
-
-    .score_box {
-      position: revert;
-    }
-
-    .quiz_box {
-      min-height: 50vh;
-      width: 100%;
-    }
-
-    .quiz_box .swiper-slide {
-      gap: 2rem;
-    }
-  }
-
-  @media all and (max-width:800px) {
-    .answer_box {
-      display: flex;
-      width: 100% !important;
-    }
-
-    .answer_box label {
-      width: 70% !important;
-    }
-
-    .answer_box .answer {
-      width: 100%;
-    }
-  }
-</style>
-
-<script>
-  const prompt_box = document.querySelector('.prompt_box')
-
-  const deleteQuiz = (a_tag) => {
-    prompt_box.classList.add('show');
-    [...prompt_box.children[2].children].forEach((el, i) => {
-      el.onclick = () => {
-        if (i === 0) {
-          a_tag.href = '{% url "delete_quiz_page" quiz.slug %}'
-          window.location.href = a_tag.href
-        } else {
-          prompt_box.remove('show')
-        }
-      }
-    })
-  }
-
-</script>
 {% endblock page %}
-
-{% block response %}
-{% endblock response %}
 
 {% block js %}
 
-<!-- <script>
-  window.onblur =()=>{
+<script src="{% static 'Quiz/start_quiz.js' %}"></script>
+
+<script>
+  const lock_box = document.querySelector('.lock_box')
+  const quiz_info = document.querySelector('.quiz_info')
+  var quiz_duration = '{{quiz.duration}}'
+
+  submitQuiz = () => {
+    var answer_json = autoSaveQuiz()
     sessionStorage.clear()
-  }
-</script> -->
-
-
-<!-- <script>
-  // Get the current time
-  const currentTime = new Date();
-
-  // Add 1 minute to the current time
-  const newTime = new Date(currentTime.getTime() + 60000); // 60000 milliseconds = 1 minute
-  console.log(newTime);
-
-</script> -->
-
-<script>
-  const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
-  const quiz_box = document.querySelector('.quiz_box')
-
-  if (quiz_box.dataset.json != 'None') {
-    JSON.parse(quiz_box.dataset.json).forEach((el, i) => {
-      const quiz_box_wrapper = document.querySelector('.quiz_box .swiper-wrapper')
-      var slide_sheet = document.createElement('div')
-      slide_sheet.classList.add('swiper-slide')
-      var question_tag = document.createElement('p')
-      question_tag.classList.add('question_tag')
-      question_tag.innerHTML = `Question ${el.num}`
-      slide_sheet.appendChild(question_tag)
-      var question_box = document.createElement('div')
-      question_box.innerHTML = el.question
-      question_box.classList.add('question_box')
-      slide_sheet.appendChild(question_box)
-      var answer_box = document.createElement('div')
-      answer_box.classList.add('answer_box')
-      let tag_box = ['A', 'B', 'C', 'D']
-      el.ans_set.forEach((ans, ii) => {
-        var answer_label = document.createElement('label')
-        var answer_label_radio = document.createElement('input')
-        answer_label_radio.type = 'radio'
-        answer_label_radio.value = ans
-        answer_label_radio.name = `ar${i}`
-        answer_label.appendChild(answer_label_radio)
-        var answer = document.createElement('div')
-        answer.classList.add('answer')
-        var answer_small = document.createElement('small')
-        answer_small.innerHTML = tag_box[ii]
-        answer.appendChild(answer_small)
-        var answer_text = document.createElement('span')
-        answer_text.innerHTML = ans
-        answer.appendChild(answer_text)
-        var ans_rad = document.createElement('div')
-        ans_rad.classList.add('ans_rad')
-        ans_rad.classList.add('material-symbols-outlined')
-        ans_rad.innerHTML = 'verified'
-        answer.appendChild(ans_rad)
-        answer_label.appendChild(answer)
-        answer_box.appendChild(answer_label)
-      })
-      slide_sheet.appendChild(answer_box)
-      quiz_box_wrapper.appendChild(slide_sheet)
-    })
-    var slide_sheet = document.createElement('div')
-    slide_sheet.classList.add('swiper-slide')
-    var q_submit = document.createElement('button')
-    q_submit.innerHTML = `<i class="material-symbols-outlined">psychology_alt</i>  Submit <i class="material-symbols-outlined">psychology_alt</i>`
-    q_submit.classList.add('quiz_submit')
-    slide_sheet.appendChild(q_submit)
-    quiz_box_wrapper.appendChild(slide_sheet)
-  }
-</script>
-<script>
-  const page_box = document.querySelector('.main .page_box')
-
-  const togglePageBox = () => {
-    page_box.classList.toggle('show')
+    runAxios('mark_quiz', ['{{quiz.id}}', JSON.stringify(answer_json)])
   }
 
-  document.querySelectorAll('.question_box').forEach((el, i) => {
-    var page_bullet = document.createElement('p')
-    page_bullet.innerHTML = eval(i + 1)
-    page_bullet.classList.add('page_bullet')
-    page_box.appendChild(page_bullet)
-  })
-
-  var quiz_swiper = new Swiper('.quiz_box', {
-    loop: false,
-    pagination: {
-      el: '.swiper-pagination',
-    },
-    speed: 500,
-    navigation: {
-      nextEl: '.quiz_box_next',
-      prevEl: '.quiz_box_prev',
-    },
-  });
-
-  document.querySelectorAll('.page_bullet').forEach((el, i) => {
-    el.onclick = () => {
-      quiz_swiper.slideTo(i)
-    }
-  })
-</script>
-
-
-<script>
-  const timer = document.querySelector('.timer')
-  var quiz_time = parseInt('{{quiz.duration}}')
-
-  var s = quiz_time * 60
-  var time_stone = (quiz_time * 60) * 1000
-
-  const setTime = () => {
-    if (!sessionStorage.getItem('seconds')) {
-      sessionStorage.setItem('seconds', s - 1)
-    }
+  handleData = (data) => {
+    console.log(data.data)
   }
-  setTime()
 
+  const timer_box = document.querySelector('.timer_box')
 
-  const setTimer = () => {
-    if (sessionStorage.getItem('seconds')) {
-      var time_left = sessionStorage.getItem('seconds')
-    } else {
-      var time_left = quiz_time * 60
-    }
-    var h = Math.floor(time_left / 60 / 60 % 60)
-    if (h < 10) { h = `0${h}` }
-    var m = Math.floor(time_left / 60 % 60)
-    if (m < 10) { m = `0${m}` }
-    var s = time_left % 60
+  runTimer = () => {
+    val = sessionStorage.getItem('seconds')
+    sessionStorage.setItem('seconds', val - 1)
+    s = (val % 60)
     if (s < 10) { s = `0${s}` }
-    timer.innerHTML = `${h} : ${m} : ${s}`
-  }
-  setTimer()
-
-  const startTimer = () => {
-    var val = 0
-    var h = 0
-    var m = 0
-    var s = 0
-    if (sessionStorage.getItem('seconds')) {
-      var runTimer =
-        setInterval(() => {
-          val = sessionStorage.getItem('seconds')
-          if (val > -1) {
-            sessionStorage.setItem('seconds', val - 1)
-            s = (val % 60)
-            if (s < 10) { s = `0${s}` }
-            m = Math.floor(val / 60 % 60)
-            if (m < 10) { m = `0${m}` }
-            h = Math.floor(val / 60 / 60 % 60)
-            if (h < 10) { h = `0${h}` }
-            timer.innerHTML = ` ${h} : ${m} : ${s}`
-          } else {
-            clearInterval(runTimer)
-            sessionStorage.removeItem('seconds')
-            console.log('done')
-          }
-        }, 1000)
+    m = Math.floor(val / 60 % 60)
+    if (m < 10) { m = `0${m}` }
+    h = Math.floor(val / 60 / 60 % 60)
+    if (h < 10) { h = `0${h}` }
+    timer_box.innerHTML = `<span>${h}</span> : <span>${m}</span> : <span>${s}</span>`
+    if (val < 1) {
+      submitQuiz()
     }
   }
-  startTimer()
 
-
-  var force_submit =
-    setInterval(() => {
-      sendResults()
-      clearInterval(force_submit)
-    }, time_stone)
-
-
-  const quiz_submit = document.querySelector('.quiz_submit')
-  const mark_box = document.querySelector('.mark_box')
-  quiz_submit.onclick = () => {
-    sendResults()
+  let quiz_con = JSON.parse('{{quiz.con | safe}}')
+  if (!sessionStorage.getItem('seconds')) {
+    sessionStorage.setItem('seconds', quiz_duration * 60)
   }
-
-  const sendResults = () => {
-    let choiceBox = []
-    document.querySelectorAll(`.quiz_box .answer_box`).forEach((ans_box, i) => {
-      let opt = ''
-      document.querySelectorAll(`.quiz_box input[name='ar${i}']`).forEach(rad => {
-        if (rad.checked) {
-          opt = rad.value
-        }
-      })
-      choiceBox.push(opt)
-    })
-    runAxios('mark_quiz', ['{{quiz.id}}', choiceBox])
-  }
-
 </script>
-
-
-
+<script src="{% static 'Quiz/createQuiz.js' %}"></script>
 <script>
-  const q_prompt_box = document.querySelector('.q_prompt_box')
-  var slideCount = document.querySelectorAll('.swiper-slide').length
-  if (slideCount < 1) {
-    q_prompt_box.classList.add('show')
-  }
+  setInterval(() => {
+    runTimer()
+  }, 1000)
 </script>
+
 {% endblock js %}

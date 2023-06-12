@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block styles %}
 <link rel="stylesheet" href="{% static 'dash.css' %}">
+<link rel="stylesheet" href="{% static 'Quiz/get_quizes.css' %}">
 <title>Document</title>
 {% endblock styles %}
-
 
 {% block page %}
 <section class="page">
@@ -26,22 +27,18 @@
         </select>
         <div class="button" onclick="show_add_quiz()">+</div>
       </form>
+
       <div class="scheme_box">
         {% for quiz in scheme.get_quizes %}
-        <div class="scheme_hold" id="item" data-name="{{quiz.name}}" data-status="{{quiz.status}}">
+        <div class="scheme_hold" id="item" data-name="{{quiz.title}}" data-status="{{quiz.status}}">
           <a href="{% url 'assess_quiz_page' quiz.slug %}" class="assess_scheme">
-            <i class="material-symbols-outlined">show_chart</i>
+            <i class="material-symbols-outlined">analytics</i>
           </a>
-          <a href="{% url 'use_quiz_page' quiz.slug %}" class="scheme">
-            <!-- <i class="material-symbols-outlined">psychology_alt</i> -->
+          <a href="{% url 'use_quiz_page' quiz.slug %}" class="scheme" style="text-align: center;">
+            <i class="material-symbols-outlined">psychology_alt</i>
             <span style="text-align: center;">{{quiz.title}}</span>
-            {% if quiz.status == 'pending' %}
-            <p style="background: #fe6265;"></p>
-            {% else %}
             <p style="background: #acedc2;"></p>
-            {% endif %}
-            <i style="font-style: normal;">{{quiz.duration}} mins</i>
-            <small>{{quiz.level}}</small>
+            <small style="text-align: center;">{{quiz.duration}} mins.</small>
           </a>
           <a href="{% url 'set_quiz_page' quiz.slug %}" class="edit_scheme">
             <i class="material-symbols-outlined">settings</i>
@@ -60,222 +57,13 @@
           <span>Title</span>
           <input type="text" name="title" required>
         </div>
-        <div class="input_field">
-          <span>Duration</span>
-          <input type="number" name="duration" placeholder="minutes" required>
-        </div>
-        <div class="input_field">
-          <span>Difficulty</span>
-          <select name="level" required>
-            <option value="easy">Easy</option>
-            <option value="normal">Normal</option>
-            <option value="difficult">Difficult</option>
-          </select>
-        </div>
-
         <button type="submit">ADD</button>
       </section>
     </form>
-
-    <script>
-      const add_quiz = document.querySelector('.add_quiz')
-      const show_add_quiz = () => {
-        add_quiz.classList.add('show')
-      }
-      const close_add_quiz = () => {
-        add_quiz.classList.remove('show')
-      }
-
-    </script>
-
-    <style>
-      .main {
-        position: relative;
-      }
-
-      .main.change .add_quiz {
-        width: 95%;
-      }
-
-      .add_quiz {
-        position: fixed;
-        transition: 0.4s ease;
-        top: 0;
-        display: none;
-        align-items: center;
-        z-index: 10;
-        justify-content: center;
-        background: rgba(255, 255, 255, 0.874);
-        width: 80%;
-        height: 100vh;
-      }
-      .add_quiz.show{
-        display: flex;
-      }
-
-      .add_quiz #close_add_quiz {
-        position: absolute;
-        top: 5vh;
-        border-radius: 50%;
-        background: salmon;
-        font-weight: 600;
-        color: white;
-        display: flex;
-        align-items: center;
-        width: 30px;
-        cursor: pointer;
-        height: 30px;
-        justify-content: center;
-      }
-
-      .add_quiz section {
-        border-radius: 15px;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        justify-content: center;
-        gap: 2rem;
-        min-width: 350px;
-        min-height: 400px;
-        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-        background: white;
-      }
-
-      .add_quiz section .input_field {
-        display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
-        align-items: center;
-        width: 100%;
-      }
-
-      .add_quiz section .input_field input,
-      .add_quiz section .input_field select {
-        width: 70%;
-        border-radius: 40px;
-        font-size: 1.1rem;
-        border: 1px solid darkgray;
-        padding: 8px 10px;
-        text-align: center;
-      }
-
-      .add_quiz section .input_field input::-webkit-inner-spin-button {
-        display: none;
-      }
-
-      .add_quiz section i {
-        position: absolute;
-        height: 50px;
-        width: 50px;
-        top: -25px;
-        border-radius: 50%;
-        background: #acedc2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 600;
-      }
-
-      .add_quiz section button {
-        rotate: 180deg;
-        color: white;
-        padding: 5px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-        background: #acedc2;
-      }
-
-      @media all and (max-width:1300px) {
-
-        .add_quiz,
-        .main.change .add_quiz {
-          width: 100%;
-        }
-      }
-    </style>
-
   </section>
 </section>
 {% endblock page %}
 
-
-
 {% block js %}
-<script>
-  const item_in = document.getElementById('item_in')
-  const item_select = document.getElementById('item_select')
-  const items = document.querySelectorAll('#item')
-
-  item_in.oninput = () => {
-    items.forEach(el => {
-      var el_name = el.dataset.name.toLowerCase()
-      if (!el_name.includes(item_in.value)) {
-        el.style.display = 'none'
-      } else {
-        el.style.display = 'flex'
-      }
-      runSearchAnime(el)
-    })
-  }
-
-  item_select.onchange = () => {
-    items.forEach(el => {
-      var el_status = el.dataset.status.toLowerCase()
-      if (item_select.value === 'all') {
-        el.style.display = 'flex'
-      } else {
-        if (el_status != item_select.value.toLowerCase()) {
-          el.style.display = 'none'
-        } else {
-          el.style.display = 'flex'
-        }
-      }
-      runSearchAnime(el)
-    })
-  }
-
-  items.forEach((el, i) => {
-    anime({
-      targets: el,
-      translateX: [-50, 0],
-      opacity: [0, 1],
-      duration: 300,
-      easing: 'spring(1, 80, 10, 0)',
-      delay: i * 100
-    })
-  })
-
-  document.querySelectorAll('.main header .box').forEach((el, i) => {
-    anime({
-      targets: el,
-      translateY: [-50, 0],
-      opacity: [0, 1],
-      scale: [0.8, 1],
-      duration: 500,
-      easing: 'spring(1, 80, 10, 0)',
-      delay: i * 100
-    })
-  })
-
-</script>
-
-<script>
-  const ctx = document.getElementById('myChart');
-  var pendCount = parseInt('{{status.pend_count}}')
-  var actCount = parseInt('{{status.act_count}}')
-  var compCount = parseInt('{{status.comp_count}}')
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        backgroundColor: ['#00acea', '#acedc2', '#fe6265'],
-        data: [actCount, compCount, pendCount],
-        borderWidth: 1,
-      }]
-    },
-  });
-</script>
+<script src="{% static 'Quiz/get_quizes.js' %}"></script>
 {% endblock js %}

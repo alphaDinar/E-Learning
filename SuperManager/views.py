@@ -4,7 +4,10 @@ from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from Course.models import Course,Grade
+from Scheme.models import Scheme
 from Log.models import Student,User,Teacher,Manager
+from Student.models import SchemeProgress
+from .models import Grading
 import json
 
 def supermanager(request):
@@ -37,6 +40,8 @@ def capitalize(string):
     
 def super_get_students(request,slug):
     grade = Grade.objects.get(slug=slug)
+    print(grade.get_courses())
+
     token = get_token(request)
     if request.method == 'POST':
         if request.POST.get('type') == 'new':
@@ -49,11 +54,27 @@ def super_get_students(request,slug):
                 user.save()
                 student = Student()
                 student.name = user
-                grade = grade
                 student.grade = grade
                 student.first_name = capitalize(request.POST.get('first_name'))
                 student.last_name = capitalize(request.POST.get('last_name'))
                 student.save()
+                for course in student.grade.get_courses():
+                    for scheme in course.get_schemes():
+                        if not SchemeProgress.objects.filter(student=student).filter(scheme=scheme).exists():
+                            SchemeProgress.objects.create(student=student,course=scheme.course, scheme=scheme).save()
+
+                for progress in SchemeProgress.objects.filter(student=student):
+                    scheme = Scheme.objects.get(id=progress.scheme.id)
+                    progress.progress_json = []
+                    # for image in scheme.get_images():
+                    #     progress.progress_json.append({'type':'image','id' : image.id, 'status' : 'pending'})
+                    # for video in scheme.get_videos():
+                    #     progress.progress_json.append({'type':'video','id' : video.id, 'status' : 'pending'})
+                    # for passage in scheme.get_passages():
+                    #     progress.progress_json.append({'type':'passage','id' : passage.id, 'status' : 'pending'})
+                    for slide in scheme.get_slides():
+                        progress.progress_json.append({'type':'slide','id' : slide.id, 'status' : 'pending'})
+                    progress.save()
                 messages.success(request, f'{user.username} Created successfully')
         else :
             user = User.objects.get(username=request.POST.get('name'))
@@ -188,9 +209,11 @@ def super_delete_grade(request):
     return JsonResponse({'test':'good'})
 
 def super_courses(request):
-    courses = Course.objects.all()
+    courses = Course.objects.all().order_by('abb')
+    token = get_token(request)
     context = {
-        'courses' : courses
+        'courses' : courses,
+        'token' : token
     }
     return render(request, 'super_courses.html', context)
 
@@ -198,6 +221,36 @@ def super_delete_course(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
         Course.objects.get(id=json_data['data']).delete()
+    return JsonResponse({'test':'good'})
+
+def super_grading(request):
+    if request.method == 'POST':
+        if request.POST.get('type') == 'new':
+            if Grading.objects.filter(grade=request.POST.get('grade')):
+                messages.error(request, 'Grade already exists')
+            else:
+                grading = Grading()
+                messages.success(request, 'Grade added successfully')
+        else:
+            grading = Grading.objects.get(id=request.POST.get('id'))
+            messages.success(request, 'Grade updated successfully')
+        grading.grade = request.POST.get('grade')
+        grading.min_mark = request.POST.get('min_mark')
+        grading.max_mark = request.POST.get('max_mark')
+        grading.remark = request.POST.get('remark')
+        grading.color_code = request.POST.get('color_code')
+        grading.save()
+        
+    context = {
+        'token' : get_token(request),
+        'gradings' : Grading.objects.all().order_by('-min_mark') 
+    }
+    return render(request, 'super_grading.html', context)
+
+def super_delete_grading(request):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)
+        Grading.objects.get(id=json_data['data']).delete()
     return JsonResponse({'test':'good'})
 
 def super_test(request):

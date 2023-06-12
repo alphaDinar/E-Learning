@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Scheme,Image,Passage,Video,Slide
+from .models import Scheme,Image,Passage,Video,Pdf,Slide
 
 class ImageTable(admin.TabularInline):
     model = Image
@@ -20,4 +20,10 @@ admin.site.register(Scheme,SchemeAdmin)
 admin.site.register(Image)
 admin.site.register(Passage)
 admin.site.register(Video)
+admin.site.register(Pdf)
 admin.site.register(Slide)
+
+
+from .models import RecentScheme
+
+admin.site.register(RecentScheme)

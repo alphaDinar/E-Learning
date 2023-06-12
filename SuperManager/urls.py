@@ -25,6 +25,9 @@ urlpatterns = [
 
     path('super_courses', views.super_courses, name='super_courses_page'),
 
+    path('super_grading', views.super_grading, name='super_grading_page'),
+    path('super_delete_grading', views.super_delete_grading),
+
     path('super_test', views.super_test, name='super_test_page'),
 
 ]

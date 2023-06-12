@@ -50,9 +50,6 @@ def portal(request):
             messages.error(request, 'Username doesn"t exist')
     return render(request, 'portal.html')
 
-
-
-
 # from app_name.models import RelatedModel
 
 def teacher_portal(request):

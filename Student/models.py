@@ -1,8 +1,21 @@
 from django.db import models
 from django.utils.text import slugify
 from Log.models import Student
-from Quiz.models import Quiz
+from Quiz.models import Quiz,Assignment
 from cloudinary.models import CloudinaryField
+from Course.models import Course
+from Scheme.models import Scheme
+    
+
+class SchemeProgress(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    scheme = models.ForeignKey(Scheme, on_delete=models.CASCADE)
+    progress_json = models.JSONField(blank=True,null=True)
+    progress_count = models.FloatField(default=0)
+    rating = models.IntegerField(default=0)
+    def __str__(self):
+        return f'{self.student}"s {self.scheme} progress'
 
 class StudentReport(models.Model):
     student = models.OneToOneField(Student, on_delete=models.CASCADE)
@@ -10,19 +23,29 @@ class StudentReport(models.Model):
     def __str__(self):
         return f'{self.student}"s Report'
 
-class Score(models.Model):
+class QuizScore(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    quiz_con = models.JSONField(blank=True,null=True) 
-    quiz_ans_box = models.JSONField(blank=True,null=True) 
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    scheme = models.ForeignKey(Scheme, on_delete=models.CASCADE)
+    holder = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    con = models.JSONField(blank=True,null=True) 
+    ans_box = models.JSONField(blank=True,null=True) 
     mark = models.FloatField()
     choice_box = models.JSONField(blank=True,null=True) 
-    timestamp = models.DateTimeField(auto_now_add=True)
-    slug = models.SlugField(max_length=500, blank=True, null= True)
-    def save(self,*args,**kwargs):
-        if self.slug == None:
-            self.slug = slugify(self.quiz.title) + '-' + slugify(self.student)      
-        super().save(*args, **kwargs)  
+    timestamp = models.DateTimeField(auto_now_add=True)  
     def __str__(self):
-        return f'{self.student.name}   {self.quiz.title} {self.mark}'
+        return f'{self.student.name}   {self.holder.title} {self.mark}'
+
+class AssignmentScore(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    scheme = models.ForeignKey(Scheme, on_delete=models.CASCADE)
+    holder = models.ForeignKey(Assignment, on_delete=models.CASCADE)
+    con = models.JSONField(blank=True,null=True) 
+    ans_box = models.JSONField(blank=True,null=True) 
+    mark = models.FloatField()
+    choice_box = models.JSONField(blank=True,null=True) 
+    timestamp = models.DateTimeField(auto_now_add=True)  
+    def __str__(self):
+        return f'{self.student.name}   {self.holder.title} {self.mark}'
 

@@ -10,37 +10,7 @@
 {% block page %}
 <section class="page">
   {% include 'sideBar.html' %}
-  <section class="main">
-    <header>
-      <a href="" class="box">
-        <p>
-          <i class="material-symbols-outlined">history</i>
-          <span>Recent</span>
-        </p>
-        <span>Cold war</span>
-        <p>
-          <small class="material-symbols-outlined">trending_flat</small>
-        </p>
-      </a>
-      <div class="chart_box">
-        <legend>
-          <small class="material-symbols-outlined" style="color: #fe6265;">pending</small>
-          <small class="material-symbols-outlined" style="color: #00acea;">bolt</small>
-          <small class="material-symbols-outlined" style="color: #acedc2;">verified</small>
-        </legend>
-        <canvas id="myChart"></canvas>
-      </div>
-      <a href="" class="box">
-        <p>
-          <i class="material-symbols-outlined">favorite</i>
-          <span>Favorite</span>
-        </p>
-        <span>Diplomacy</span>
-        <p>
-          <small class="material-symbols-outlined">trending_flat</small>
-        </p>
-      </a>
-    </header>
+  <section class="main toggle">
     <section class="con">
       <form>
         <div>
@@ -54,7 +24,6 @@
           <option value="active">Active</option>
           <option value="completed">Completed</option>
         </select>
-        <button type="button" class="material-symbols-outlined">north</button>
       </form>
       <div class="scheme_box">
         {% for scheme in schemes %}
@@ -80,14 +49,6 @@
 
 
 {% block js %}
-<script>
-  const toggle_main = document.querySelector('.main .con form button')
-  const main_header = document.querySelector('.main header')
-  const main_con = document.querySelector('.main .con')
-  toggle_main.onclick = () => {
-    main.classList.toggle('toggle')
-  }
-</script>
 <script>
   const item_in = document.getElementById('item_in')
   const item_select = document.getElementById('item_select')
@@ -144,22 +105,5 @@
     })
   })
 
-</script>
-
-<script>
-  const ctx = document.getElementById('myChart');
-  var pendCount = parseInt('{{status.pend_count}}')
-  var actCount = parseInt('{{status.act_count}}')
-  var compCount = parseInt('{{status.comp_count}}')
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      datasets: [{
-        backgroundColor: ['#00acea', '#acedc2', '#fe6265'],
-        data: [actCount, compCount, pendCount],
-        borderWidth: 1,
-      }]
-    },
-  });
 </script>
 {% endblock js %}

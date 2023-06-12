@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Score,StudentReport
+from .models import SchemeProgress,QuizScore,StudentReport,AssignmentScore
 
 admin.site.register(StudentReport)
-admin.site.register(Score)
+admin.site.register(QuizScore)
+admin.site.register(AssignmentScore)
+admin.site.register(SchemeProgress)

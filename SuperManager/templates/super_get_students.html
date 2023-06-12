@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{% static 'dash.css' %}">
 <link rel="stylesheet" href="{% static 'sideBar.css' %}">
 <link rel="stylesheet" href="{% static 'prompt.css' %}">
+<link rel="stylesheet" href="{% static 'add_form.css' %}">
 <link rel="stylesheet" href="{% static 'Super/super.css' %}">
 {% endblock styles %}
 
@@ -156,19 +157,6 @@
     }
   })
 
-  runGradeSearchAnime = (grade, i) => {
-    anime({
-      targets: grade,
-      translateY: [-30, 0],
-      opacity: [0, 1],
-      duration: 1800,
-      delay: 30 * i,
-    })
-  }
-
-  grades.forEach((grade, i) => {
-    runGradeSearchAnime(grade, i)
-  })
 
   runGradeSearch = (val) => {
     grades.forEach(grade => {
@@ -180,5 +168,7 @@
     })
   }
 </script>
+
+<script src="{% static 'Super/anime.js' %}"></script>
 
 {% endblock js %}

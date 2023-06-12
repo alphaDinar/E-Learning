@@ -26,11 +26,18 @@ class Course(models.Model):
     slug = models.SlugField(blank=True,null=True)
     def save(self, *args, **kwargs):
         self.abb = self.subject[:3].upper()
-        if self.slug is None:
-             self.slug = slugify(self.abb) + slugify(self.grade.code)
+        self.slug = slugify(self.abb) + slugify(self.grade.code)
         super().save(*args, **kwargs)
     def get_schemes(self):
         return self.scheme_set.all() 
+    def get_scheme_progress(self):
+        return self.schemeprogress_set.all()
+    def get_quizes(self):
+        return self.quiz_set.all()
+    def get_quiz_scores(self):
+        return self.quiz_score_set.all()
+    def get_assignments(self):
+        return self.assignment_set.all()
     def __str__(self):
         return f'{self.abb} {self.grade.code}'   
      
