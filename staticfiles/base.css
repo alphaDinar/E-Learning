@@ -40,3 +40,42 @@ strong {
 a {
   cursor: pointer;
 }
+
+.quiz_prompt_box {
+  position: absolute;
+  top: 0;
+  right: -330px;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 300px;
+  padding: 10px;
+  z-index: 50;
+  background: black;
+  color: white;
+  transition: 0.4s ease;
+  border-radius: 0 0 0 10px;
+  text-align: center;
+}
+
+.quiz_prompt_box.show {
+  right: 0;
+}
+
+.quiz_prompt_box nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.quiz_prompt_box nav i {
+  font-style: normal;
+  cursor: pointer;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 3px;
+  justify-content: center;
+  height: 30px;
+}

@@ -1,5 +1,5 @@
 .main header {
-  width: 100%;
+  width: 90%;
   background: white;
   min-height: 8vh;
   justify-content: space-around;
@@ -113,6 +113,16 @@
   font-size: 1.5rem;
 }
 
+.inst_box{
+  width: 90%;
+  padding: 10px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a2a46;
+  color: skyblue;
+}
+
 .student_list {
   width: 88%;
   padding: 5px 1%;
@@ -167,36 +177,6 @@
   color: white;
 }
 
-.close_form{
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: salmon;
-  color: white;
-  top: -15px;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-.add_form{
-  position: absolute;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  left: 0;
-  min-height: 100vh;
-  width: 100%;
-  z-index: 100;
-  background: rgba(163, 137, 137, 0.703);
-}
-.add_form.change{
-  display: flex;
-}
-
 .course_box {
   width: 50%;
   display: flex;
@@ -243,92 +223,6 @@
   color: white;
 }
 
-.mBox{
-  padding: 5px 10px;
-  background: rgb(255, 228, 225);
-  border-radius: 5px;
-  color: salmon;
-}
-.add_form form{
-  position: relative;
-  border-radius: 15px;
-  display: flex;
-  padding: 20px;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem 0;
-  background: white;
-}
-.add_form form input {
-  width: 80%;
-  height: 30px;
-  padding: 5px 10px;
-  text-align: center;
-  font-size: 1.1rem;
-  background: ghostwhite;
-  border-radius: 40px;
-  border: 1px solid darkcyan;
-}
-.add_form form input::placeholder{
-  text-align: center;
-}
-.add_form form button{
-  width: 100px;
-  height: 30px;
-  padding: 5px;
-  background: rgb(25, 228, 126);
-  color: white;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  border-radius: 20px;
-  cursor: pointer;
-  justify-content: center;
-}
-
-.cell{
-  min-width: 70px;
-  padding: 3px;
-  height: 30px;
-  font-size: 0.9rem;
-  color: rgb(20, 74, 74);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid darkcyan;
-}
-
-#sh{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 12vw;
-  width: inherit;
-}
-
-.mark_box, .mark_box_header{
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 0 0.3rem;
-}
-.report_box{
-  gap: 0.5rem;
-}
-.record_box_holder{
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.report_box hr{
-  width: 100%;
-  border-top: 2px dotted darkcyan;
-}
-.record , .report_box .header{
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
 
 .report_box {
   max-width: 80vw;

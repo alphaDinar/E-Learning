@@ -13,7 +13,8 @@
 }
 
 #sideBar_tag{
-  background: black;
+  background: wheat;
+  color: black;
 }
 
 @media all and (max-width:1300px) {

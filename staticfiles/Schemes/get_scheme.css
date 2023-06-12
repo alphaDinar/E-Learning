@@ -1,5 +1,8 @@
-body {
-  background: #f4f7fa;
+.sideBar{
+  background: white;
+}
+.sideBar strong{
+  color: darkgray;
 }
 
 .main .screen{
@@ -69,9 +72,6 @@ body {
   margin: 0;
   min-height: 100vh;
 }
-.main.hide .edit_screen .res_edit_box{
-  height: 88vh;
-}
 
 .main.hide .add_form_box{
   top: 0;
@@ -98,7 +98,7 @@ body {
 }
 .sideBar nav{
   width: 100%;
-  height: 80vh;
+  height: 70vh;
 }
 .sideBar nav button[type='button']{
   height: 20px;
