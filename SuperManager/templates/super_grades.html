@@ -32,10 +32,16 @@
         <i class="close_form material-symbols-outlined" onclick="closeForm()">close</i>
         {% csrf_token %}
         <input type="text" name="grade" placeholder="Grade" required>
-        <input type="text" name="code" placeholder="Code" required>
+        <input type="number" name="code" placeholder="Code" required>
         <button type="submit">+</button>
       </form>
     </section>
+
+    <style>
+      form input::-webkit-inner-spin-button{
+        display: none;
+      }
+    </style>
 
     <header>
       <span><i class="material-symbols-outlined">blur_on</i> Grades</span>

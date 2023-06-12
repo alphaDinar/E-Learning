@@ -159,16 +159,15 @@ def super_grades(request):
     grades = Grade.objects.all()
     token = get_token(request)
     if request.method == 'POST':
-        if Grade.objects.filter(name=request.POST.get('grade')).exists() or Grade.objects.filter(code=request.POST.get('code')).exists():
-            messages.error(request, 'Grade already exists')
-        else:
             if request.POST.get('type') == 'new':
+                if Grade.objects.filter(name=request.POST.get('grade')).exists() or Grade.objects.filter(code=request.POST.get('code')).exists():
+                    messages.error(request, 'Grade already exists')
                 grade = Grade()
                 grade.name = request.POST.get('grade')
                 grade.code = request.POST.get('code')
                 grade.save()
             else:
-                grade = Grade.objects.get(name=request.POST.get('grade'))
+                grade = Grade.objects.get(id=request.POST.get('id'))
                 grade.name = request.POST.get('grade')
                 grade.code = request.POST.get('code')
                 grade.save()
