@@ -20,12 +20,11 @@ def schemes(request,slug):
     act_count = schemes.filter(status = 'active').count()
     comp_count = schemes.filter(status = 'completed').count()
     status = {'pend_count' : pend_count, 'act_count' : act_count, 'comp_count' : comp_count}
+    recent_scheme = ''
     if request.user.is_teacher:
         if RecentScheme.objects.filter(teacher=Teacher.objects.get(name=request.user)).exists():
             recent_scheme = RecentScheme.objects.filter(teacher=Teacher.objects.get(name=request.user)).last()
-    else:
-        recent_scheme = ''
-
+            
     if request.method == 'POST':
         name = capitalize(request.POST.get('name'))
         if Scheme.objects.filter(topic = name).exists():
