@@ -22,6 +22,9 @@ def get_grade_box():
         grading_box.append({'min': grading.min_mark,'max' : grading.max_mark, 'grade' : grading.grade, 'remark' : grading.remark, 'color' : grading.color_code})
     return json.dumps(grading_box)
     
+from datetime import datetime
+from django.utils import timezone
+
 def student_dash(request):
     if not checkStudent(request):
         messages.error(request,'Login with Student Account')
@@ -29,13 +32,21 @@ def student_dash(request):
     else:
         student = Student.objects.get(name=request.user)
         course_progress = []
+        red_assignments = []
+        for assignment in Assignment.objects.filter(status='pending'):
+            time_left = (assignment.deadline - timezone.now()).days
+            if time_left < 1:
+                red_assignments.append(assignment)
+        print(red_assignments)
+
         for course in student.grade.get_courses():
             course_progress_count = []
             for progress in course.get_scheme_progress().filter(student=student):
                 course_progress_count.append(progress.progress_count)
             course_progress.append(course_progress_count)
     context = {
-        'course_progress' : course_progress
+        'course_progress' : course_progress,
+        'red_assignments' : red_assignments
     }
     return render(request, 'student_dash.html', context)
 
@@ -264,9 +275,11 @@ def student_get_assignments(request,slug):
         student = Student.objects.get(name=request.user)
         scheme = Scheme.objects.get(slug=slug)
         pend_high_scores = []
-        comp_high_scores = []
         pend_question_num = []
+        pend_result_links = [] 
+        comp_high_scores = []
         comp_question_num = []
+        comp_result_links = []
         for assignment in scheme.get_assignments():
             if assignment.status == 'pending':
                 if assignment.con:
@@ -275,8 +288,10 @@ def student_get_assignments(request,slug):
                     pend_question_num.append(0)
                 if assignment.get_assignment_scores().filter(student=student).exists():
                     pend_high_scores.append(assignment.get_assignment_scores().filter(student=student).order_by('-mark').first().mark)
+                    pend_result_links.append(assignment.get_assignment_scores().filter(student=student).order_by('-mark').first().id)
                 else:
                     pend_high_scores.append('empty')
+                    pend_result_links.append('empty')
             else:
                 if assignment.con:
                     comp_question_num.append(len(json.loads(assignment.con)))
@@ -284,14 +299,18 @@ def student_get_assignments(request,slug):
                     comp_question_num.append(0)
                 if assignment.get_assignment_scores().filter(student=student).exists():
                     comp_high_scores.append(assignment.get_assignment_scores().filter(student=student).order_by('-mark').first().mark)
+                    comp_result_links.append(assignment.get_assignment_scores().filter(student=student).order_by('-mark').first().id)
                 else:
                     comp_high_scores.append('empty')
+                    comp_result_links.append('empty')
     context = {
         'scheme' : scheme,
         'pend_question_num' : json.dumps(pend_question_num),
-        'comp_question_num' : json.dumps(comp_question_num),
         'pend_high_scores' : json.dumps(pend_high_scores),
+        'pend_result_links' : json.dumps(pend_result_links),
+        'comp_question_num' : json.dumps(comp_question_num),
         'comp_high_scores' : json.dumps(comp_high_scores),
+        'comp_result_links' : json.dumps(comp_result_links),
         'grading_box' : get_grade_box()
     }
     return render(request, 'student_get_assignments.html', context)
@@ -423,8 +442,7 @@ def student_assignment_history(request,slug):
 def student_assessment(request):
     student = Student.objects.get(name=request.user)
     grade = student.grade
-
-    course_avg_list = []
+    quiz_course_avg_list = []
     for course in grade.get_courses():
         course_quiz_total = 0
         for scheme in course.get_schemes():
@@ -433,15 +451,27 @@ def student_assessment(request):
                     high_score = quiz.get_quiz_scores().filter(student=student).order_by('-mark').first().mark
                     course_quiz_total = course_quiz_total + high_score
         if course.get_quizes().count() > 0:
-            course_avg_list.append(course_quiz_total/course.get_quizes().count())
+            quiz_course_avg_list.append(course_quiz_total/course.get_quizes().count())
         else:
-            course_avg_list.append(course_quiz_total)
+            quiz_course_avg_list.append(course_quiz_total)
+    assignment_course_avg_list = []
+    for course in grade.get_courses():
+        course_assignment_total = 0
+        for scheme in course.get_schemes():
+            for assignment in scheme.get_assignments():
+                if assignment.get_assignment_scores().filter(student=student).exists():
+                    high_score = assignment.get_assignment_scores().filter(student=student).order_by('-mark').first().mark
+                    course_assignment_total = course_assignment_total + high_score
+        if course.get_assignments().count() > 0:
+            assignment_course_avg_list.append(course_assignment_total/course.get_assignments().count())
+        else:
+            assignment_course_avg_list.append(course_assignment_total)
     
     context = {
-        
-        
         'grade' : grade,
-        'course_avg_list' : json.dumps(course_avg_list)
+        'quiz_course_avg_list' : json.dumps(quiz_course_avg_list),
+        'assignment_course_avg_list' : json.dumps(assignment_course_avg_list),
+        'grading_box' : get_grade_box()
     }
     return render(request, 'student_assessment.html', context)
 

@@ -36,27 +36,7 @@
       <a href="{% url 'schemes_page' scheme.course.slug %}" class="material-symbols-outlined">arrow_back_ios_new</a>
     </footer>
   </section>
-  <i class="material-symbols-outlined" id="hide_nav">expand</i>
-  <section class="main">
-    <nav>
-      <i class="material-symbols-outlined" id="toggle_stats">donut_small</i>
-      <i class="material-symbols-outlined" id="toggle_stats">slideshow</i>
-    </nav>
-
-    <section class="stat_box">
-      last_touched
-      ----
-      images
-      passages
-      videos
-      ----
-      add res
-      -----
-      status -> pending
-      ----
-      toggle stat button
-    </section>
-
+  <section class="main hide">
     <section class="add_form_box">
       <form class="add_form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -369,75 +349,66 @@
 <script>
   const image_in = document.querySelector('.add_form input[type="file"]')
 
-  console.log(image_in)
+  // function resizeImage(file, maxWidth, maxHeight, callback) {
+  //   var reader = new FileReader();
+  //   reader.onload = function (event) {
+  //     var image = new Image();
+  //     image.onload = function () {
+  //       var width = image.width;
+  //       var height = image.height;
 
-  function resizeImage(file, maxWidth, maxHeight, callback) {
-    var reader = new FileReader();
-    reader.onload = function (event) {
-      var image = new Image();
-      image.onload = function () {
-        var width = image.width;
-        var height = image.height;
+  //       // Calculate the new dimensions
+  //       var newWidth, newHeight;
+  //       if (width > height) {
+  //         newWidth = maxWidth;
+  //         newHeight = Math.floor(height * (maxWidth / width));
+  //       } else {
+  //         newHeight = maxHeight;
+  //         newWidth = Math.floor(width * (maxHeight / height));
+  //       }
 
-        // Calculate the new dimensions
-        var newWidth, newHeight;
-        if (width > height) {
-          newWidth = maxWidth;
-          newHeight = Math.floor(height * (maxWidth / width));
-        } else {
-          newHeight = maxHeight;
-          newWidth = Math.floor(width * (maxHeight / height));
-        }
+  //       // Create a canvas element
+  //       var canvas = document.createElement('canvas');
+  //       canvas.width = newWidth;
+  //       canvas.height = newHeight;
 
-        // Create a canvas element
-        var canvas = document.createElement('canvas');
-        canvas.width = newWidth;
-        canvas.height = newHeight;
+  //       // Resize the image and draw it on the canvas
+  //       var ctx = canvas.getContext('2d');
+  //       ctx.drawImage(image, 0, 0, newWidth, newHeight);
 
-        // Resize the image and draw it on the canvas
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0, newWidth, newHeight);
-
-        // Get the resized data URL from the canvas and pass it to the callback function
-        var resizedDataURL = canvas.toDataURL(file.type);
-        callback(resizedDataURL);
-      }
-      image.src = event.target.result;
-    }
-    reader.readAsDataURL(file);
-  }
+  //       // Get the resized data URL from the canvas and pass it to the callback function
+  //       var resizedDataURL = canvas.toDataURL(file.type);
+  //       callback(resizedDataURL);
+  //     }
+  //     image.src = event.target.result;
+  //   }
+  //   reader.readAsDataURL(file);
+  // }
 
 
 
   image_in.onchange = (event) => {
-    var file_in = event.target.files[0];
+    //Resize Images before upload
 
-    resizeImage(file_in, 400, 400, function (resizedDataURL) {
-      // Use the resized data URL here
-      console.log(resizedDataURL);
-      dis_box.style.backgroundImage = `url(${resizedDataURL})`
-    });
-
-    // const [file] = image_in.files
-    // var src = URL.createObjectURL(file)
-    // if (image_in.classList.contains('image')) {
-    //   dis_box.style.backgroundImage = `url(${src})`
-    //   console.log(image_in.files)
-    // } else {
-    //   dis_box.innerHTML = ''
-    //   const dis_box_video = document.createElement('video')
-    //   dis_box_video.controls = true
-    //   dis_box_video.src = src
-    //   dis_box.appendChild(dis_box_video)
-    // }
+    const [file] = image_in.files
+    var src = URL.createObjectURL(file)
+    if (image_in.classList.contains('image')) {
+      dis_box.style.backgroundImage = `url(${src})`
+    } else {
+      dis_box.innerHTML = ''
+      const dis_box_video = document.createElement('video')
+      dis_box_video.controls = true
+      dis_box_video.src = src
+      dis_box.appendChild(dis_box_video)
+    }
   }
 </script>
 
-<style>
+<!-- <style>
   .dis_box{
     background-position: revert !important;
     background-size: revert !important;
     background-repeat: no-repeat;
   }
-</style>
+</style> -->
 {% endblock js %}

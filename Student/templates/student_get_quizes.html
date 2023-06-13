@@ -44,89 +44,15 @@
               <span class="attempt_box"></span>
             </p>
           </div>
-          <style>
-            .quiz_data{
-              display: flex;
-              scale: 0.75;
-              align-items: center;
-              width: 80%;
-              gap: 0.3rem;
-              padding: 5px;
-              justify-content: space-around;
-            }
-            .quiz_data p{
-              color: rgb(95, 95, 95);
-              color: white;
-              display: flex;
-              align-items: center;
-              flex-direction: column;
-            }
-          </style>
-
-          
           <div class="item_cover">
             <a href="{% url 'student_start_quiz_page' quiz.slug %}" class="material-symbols-outlined" style="color: skyblue;">edit</a>
             <a href="{% url 'student_quiz_history_page' quiz.slug %}" class="material-symbols-outlined" style="color: salmon;">history</a>
           </div>
-
-          <style>
-            .item{
-              overflow: hidden;
-            }
-            .item_cover{
-              bottom: -100%;
-              width: 100%;
-              height: 100%;
-              background: rgba(0, 0, 0, 0.699);
-              border-radius: 10px;
-              transition: 0.4s ease;
-              position: absolute;
-              display: flex;
-              align-items: center;
-              gap: 1rem;
-              justify-content: center;
-            }
-            .item_cover a{
-              width: 40px;
-              height: 40px;
-              border-radius: 5px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 600;
-              background: white;
-            }
-            .item:hover .item_cover{
-              bottom: 0;
-            }
-          </style>
         </div>
       {% endfor %}
     </header>
 </section>
 </section>
-
-<style>
-  .item_hold {
-    position: relative;
-    cursor: pointer;
-  }
-
-  .item {
-    position: relative;
-    cursor: pointer;
-  }
-
-  .high_score_box {
-    font-size: 1.5rem;
-    color: white;
-    border-radius: 5px;
-    padding: 5px;
-  }
-
-</style>
-
-
 
 
 <style>
@@ -138,7 +64,6 @@
     background: rgb(6, 225, 116);
   }
 </style>
-
 {% endblock page %}
 
 
@@ -153,17 +78,14 @@
   const q_num_box = document.querySelectorAll('.q_num_box')
 
   high_scores.forEach((high_score, i) => {
-    var mark_data = gradeMark(high_score)
-    high_score_box[i].style.color = mark_data.color
-
     if (high_score === 'empty') {
       high_score_box[i].innerHTML = '--'
       high_score_box[i].style.color = 'white'
     } else {
+      var mark_data = gradeMark(high_score)
+      high_score_box[i].style.color = mark_data.color
       high_score_box[i].innerHTML = `${high_score}%`
     }
-    console.log(attempts[i])
-
     attempt_box[i].innerHTML = `${attempts[i]} att.`
     q_num_box[i].innerHTML = `${question_num[i]}`
   })

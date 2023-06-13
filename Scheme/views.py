@@ -9,9 +9,6 @@ from Scheme.models import Scheme,Image,Video,Passage,Pdf,Slide,RecentScheme
 from Student.models import SchemeProgress
 import json
 
-def capitalize(string):
-    return string[0].upper() + string[1:]
-
 @login_required
 def schemes(request,slug):
     course = Course.objects.get(slug = slug)
@@ -26,7 +23,7 @@ def schemes(request,slug):
             recent_scheme = RecentScheme.objects.filter(teacher=Teacher.objects.get(name=request.user)).last()
             
     if request.method == 'POST':
-        name = capitalize(request.POST.get('name'))
+        name = request.POST.get('name').capitalize()
         if Scheme.objects.filter(topic = name).exists():
             messages.error(request, f'{name} Already Exists')
         else:
@@ -82,7 +79,6 @@ def add_progress_res(scheme_progress, progress_json):
             print(cur_progress)
             if not progress.progress_count == cur_progress: 
                 progress.progress_count = cur_progress
-                # progress.save()
         else:
             progress.progress_json = [progress_json]
         progress.save()
@@ -147,7 +143,6 @@ def edit_scheme(request, slug):
                 passage.title = request.POST.get('passage_title')
                 passage.body = request.POST.get('passage_body')
                 if request.FILES.get('passage_thumb'):
-                    print('ascascascascascascscasc')
                     passage.thumb = request.FILES.get('passage_thumb')
                 passage.save()
                 messages.info(request, 'changes have been made')
@@ -244,14 +239,4 @@ def delete_scheme_slide(request):
         res.delete()
     return JsonResponse({'info':'delete'})
 
-def head(request):
-    return render(request, 'head.html')
-
-def assessment(request, slug):
-    course = Course.objects.get(slug=slug)
-    schemes = course.get_schemes()
-    context ={
-        'course' : course
-    }
-    return render(request, 'assessment.html', context)
 

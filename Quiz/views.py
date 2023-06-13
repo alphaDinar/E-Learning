@@ -7,11 +7,16 @@ from celery import shared_task
 from Course.models import Course
 from Scheme.models import Scheme
 from Quiz.models import Quiz,Assignment
-from Student.models import QuizScore 
+from Student.models import QuizScore,AssignmentScore 
+from SuperManager.models import Grading
 import json,datetime
 
-def capitalize(string):
-    return string[0].upper() + string[1:]
+def get_grade_box():
+    grading_box = []    
+    for grading in Grading.objects.all():
+        grading_box.append({'min': grading.min_mark,'max' : grading.max_mark, 'grade' : grading.grade, 'remark' : grading.remark, 'color' : grading.color_code})
+    return json.dumps(grading_box)
+
 
 def quizes(request,slug):
     course = Course.objects.get(slug=slug)
@@ -21,7 +26,6 @@ def quizes(request,slug):
     quiz_count = 0
     for scheme in schemes:
         quiz_count = quiz_count + scheme.get_quizes().count()
-    print(quiz_count)
     context ={
         'course' : course,
         'schemes' : schemes,
@@ -36,7 +40,6 @@ def assignments(request,slug):
     context ={
         'course' : course,
         'schemes' : course.get_schemes(),
-        # 'quiz_count' : quiz_count,
     }
     return render(request, 'assignments.html', context)
 
@@ -44,7 +47,7 @@ def get_quizes(request,slug):
     scheme = Scheme.objects.get(slug=slug)
     course = scheme.course
     if request.method == 'POST':
-        title = capitalize(request.POST.get('title'))
+        title = request.POST.get('title').capitalize()
         if not Quiz.objects.filter(topic=scheme).filter(title=title).exists():
             Quiz.objects.create(topic=scheme,title=title, course=scheme.course).save()
         else:
@@ -59,7 +62,7 @@ def get_assignments(request,slug):
     scheme = Scheme.objects.get(slug=slug)
     course = scheme.course
     if request.method == 'POST':
-        title = capitalize(request.POST.get('title'))
+        title = request.POST.get('title').capitalize()
         if not Assignment.objects.filter(topic=scheme).filter(title=title).exists():
             Assignment.objects.create(topic=scheme,title=title, course=scheme.course).save()
         else:
@@ -103,10 +106,11 @@ def toggle_assignment(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
         assignment = Assignment.objects.get(id=json_data['data'][0])
+        print(assignment)
         if assignment.protection == 'locked':
             assignment.protection = 'unlocked'
         else:
-            assignment.status = 'locked'
+            assignment.protection = 'locked'
         assignment.save()
     return JsonResponse({'test':'good'})
 
@@ -166,20 +170,52 @@ def delete_session(request):
         quiz.save()
     return JsonResponse({'test':'deleted'})
 
-
 def assess_quiz(request, slug):
     quiz = Quiz.objects.get(slug=slug)
     course = quiz.topic.course
     quiz_scores = []
-    for student in course.grade.get_students():
-        if QuizScore.objects.filter(student=student).filter(quiz=quiz).order_by('-mark').exists():
-            quiz_scores.append(QuizScore.objects.filter(student=student).filter(quiz=quiz).order_by('-mark').first())
+    for score in QuizScore.objects.filter(holder=quiz).order_by('-mark'):
+        err = 0
+        if len(quiz_scores) > 0:
+            for item in quiz_scores:
+                if item.student == score.student:
+                    err = 1
+        if err > 0:
+            continue
         else:
+            quiz_scores.append(score)
+    for student in course.grade.get_students():
+        if not QuizScore.objects.filter(student=student).filter(holder=quiz).order_by('-mark').exists():
             quiz_scores.append(student)
-    print(quiz_scores)
     context = {
         'course' : course,
         'quiz' : quiz,
         'quiz_scores' : quiz_scores,
+        'grading_box' : get_grade_box()
     }
     return render(request, 'assess_quiz.html', context)
+
+def assess_assignment(request, slug):
+    assignment = Assignment.objects.get(slug=slug)
+    course = assignment.topic.course
+    assignment_scores = []
+    for score in AssignmentScore.objects.filter(holder=assignment).order_by('-mark'):
+        err = 0
+        if len(assignment_scores) > 0:
+            for item in assignment_scores:
+                if item.student == score.student:
+                    err = 1
+        if err > 0:
+            continue
+        else:
+            assignment_scores.append(score)
+    for student in course.grade.get_students():
+        if not AssignmentScore.objects.filter(student=student).filter(holder=assignment).order_by('-mark').exists():
+            assignment_scores.append(student)
+    context = {
+        'course' : course,
+        'assignment' : assignment,
+        'assignment_scores' : assignment_scores,
+        'grading_box' : get_grade_box()
+    }
+    return render(request, 'assess_assignment.html', context)

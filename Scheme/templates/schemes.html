@@ -36,9 +36,7 @@
           <i class="close_form material-symbols-outlined" onclick="closeForm()">close</i>
         </form>
       </section>
-
       {% endif %}
-
 
       {% if user.is_teacher %}
       <header>
@@ -253,16 +251,6 @@
         runSearchAnime(el)
       })
     }
-
-    // const runSearchAnime = (el) => {
-    //   anime({
-    //     targets: el,
-    //     translateY: [50, 0],
-    //     opacity: [0, 1],
-    //     duration: 500,
-    //     easing: 'spring(1, 80, 10, 0)'
-    //   })
-    // }
 
     items.forEach((el, i) => {
       anime({

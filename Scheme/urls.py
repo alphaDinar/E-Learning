@@ -16,5 +16,4 @@ urlpatterns = [
     path('delete_scheme_pdf', views.delete_scheme_pdf),
 
     # path('edit_scheme/<str:slug>/delete_video/<int:id>', views.delete_video, name='delete_video'),
-    path('assessment/<str:slug>', views.assessment, name='assessment_page'),
 ]

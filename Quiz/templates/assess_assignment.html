@@ -15,7 +15,8 @@
       <form>
         <div>
           <i class="material-symbols-outlined">blur_on</i>
-          <span>{{quiz.title}} Quiz Assessment</span>
+          
+          <span><a style="color: white;" href="{% url 'assignments_page' course.slug %}">Assignments</a> > <a href="{% url 'get_assignments_page' assignment.topic.slug %}" style="color: white;">{{assignment.topic.topic}} Assignments</a>  > {{assignment}} </span>
         </div>
         <input type="text" id="item_in" oninput="runStudentSearch(event.target)">
         <!-- <button type="button" onclick="show_add_quiz()">+</button> -->
@@ -31,7 +32,7 @@
         <th>View Work</th>
         <th>Remarks</th>
       </tr>
-      {% for score in quiz_scores %}
+      {% for score in assignment_scores %}
       {% if score.student %}
       <tr data-name="{{score.student}} {{score.student.first_name}} {{score.student.last_name}}"
         data-score="{{score.mark}}" class="student_row">
@@ -46,7 +47,7 @@
         {% else %}
         <td id="mark_box" style="background: salmon; color: white;">{{score.mark}}</td>
         {% endif %}
-        <td><a href="{% url 'student_quiz_results_page' score.id %}" class="material-symbols-outlined">link</a></td>
+        <td><a href="{% url 'student_assignment_results_page' score.id %}" class="material-symbols-outlined">link</a></td>
         <td><i class="material-symbols-outlined">message</i></td>
       </tr>
       {% else %}

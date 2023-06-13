@@ -17,7 +17,7 @@
       <form>
         <div>
           <i class="material-symbols-outlined">blur_on</i>
-          <span>{{scheme.topic}} Assignments | {{scheme.get_assignments.count}}</span>
+          <span><a style="color: white;" href="{% url 'assignments_page' scheme.course.slug %}">Assignments</a> > {{scheme.topic}} Assignments | {{scheme.get_assignments.count}}</span>
         </div>
         <input type="text" id="item_in">
         <select id="item_select">
@@ -32,7 +32,7 @@
       <div class="scheme_box">
         {% for assignment in scheme.get_assignments %}
         <div class="scheme_hold" id="item" data-name="{{assignment.title}}" data-status="{{assignment.status}}">
-          <a href="" class="assess_scheme">
+          <a href="{% url 'assess_assignment_page' assignment.slug %}" class="assess_scheme">
             <i class="material-symbols-outlined">analytics</i>
           </a>
           <a href="{% url 'use_assignment_page' assignment.slug %}" class="scheme" style="text-align: center;">

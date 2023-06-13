@@ -16,7 +16,7 @@
       <form>
         <div>
           <i class="material-symbols-outlined">blur_on</i>
-          <span>{{scheme.topic}} Quizes | {{scheme.get_quizes.count}}</span>
+          <span> <a style="color: white;" href="{% url 'quizes_page' scheme.course.slug %}">Quizes</a>  > {{scheme.topic}} Quizes | {{scheme.get_quizes.count}}</span>
         </div>
         <input type="text" id="item_in">
         <select id="item_select">

@@ -11,12 +11,22 @@
   {% include "student_sideBar.html" %}
   <section class="main">
     <section class="quiz_box">
-
+      <a href="" class="item" style="background: tomato;">
+        {% for assignment in red_assignments %}
+        <i class="material-symbols-outlined">assignment</i>
+        <span>{{assignment}}</span>
+        
+        {{assignment.deadline|timeuntil}}
+        {% endfor %}
+      </a>
     </section>
     <style>
-      .quiz_box{
+      .quiz_box {
         width: 100%;
         height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
         border: 3px solid black;
       }
     </style>

@@ -20,6 +20,7 @@ urlpatterns = [
     path('delete_assignment/<str:slug>', views.delete_assignment, name='delete_assignment_page'),
     path('set_assignment/<str:slug>', views.set_assignment, name='set_assignment_page'),
     path('save_assignment', views.save_assignment),
+    path('assess_assignment/<str:slug>', views.assess_assignment, name='assess_assignment_page'),
 
     # path('assess_quiz/<str:slug>', views.assess_quiz, name='assess_quiz_page'),
 ]
