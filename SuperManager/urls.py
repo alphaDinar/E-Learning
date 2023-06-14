@@ -25,8 +25,15 @@ urlpatterns = [
 
     path('super_courses', views.super_courses, name='super_courses_page'),
 
+    path('super_events', views.super_events, name='super_events_page'),
+    path('super_delete_event', views.super_delete_event),
+
+    path('super_noticeboard', views.super_noticeboard, name='super_noticeboard_page'),
+
     path('super_grading', views.super_grading, name='super_grading_page'),
     path('super_delete_grading', views.super_delete_grading),
+
+    path('super_admin', views.super_admin, name='super_admin_page'),
 
     path('super_test', views.super_test, name='super_test_page'),
 

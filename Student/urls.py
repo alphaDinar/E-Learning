@@ -30,6 +30,9 @@ urlpatterns = [
     path('student_assessment', views.student_assessment, name='student_assessment_page'),
     path('student_assessment_quizes/<str:slug>', views.student_assessment_quizes, name='student_assessment_quizes_page'),
 
+    path('student_events', views.student_events , name='student_events_page'),
+    path('student_noticeboard', views.student_noticeboard, name='student_noticeboard_page'),
+
     path('student_report', views.student_report, name='student_report_page'),
 
     path('mark2', views.mark2)

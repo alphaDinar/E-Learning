@@ -56,24 +56,14 @@
   var djangoDateTimeValue = '{{ assignment_deadline|date:"c" }}';
 
   runTimer = () => {
-    var jsDateValue = new Date(djangoDateTimeValue);
-
-    var today = new Date()
-    var timeLeft = jsDateValue - today;
-
-    var daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    var hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    if (hoursLeft < 10) {
-      hoursLeft = `0${hoursLeft}`
-    }
-    var minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    if (minutesLeft < 10) {
-      minutesLeft = `0${minutesLeft}`
-    }
-    var secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    if (secondsLeft < 10) {
-      secondsLeft = `0${secondsLeft}`
-    }
+    today = new Date()
+    
+    var timeBox = getTimeLeft(djangoDateTimeValue, today)
+    var timeLeft = timeBox.timeLeft
+    var daysLeft = timeBox.daysLeft
+    var hoursLeft = timeBox.hoursLeft
+    var minutesLeft = timeBox.minutesLeft
+    var secondsLeft = timeBox.secondsLeft
 
     if (timeLeft > 0) {
       if (daysLeft > 0) {
@@ -82,7 +72,7 @@
         timer_box.innerHTML = `${hoursLeft}: ${minutesLeft} : ${secondsLeft}`
       }
     } else {
-      timer_box.innerHTML = `${00}: ${00} : ${00}`
+      timer_box.innerHTML = `00: 00 : 00`
     }
 
     if (timeLeft < 100000) {

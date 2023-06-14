@@ -12,7 +12,9 @@ def home(request):
             if user:
                 if user.is_active:
                     login(request, user)
-                    if user.is_student:
+                    if user.is_superuser:
+                        return redirect('supermanager_page')
+                    elif user.is_student:
                         return redirect('student_dash')
                     else:
                         return redirect('courses_page')

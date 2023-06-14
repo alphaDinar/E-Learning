@@ -10,43 +10,72 @@
 <section class="page">
   {% include "student_sideBar.html" %}
   <section class="main">
-    <section class="quiz_box">
-      <a href="" class="item" style="background: tomato;">
+    <section class="wrapper">
+      <section class="wrapper_top">
+        <i class="material-symbols-outlined">assignment</i>Pending Assignments<i class="material-symbols-outlined">assignment</i>
+      </section>
+      <section class="quiz_box">
         {% for assignment in red_assignments %}
-        <i class="material-symbols-outlined">assignment</i>
-        <span>{{assignment}}</span>
-        
-        {{assignment.deadline|timeuntil}}
+        <a href="{% url 'student_start_assignment_page' assignment.slug %}" class="item" style="background: tomato; color: white;" >
+          <i class="material-symbols-outlined">assignment</i>
+          <span>{{assignment}}</span>
+          
+          {{assignment.deadline|timeuntil}}
+        </a>
         {% endfor %}
-      </a>
+      </section>
     </section>
     <style>
+      .wrapper{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      .wrapper .wrapper_top{
+        height: 40px;
+        background: white;
+        display: flex;
+        gap: 0 1rem;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        /* background: black; */
+        width: 100%;
+      }
       .quiz_box {
         width: 100%;
-        height: 200px;
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem 0;
+        padding: 2rem 0;
         justify-content: space-around;
-        border: 3px solid black;
+        /* border-bottom: 2px solid darkgray; */
       }
     </style>
 
-    <header data-course_progress="{{course_progress}}">
-      {% for course in user.student.grade.get_courses %}
-      <a class="item" href="">
-        <p class="top">
-          <i class="material-symbols-outlined">school</i>
-          <span>{{course.subject}}</span>
-        </p>
-        <div class="progress_box">
-          <div class="bar">
-            <div class="progress"></div>
+    <section class="wrapper">
+      <section class="wrapper_top">
+        <i class="material-symbols-outlined">school</i>Teacher Learning Materials<i class="material-symbols-outlined">school</i>
+      </section>
+      <header data-course_progress="{{course_progress}}" style="padding: 2rem 0;">
+        {% for course in user.student.grade.get_courses %}
+        <a class="item" href="{% url 'student_get_slides_schemes_page' course.slug %}" style="background: rgb(42,42,70); color: white;">
+          <p class="top">
+            <i class="material-symbols-outlined">school</i>
+            <span>{{course.subject}}</span>
+          </p>
+          <div class="progress_box">
+            <div class="bar">
+              <div class="progress"></div>
+            </div>
+            <small>TLM Progress</small>
           </div>
-          <small>TLM Progress</small>
-        </div>
-      </a>
-      {% endfor %}
-    </header>
+        </a>
+        {% endfor %}
+      </header>
+    </section>
   </section>
 </section>
 

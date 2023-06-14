@@ -2,17 +2,21 @@ from django.shortcuts import render
 from django.middleware.csrf import get_token
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from Course.models import Course,Grade
 from Scheme.models import Scheme
 from Log.models import Student,User,Teacher,Manager
 from Student.models import SchemeProgress
-from .models import Grading
-import json
+from .models import Event,Notice,Grading
+import json,datetime
+from django.utils import timezone
 
+@login_required
 def supermanager(request):
     return render(request, 'supermanager.html')
 
+@login_required
 def super_student_assessment(request):
     grades = Grade.objects.all()
     context = {
@@ -20,7 +24,7 @@ def super_student_assessment(request):
     }
     return render(request, 'super_student_assessment.html', context)
 
-
+@login_required
 def super_get_student_assessment(request,slug):
     grade = Grade.objects.get(slug=slug)
     context = {
@@ -28,6 +32,7 @@ def super_get_student_assessment(request,slug):
     }
     return render(request, 'super_get_student_assessment.html', context)
 
+@login_required
 def super_add_student(request):
     grades = Grade.objects.all()
     context = {
@@ -37,7 +42,8 @@ def super_add_student(request):
 
 def capitalize(string):
     return string[0].upper() + string[1:]
-    
+
+@login_required
 def super_get_students(request,slug):
     grade = Grade.objects.get(slug=slug)
     print(grade.get_courses())
@@ -91,6 +97,7 @@ def super_get_students(request,slug):
     }
     return render(request, 'super_get_students.html', context)
 
+@login_required
 def super_add_teacher(request):
     teachers = Teacher.objects.all()
     courses = Course.objects.all()
@@ -103,6 +110,7 @@ def super_add_teacher(request):
     }
     return render(request, 'super_add_teacher.html', context)
 
+@login_required
 def super_add_manager(request):
     managers = Manager.objects.all()
     courses = Course.objects.all()
@@ -115,6 +123,7 @@ def super_add_manager(request):
     }
     return render(request, 'super_add_manager.html', context)
 
+@login_required
 def super_add(request , Staff):
     if request.method == 'POST':
         if request.POST.get('type') == 'new':
@@ -148,6 +157,7 @@ def super_add(request , Staff):
             staff.save()
             messages.success(request, f'{user} Updated successfully')
 
+@login_required
 def super_delete_user(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
@@ -155,6 +165,7 @@ def super_delete_user(request):
     return JsonResponse({'info':'success'})
 
 
+@login_required
 def super_grades(request):
     grades = Grade.objects.all()
     token = get_token(request)
@@ -177,6 +188,7 @@ def super_grades(request):
     }
     return render(request, 'super_grades.html', context)
 
+@login_required
 def super_get_grade(request,slug):
     grade = Grade.objects.get(slug=slug)
     token = get_token(request)
@@ -201,12 +213,14 @@ def super_get_grade(request,slug):
     }
     return render(request, 'super_get_grade.html', context)
 
+@login_required
 def super_delete_grade(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
         Grade.objects.get(id=json_data['data']).delete()
     return JsonResponse({'test':'good'})
 
+@login_required
 def super_courses(request):
     courses = Course.objects.all().order_by('abb')
     token = get_token(request)
@@ -216,12 +230,57 @@ def super_courses(request):
     }
     return render(request, 'super_courses.html', context)
 
+@login_required
 def super_delete_course(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
         Course.objects.get(id=json_data['data']).delete()
     return JsonResponse({'test':'good'})
 
+
+
+def get_event_json(events):
+    events_json = []
+    for event in events:
+        events_json.append({'id':event.id ,'name':event.name, 'start_date' : datetime.datetime.strftime(event.start_date, '%Y-%m-%d %H:%M:%S'), 'end_date' : datetime.datetime.strftime(event.end_date, '%Y-%m-%d %H:%M:%S'), 'color':event.color})
+    return events_json
+
+# @login_required
+def super_events(request):
+    if request.method == 'POST':
+        if request.POST.get('type') == 'new':
+            event = Event()
+        else:
+            event = Event.objects.get(id=request.POST.get('id'))
+        event.name = request.POST.get('name')        
+        event.start_date = datetime.datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d')
+        event.end_date = datetime.datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d')
+        event.color = request.POST.get('color')
+        event.save()
+        event.grade.set(Grade.objects.all())
+
+    event_json = get_event_json(Event.objects.all())
+
+    context = {
+        'token' : get_token(request) ,
+        'events' : json.dumps(event_json),
+        'event_count' : len(event_json)
+    }
+    return render(request, 'super_events.html', context)
+
+def super_delete_event(request):
+    if request.method == 'POST':
+        json_data = json.loads(request.body)['data']
+        Event.objects.get(id=json_data).delete()
+    return JsonResponse({'test':'good'})
+
+def super_noticeboard(request):
+    context = {
+        'notices' : Notice.objects.all() 
+    }
+    return render(request, 'super_noticeboard.html', context)
+
+@login_required
 def super_grading(request):
     if request.method == 'POST':
         if request.POST.get('type') == 'new':
@@ -246,11 +305,20 @@ def super_grading(request):
     }
     return render(request, 'super_grading.html', context)
 
+@login_required
 def super_delete_grading(request):
     if request.method == 'POST':
         json_data = json.loads(request.body)
         Grading.objects.get(id=json_data['data']).delete()
     return JsonResponse({'test':'good'})
+
+def super_admin(request):
+    context = {
+        'teachers' : Teacher.objects.all(),
+        'managers' : Manager.objects.all(),
+        'students' : Student.objects.all() 
+    }
+    return render(request, 'super_admin.html', context)
 
 def super_test(request):
     student = Student.objects.get(name=request.user)

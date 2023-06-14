@@ -2,9 +2,10 @@
 
 <section class="sideBar">
   <button id="sideBar_tag" class="material-symbols-outlined">linear_scale</button>
-  <a style="color: white; display: flex; font-size: 1.5rem;" href="{% url 'student_dash' %}"><i class="material-symbols-outlined">dashboard</i> <span>Dashboard</span> </a>
+  <a style="color: white; align-items: center; gap: 0.3rem; display: flex; font-size: 1.5rem;" href="{% url 'student_dash' %}"><i
+      class="material-symbols-outlined">dashboard</i> <span>Dashboard</span> </a>
 
-  
+
   <header>
     <div
       style="background-image: url(https://res.cloudinary.com/dvnemzw0z/image/upload/v1685699929/medium-shot-boy-being-winner_z6oxb9.jpg);">
@@ -22,11 +23,13 @@
       <span>Assignment</span></a>
     <a href="{% url 'student_assessment_page' %}"><i class="material-symbols-outlined">analytics</i>
       <span>Track Performance</span></a>
+    <a href="{% url 'student_events_page' %}"><i class="material-symbols-outlined">event</i> <span>Events</span> </a>
+    <a href="{% url 'student_noticeboard_page' %}"><i class="material-symbols-outlined">breaking_news</i> <span>Notice Board</span> </a>
     <a href=""><i class="material-symbols-outlined">message</i> <span>Inbox</span></a>
     <a href=""><i class="material-symbols-outlined">notifications</i> <span>Notifications</span></a>
     <a href=""><i class="material-symbols-outlined">person_pin</i> <span>Profile</span></a>
   </nav>
-  
+
   <footer>
     <hr>
     <a href="{% url 'logout_page' %}" class="material-symbols-outlined">power_settings_new</a>
@@ -69,7 +72,7 @@
     width: 3%;
   }
 
-  .sideBar.change nav a span {
+  .sideBar.change a span {
     display: none;
   }
 

@@ -6,7 +6,7 @@ from Log.models import Student
 from Course.models import Course
 from Scheme.models import Scheme
 from Quiz.models import Quiz,Assignment
-from SuperManager.models import Grading 
+from SuperManager.models import Event,Notice,Grading 
 from .models import SchemeProgress,QuizScore,AssignmentScore,StudentReport
 import json
 
@@ -22,7 +22,7 @@ def get_grade_box():
         grading_box.append({'min': grading.min_mark,'max' : grading.max_mark, 'grade' : grading.grade, 'remark' : grading.remark, 'color' : grading.color_code})
     return json.dumps(grading_box)
     
-from datetime import datetime
+import datetime
 from django.utils import timezone
 
 def student_dash(request):
@@ -37,13 +37,13 @@ def student_dash(request):
             time_left = (assignment.deadline - timezone.now()).days
             if time_left < 1:
                 red_assignments.append(assignment)
-        print(red_assignments)
 
         for course in student.grade.get_courses():
             course_progress_count = []
             for progress in course.get_scheme_progress().filter(student=student):
                 course_progress_count.append(progress.progress_count)
             course_progress.append(course_progress_count)
+        
     context = {
         'course_progress' : course_progress,
         'red_assignments' : red_assignments
@@ -481,6 +481,24 @@ def student_assessment_quizes(request,slug):
         'course' : course
     }
     return render(request, 'student_assessment_quizes.html', context)
+
+
+
+def student_events(request):
+    grade = Student.objects.get(name=request.user).grade
+    events_json = []
+    for event in Event.objects.filter(grade=grade):
+        events_json.append({'name':event.name, 'start_date':datetime.datetime.strftime(event.start_date, '%Y-%m-%d %H:%M:%S'), 'end_date' : datetime.datetime.strftime(event.end_date, '%Y-%m-%d %H:%M:%S'), 'color' : event.color})
+    context = {
+        'events' : json.dumps(events_json)
+    }
+    return render(request, 'student_events.html', context)
+
+def student_noticeboard(request):
+    context = {
+        'notices' : Notice.objects.filter(grade=Student.objects.get(name=request.user).grade)
+    }
+    return render(request, 'student_noticeboard.html',context)
 
 def student_report(request):
     grade = Student.objects.get(name=request.user).grade

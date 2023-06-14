@@ -35,7 +35,10 @@
     <hr>
     <a href="{% url 'super_grades_page' %}"><i class="material-symbols-outlined">school</i> <span>Grades</span></a>
     <a href="{% url 'super_courses_page' %}"><i class="material-symbols-outlined">school</i> <span>Courses</span></a>
+    <a href="{% url 'super_admin_page' %}"><i class="material-symbols-outlined">history_edu</i> <span>Administration</span> </a>
     <hr>
+    <a href="{% url 'super_events_page' %}"><i class="material-symbols-outlined">event</i> <span>Events</span></a>
+    <a href="{% url 'super_noticeboard_page' %}"><i class="material-symbols-outlined">breaking_news</i> <span>Notice Board</span></a>
     <a href="{% url 'super_grading_page' %}"><i class="material-symbols-outlined">verified</i> <span>Grading System</span></a>
   </nav>
 
@@ -54,7 +57,6 @@
     }
 
     .sideBar nav section {
-      /* border: 1px solid black; */
       padding: 5px;
       display: flex;
       flex-direction: column;
@@ -105,8 +107,6 @@
 
 
   <footer>
-    <a href="" style="border-bottom: 1px solid black; color: rgb(55, 185, 236);"><i
-        class="material-symbols-outlined">west</i> <span>Back to Courses</span> </a>
-    <a href="" style="color: salmon; font-weight: 600;" class="material-symbols-outlined">power_settings_new</a>
+    <a href="{% url 'logout_page' %}" style="color: salmon; font-weight: 600;" class="material-symbols-outlined">power_settings_new</a>
   </footer>
 </section>
