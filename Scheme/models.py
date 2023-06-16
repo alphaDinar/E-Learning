@@ -56,8 +56,8 @@ class RecentScheme(models.Model):
 
 class Image(models.Model):
     name = models.CharField(max_length=300)
-    # image = models.ImageField(default='default.jpg',upload_to='Scheme_images')
-    image = CloudinaryField("Image" ,folder='TM/Scheme_image', resource_type='auto')
+    image = models.ImageField(default='default.jpg',upload_to='Scheme_images')
+    # image = CloudinaryField("Image" ,folder='TM/Scheme_image', resource_type='auto')
     holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
@@ -65,24 +65,24 @@ class Image(models.Model):
 class Passage(models.Model):
     title = models.CharField(max_length=300)
     body = models.TextField(max_length=10000)
-    # thumb = models.ImageField(default='Scheme_images/google-document-icon-free-png_r0pGceu.png',upload_to='Scheme_images',blank=True,null=True)
-    thumb = CloudinaryField("Image" ,folder='TM/Scheme_image', resource_type='auto', default='https://res.cloudinary.com/dvnemzw0z/image/upload/v1683386036/5064889_wpiq8e.png')
+    thumb = models.ImageField(default='Scheme_images/google-document-icon-free-png_r0pGceu.png',upload_to='Scheme_images',blank=True,null=True)
+    # thumb = CloudinaryField("Image" ,folder='TM/Scheme_image', resource_type='auto', default='https://res.cloudinary.com/dvnemzw0z/image/upload/v1683386036/5064889_wpiq8e.png')
     holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     def __str__(self):
         return self.title
 
 class Video(models.Model):
     name = models.CharField(max_length=300)
-    # video = models.FileField(default='vid.jpg', upload_to='TM/Scheme_video', validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
-    video = CloudinaryField("Video" ,folder='TM/Scheme_video', resource_type='auto')
+    video = models.FileField(default='vid.jpg', upload_to='TM/Scheme_video', validators=[FileExtensionValidator(allowed_extensions=['MOV','avi','mp4','webm','mkv'])])
+    # video = CloudinaryField("Video" ,folder='TM/Scheme_video', resource_type='auto')
     holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
 
 class Pdf(models.Model):
     name = models.CharField(max_length=300)    
-    # pdf = models.FileField(default='vid.jpg', upload_to='TM/Scheme_doc', validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
-    pdf = CloudinaryField("Video" ,folder='TM/Scheme_video', resource_type='auto')
+    pdf = models.FileField(default='vid.jpg', upload_to='TM/Scheme_doc', validators=[FileExtensionValidator(allowed_extensions=['pdf'])])
+    # pdf = CloudinaryField("Video" ,folder='TM/Scheme_video', resource_type='auto')
     holder = models.ForeignKey(Scheme, on_delete=models.CASCADE)
     def __str__(self):
         return self.name
@@ -101,3 +101,15 @@ class Reference(models.Model):
 #change slide to links and text reference... 
 
 # class PastResources(models.Model):
+
+class Meeting(models.Model):
+    token = models.CharField(max_length=3000)
+    meeting_id = models.CharField(max_length=3000)
+    passcode = models.CharField(max_length=1000)
+    topic = models.CharField(max_length=300)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    duration = models.IntegerField()
+    start_time = models.DateTimeField(default=timezone.now)
+    join_url = models.CharField(max_length=3000)
+    def __str__(self):
+        return self.topic

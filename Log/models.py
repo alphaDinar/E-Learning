@@ -11,6 +11,7 @@ class Teacher(models.Model):
     name = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     course = models.ManyToManyField(Course,blank=True)
     password = models.CharField(max_length=100)
+    access_token = models.CharField(max_length=3000)
     def save(self, *args, **kwargs):
         user = User.objects.get(username=self.name.username)
         user.is_teacher = True

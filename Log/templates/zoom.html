@@ -7,44 +7,7 @@
 </head>
 <body>
   <section class="meeting_box">
-  
+    <h1>ZOOM</h1>
   </section>
-
-  <style>
-    .meeting{
-      /* width: 300px; */
-      padding: 20px;
-
-      /* height: 350px; */
-      display: flex;
-      flex-direction: column;
-      border: 2px solid black;
-      border-radius: 10px;
-    }
-  </style>
-  <style>
-    .meeting_box{
-      display: flex;
-      justify-content: space-around;
-      width: 90%;
-      padding: 3vh 5%;
-    }
-  </style>
 </body>
 </html>
-
-<script>
-  let meetings = JSON.parse('{{meetings|safe}}').meetings
-  const meeting_box = document.querySelector('.meeting_box')
-
-  meetings.forEach(meeting=>{
-    var meeting_link = document.createElement('a')
-    meeting_link.href = meeting.join_url
-    meeting_link.innerHTML = `
-      <span>${meeting.topic}</span>
-      <small>${meeting.duration} minutes</small>
-    `
-    meeting_box.appendChild(meeting_link)
-    console.log(meeting)
-  })
-</script>

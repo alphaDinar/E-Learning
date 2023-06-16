@@ -213,7 +213,7 @@
   </section>
 
   <section class="rate_box">
-
+    <!-- <h3>Rate Your Experience</h3> -->
   </section>
   <style>
     .rate_box {
@@ -402,8 +402,8 @@
 
   handleData = (data) => {
     // progress_count = 
-    console.log(data) 
-    if(data.data.progress_count){
+    console.log(data)
+    if (data.data.progress_count) {
       progress.style.width = `${Math.round(data.data.progress_count)}%`
       progress_bar.nextElementSibling.innerHTML = `${Math.round(data.data.progress_count)} %`
     }
@@ -411,13 +411,16 @@
     console.log(progress)
   }
 
-  handleSlideRatings =(rate_slide)=>{
-    [...rate_slide.children].forEach(rate=>{
-      rate.onclick =()=>{
+  handleSlideRatings = (rate_slide) => {
+    [...rate_slide.children].forEach(rate => {
+      rate.onclick = () => {
         runAxios('rate_scheme', ['{{scheme.id}}', rate.dataset.rate])
+        window.location.href = `/student_get_quizes_schemes/{{scheme.course.slug}}`
       }
     })
   }
+
+  console.log(progress_count)
 
   checkSlide = (slide_swiper, slide_swiper_el, res, wrapper) => {
     slide_swiper.on('slideNextTransitionStart', () => {
@@ -432,37 +435,37 @@
               display_box.classList.add('change')
             } else {
               slide.innerHTML = 'End of Scheme'
-              var rate_slide = document.createElement('div')
-              rate_slide.classList.add('swiper-slide')
-              rate_slide.classList.add('rate_box')
-              rate_slide.innerHTML = `
+              if (progress_count < 100) {
+                var rate_slide = document.createElement('div')
+                rate_slide.classList.add('swiper-slide')
+                rate_slide.classList.add('rate_box')
+                rate_slide.innerHTML = `
               <div data-rate="1">
                 <i class="material-symbols-outlined" style="color: tomato;">dangerous</i>
-                <span>Bad</span>
+                <a>Bad</a>
               </div>
 
               <div data-rate="2.5">
                 <i class="material-symbols-outlined" style="color: orange">sentiment_neutral</i>
-                <span>Okay</span>
+                <a>Okay</a>
               </div>
 
               <div data-rate="4">
                 <i class="material-symbols-outlined" style="color: rgb(22, 213, 117);">check</i>
-                <span>Good</span>
+                <a>Good</a>
               </div>
 
               <div data-rate="5">
                 <i class="material-symbols-outlined" style="color: rgb(11, 239, 125);">verified</i>
-                <span>Very Good</span>
+                <a>Very Good</a>
               </div>
               `
-              runAxios('toggle_res_status', ['{{scheme.id}}', res.dataset.type, res.dataset.id])
-              handleSlideRatings(rate_slide)
-              // rate_slide.classList.add('intro_slide')
-              // rate_slide.classList.add('con_slide')
-              // rate_slide.innerHTML = 'Rate Slide'
-              wrapper.appendChild(rate_slide)
-              makeSlideSwiper(res, wrapper)
+                runAxios('toggle_res_status', ['{{scheme.id}}', res.dataset.type, res.dataset.id])
+                handleSlideRatings(rate_slide)
+                wrapper.appendChild(rate_slide)
+                makeSlideSwiper(res, wrapper)
+              }
+
             }
             res.children[2].style.background = '#38c7ff'
           }

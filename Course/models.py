@@ -38,6 +38,8 @@ class Course(models.Model):
         return self.quiz_score_set.all()
     def get_assignments(self):
         return self.assignment_set.all()
+    def get_meetings(self):
+        return self.meeting_set.all()
     def __str__(self):
         return f'{self.abb} {self.grade.code}'   
      
