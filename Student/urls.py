@@ -27,6 +27,8 @@ urlpatterns = [
     path('student_assignment_results/<int:id>', views.student_assignment_results, name='student_assignment_results_page'),
     path('student_assignment_history/<str:slug>', views.student_assignment_history, name='student_assignment_history_page'),
 
+    path('student_liveclasses', views.student_liveclasses, name='student_liveclasses_page' ),
+    
     path('student_assessment', views.student_assessment, name='student_assessment_page'),
     path('student_assessment_quizes/<str:slug>', views.student_assessment_quizes, name='student_assessment_quizes_page'),
 

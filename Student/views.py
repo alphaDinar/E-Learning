@@ -44,8 +44,10 @@ def student_dash(request):
                 course_progress_count.append(progress.progress_count)
             course_progress.append(course_progress_count)
         
+        events = Event.objects.filter(grade=student.grade)
     context = {
         'course_progress' : course_progress,
+        'events' : events,
         'red_assignments' : red_assignments
     }
     return render(request, 'student_dash.html', context)
@@ -438,6 +440,17 @@ def student_assignment_history(request,slug):
         'assignment_scores' : assignment_scores
     }
     return render(request, 'student_assignment_history.html', context)
+
+def student_liveclasses(request):
+    student = Student.objects.get(name=request.user)
+    meeting_json = []
+    for meeting in student.grade.get_meetings().order_by('start_time'):
+        meeting_json.append({'join_url': meeting.join_url ,'topic' : meeting.topic, 'start_time' : datetime.datetime.strftime(meeting.start_time, '%Y-%m-%d %H:%M:%S'), 'course' : meeting.course.subject})
+    context ={
+        'meetings' : student.grade.get_meetings().order_by('start_time')[0:2],
+        'meeting_json' : json.dumps(meeting_json)
+    }
+    return render(request, 'student_liveclasses.html', context)
 
 def student_assessment(request):
     student = Student.objects.get(name=request.user)

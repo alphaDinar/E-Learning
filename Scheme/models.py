@@ -4,7 +4,7 @@ from django.core.validators import FileExtensionValidator
 from django.utils.text import slugify
 from django.utils import timezone
 from Log.models import Teacher
-from Course.models import Course
+from Course.models import Grade,Course
 from cloudinary.models import CloudinaryField
 import datetime
 
@@ -108,6 +108,7 @@ class Meeting(models.Model):
     passcode = models.CharField(max_length=1000)
     topic = models.CharField(max_length=300)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE)
     duration = models.IntegerField()
     start_time = models.DateTimeField(default=timezone.now)
     join_url = models.CharField(max_length=3000)

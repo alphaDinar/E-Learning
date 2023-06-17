@@ -10,28 +10,15 @@
 <section class="page">
   {% include "student_sideBar.html" %}
   <section class="main">
-    <section class="wrapper">
-      <section class="wrapper_top">
-        <i class="material-symbols-outlined">assignment</i>Pending Assignments<i class="material-symbols-outlined">assignment</i>
-      </section>
-      <section class="quiz_box">
-        {% for assignment in red_assignments %}
-        <a href="{% url 'student_start_assignment_page' assignment.slug %}" class="item" style="background: tomato; color: white;" >
-          <i class="material-symbols-outlined">assignment</i>
-          <span>{{assignment}}</span>
-          
-          {{assignment.deadline|timeuntil}}
-        </a>
-        {% endfor %}
-      </section>
-    </section>
+
     <style>
-      .wrapper{
+      .wrapper {
         display: flex;
         flex-direction: column;
         width: 100%;
       }
-      .wrapper .wrapper_top{
+
+      .wrapper .wrapper_top {
         height: 40px;
         background: white;
         display: flex;
@@ -43,6 +30,7 @@
         /* background: black; */
         width: 100%;
       }
+
       .quiz_box {
         width: 100%;
         display: flex;
@@ -55,27 +43,168 @@
       }
     </style>
 
-    <section class="wrapper">
-      <section class="wrapper_top">
-        <i class="material-symbols-outlined">school</i>Teacher Learning Materials<i class="material-symbols-outlined">school</i>
-      </section>
-      <header data-course_progress="{{course_progress}}" style="padding: 2rem 0;">
+    <section class="dash_box">
+      <section class="course_box" data-course_progress="{{course_progress}}">
+        <h3>TLM Progress</h3>
         {% for course in user.student.grade.get_courses %}
-        <a class="item" href="{% url 'student_get_slides_schemes_page' course.slug %}" style="background: rgb(42,42,70); color: white;">
-          <p class="top">
-            <i class="material-symbols-outlined">school</i>
-            <span>{{course.subject}}</span>
-          </p>
+        <a class="course_tab" href="{% url 'student_get_slides_schemes_page' course.slug %}">
+          <span>{{course.subject}}</span>
           <div class="progress_box">
             <div class="bar">
               <div class="progress"></div>
             </div>
-            <small>TLM Progress</small>
           </div>
         </a>
         {% endfor %}
-      </header>
+      </section>
+      <hr style="height: 100%; border-right: 2px dotted darkgray;">
+      <section class="event_box">
+        {% for event in events %}
+        <div class="event_tab">
+          <span> {{event}}</span>
+          <span>{{event.start_date}}</span>
+        </div>
+        {% endfor %}
+        <a href="" class="material-symbols-outlined">chevron_right</a>
+
+      </section>
+      <style>
+        .event_tab {
+          width: 180px;
+          height: 230px;
+          border-radius: 100px;
+          box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+          box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+          background: #ECEDF6;
+          display: flex;
+          flex-direction: column;
+          color: white;
+          font-size: 1.3rem;
+          text-align: center;
+          justify-content: center;
+          align-items: center;
+          background: #196e86;
+        }
+        .event_box a{
+          font-size: 2rem;
+          height: 25px;
+          width: 25px;
+          border: 1px solid black;
+          display: flex;
+          align-items: center;
+          border-radius: 50%;
+          background: white;
+          justify-content: center;
+        }
+      </style>
     </section>
+
+
+    <style>
+      .main {
+        padding: 2vh 2.5%;
+      }
+
+      .dash_box {
+        display: flex;
+        width: 100%;
+      }
+
+
+
+      .course_box,
+      .event_box {
+        display: flex;
+        align-items: center;
+      }
+      .course_box{
+        width: 50%;
+        gap: 1rem;
+        padding: 2vh 0;
+        flex-direction: column;
+      }
+      .event_box{
+        gap: 0 2rem;
+        width: 45%;
+        padding: 2vh 2.5%;
+        overflow-x: auto;
+      }
+
+      @media all and (max-width:1000px){
+        .dash_box{
+          flex-direction: column;
+          align-items: center;
+        }
+        .dash_box hr{
+          display: none;
+        }
+        .course_box{
+          width: 100%;
+        }
+        .event_box{
+          flex-wrap: wrap;
+          gap: 1.5rem 0;
+          justify-content: space-around;
+          width: 90%;
+        }
+        .event_box a{
+          display: none;
+        }
+      }
+
+      .event_box::-webkit-scrollbar{
+        height: 10px;
+        background:lightgray;
+        border-radius: 40px;
+      }
+      .event_box::-webkit-scrollbar-thumb{
+        background: darkgray;
+        border-radius: 40px;
+      }
+
+      .course_tab {
+        width: 85%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem 0;
+        border-radius: 5px;
+        padding: 0.8vh 2.5%;
+        background: white;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        color: rgb(67, 67, 67);
+      }
+
+      .progress_box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .progress_box .bar {
+        height: 10px;
+        width: 100%;
+      }
+    </style>
+
+    <section class="wrapper">
+      <section class="wrapper_top">
+        <i class="material-symbols-outlined">assignment</i>Pending Assignments<i
+          class="material-symbols-outlined">assignment</i>
+      </section>
+      <section class="quiz_box">
+        {% for assignment in red_assignments %}
+        <a href="{% url 'student_start_assignment_page' assignment.slug %}" class="item"
+          style="background: tomato; color: white;">
+          <i class="material-symbols-outlined">assignment</i>
+          <span>{{assignment}}</span>
+
+          {{assignment.deadline|timeuntil}}
+        </a>
+        {% endfor %}
+      </section>
+    </section>
+
   </section>
 </section>
 
@@ -84,7 +213,7 @@
 </script>
 <script src="{% static 'Student/student.js' %}"></script>
 <script>
-  let course_progress = JSON.parse(document.querySelector('.main header').dataset.course_progress)
+  let course_progress = JSON.parse(document.querySelector('.course_box').dataset.course_progress)
   const progress = document.querySelectorAll('.progress')
 
   course_progress.forEach((el, i) => {

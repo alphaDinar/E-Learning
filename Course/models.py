@@ -18,6 +18,8 @@ class Grade(models.Model):
         return self.course_set.all()
     def get_students(self):
         return self.student_set.all()
+    def get_meetings(self):
+        return self.meeting_set.all()
 
 class Course(models.Model):
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE)

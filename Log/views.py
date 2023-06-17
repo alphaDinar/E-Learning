@@ -127,12 +127,13 @@ def zoom_auth(request):
                 }
             
                 response = requests.post(url, headers=headers, json=payload)
-                print(response.json())
+                
                 meeting = Meeting()
                 meeting.token = json.loads(response.text)['uuid']
                 meeting.meeting_id = json.loads(response.text)['id']
                 meeting.topic = json.loads(response.text)['topic']
                 meeting.course = Course.objects.get(slug=json.loads(response.text)['agenda'])
+                meeting.grade = Course.objects.get(slug=json.loads(response.text)['agenda']).grade
                 meeting.start_time = json.loads(response.text)['start_time']
                 meeting.duration = json.loads(response.text)['duration']
                 meeting.passcode = json.loads(response.text)['password']

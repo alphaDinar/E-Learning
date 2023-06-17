@@ -34,7 +34,6 @@
 {% block js %}
 <script>
   let events_json = JSON.parse('{{events|safe}}')
-  console.log(events_json)
 
   fixCalendarEvents =(calendar)=>{
     events_json.forEach(event=>{

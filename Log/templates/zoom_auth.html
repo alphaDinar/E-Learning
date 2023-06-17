@@ -3,11 +3,21 @@
 {% load static %}
 
 {% block styles %}
-<!-- <link rel="stylesheet" href="{% static 'log.css' %}"> -->
+<link rel="stylesheet" href="{% static 'prompt.css' %}">
+<link rel="stylesheet" href="{% static 'Zoom/zoom.css' %}">
 {% endblock styles %}
 
 {% block page %}
 <section class="page">
+  <div class="prompt_box">
+    <p>Are you sure you want to delete</p>
+    <span class="user_space"></span>
+    <nav>
+      <button id="yes" style="background: rgb(18, 203, 111);">Yes</button>
+      <button id="no" style="background: salmon;">No</button>
+    </nav>
+  </div>
+
   <section class="add_form">
     <i class="material-symbols-outlined" onclick="closeForm()">close</i>
     <form method="post">
@@ -56,16 +66,13 @@
     .add_form form {
       display: flex;
       padding: 15px;
-      /* position: relative; */
       display: flex;
-      /* align-items: center; */
       background: white;
       flex-direction: column;
       box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
       gap: 2rem;
       width: 300px;
       border-radius: 10px;
-      /* height: ; */
     }
 
     .add_form form button {
@@ -79,7 +86,6 @@
     .add_form form input {
       font-size: 1.1rem;
       padding: 10px 10px;
-      /* width: 100%; */
       border-bottom: 1px solid darkgray;
     }
   </style>
@@ -90,6 +96,16 @@
         width: 100%;
         min-height: 30vh;
         background: salmon;
+      }
+
+      .page {
+        align-items: flex-start;
+        width: 90%;
+        gap: 2rem;
+        background: whitesmoke;
+        flex-direction: column;
+        min-height: auto;
+        padding: 5vh 5%;
       }
     </style>
   </section>
@@ -104,132 +120,62 @@
     <section class="wrapper">
       <section class="banner">{{course}}</section>
       <section class="meeting_box">
-
         {% for meeting in course.get_meetings %}
-        <div class="meeting">
-          <span>{{meeting}}</span>
+        <div class="meeting" data-name="{{meeting}}" data-start_time="{{meeting.start_time}}">
+          <span>{{meeting.topic}}</span>
           <a href="{{meeting.join_url}}" target="_blank">Start</a>
           <span>{{meeting.start_time|timeuntil}} left</span>
           <i class="material-symbols-outlined" onclick="deleteMeeting('{{meeting.meeting_id}}',event.target)">delete</i>
         </div>
         {% endfor %}
-
-
         <div id="add_meeting" onclick="showForm('{{course.slug}}')">+</div>
       </section>
     </section>
     {% endfor %}
 
-    <script>
-      const add_form = document.querySelector('.add_form')
 
-      showForm = (course_slug) => {
-        add_form.classList.add('change')
-        document.getElementById('course_in').value = course_slug
-      }
-
-      closeForm = () => {
-        add_form.classList.remove('change')
-      }
-    </script>
-    <style>
-      #add_meeting {
-        display: flex;
-        align-items: center;
-        width: 270px;
-        border-radius: 10px;
-        font-size: 3rem;
-        color: white;
-        background: #01b4fe;
-        cursor: pointer;
-        height: 180px;
-        justify-content: center;
-      }
-
-      .wrapper {
-        width: 100%;
-        display: flex;
-        gap: 1rem;
-        flex-direction: column;
-      }
-
-      .wrapper section {
-        width: 100%;
-        width: 90%;
-        padding: 0 5%;
-      }
-
-      .meeting_box {
-        display: flex;
-        gap: 0 3rem;
-      }
-
-      .banner {
-        height: 40px;
-        display: flex;
-        font-size: 1.2rem;
-        /* width: 90%; */
-        align-items: center;
-        background: white;
-        padding: 0 5%;
-        color: rgb(45, 45, 45);
-        /* background: whitesmoke; */
-        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-        /* border: 2px solid black; */
-      }
-    </style>
   </section>
 </section>
-<style>
-  .zoom_box {
-    /* min-height: 30vh; */
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 2rem;
-    /* gap: 4rem 2rem; */
-    /* padding: 5vh 5%; */
-  }
-
-  .meeting {
-    width: 270px;
-    border-radius: 10px;
-    background: #01b4fe;
-    display: flex;
-    color: wheat;
-    color: white;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.3rem;
-    /* gap: 2rem; */
-    height: 180px;
-    /* border: 1px solid black; */
-  }
-
-  .page {
-    align-items: flex-start;
-    width: 90%;
-    gap: 2rem;
-    background: whitesmoke;
-    /* background: white; */
-    flex-direction: column;
-    min-height: auto;
-    padding: 5vh 5%;
-  }
-</style>
 {% endblock page %}
 
 
 {% block js %}
 <script>
-  deleteMeeting =(meeting_id, obj)=>{
-    obj.parentElement.remove()
-    runAxios('delete_meeting', meeting_id, '{{token}}')
+  const add_form = document.querySelector('.add_form')
+
+  showForm = (course_slug) => {
+    add_form.classList.add('change')
+    document.getElementById('course_in').value = course_slug
   }
 
-  handleData =(data)=>{
+  closeForm = () => {
+    add_form.classList.remove('change')
+  }
+
+  const meetings = document.querySelectorAll('.meeting')
+  console.log(meetings)
+</script>
+
+
+<script>
+  const prompt_box = document.querySelector('.prompt_box')
+  prompt_box.style.position = 'fixed'
+
+  deleteMeeting = (meeting_id, obj) => {
+    prompt_box.children[1].innerHTML = obj.parentElement.dataset.name
+    prompt_box.classList.add('show')
+    prompt_box.children[2].onclick = (event) => {
+      if (event.target.id === 'no') {
+        prompt_box.classList.remove('show')
+      } else {
+        runAxios('delete_meeting', meeting_id, '{{token}}')
+        obj.parentElement.remove()
+        prompt_box.classList.remove('show')
+      }
+    }
+  }
+
+  handleData = (data) => {
     console.log(data)
   }
 </script>
